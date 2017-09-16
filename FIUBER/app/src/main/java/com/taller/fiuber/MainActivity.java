@@ -29,9 +29,21 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void goMapa() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
     public void cerrarSesion(View view) {
         LoginManager.getInstance().logOut();
         Log.v(TAG, "Se ha cerrado sesión");
         goLogin();
+    }
+
+    public void irMapa(View view) {
+        LoginManager.getInstance().logOut();
+        Log.v(TAG, "Se va al mapa");
+        goMapa();
     }
 }

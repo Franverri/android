@@ -1,31 +1,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:orientation="vertical"
     tools:context="com.taller.fiuber.RegisterActivity">
 
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="280dp"
-        app:srcCompat="@drawable/logochico" />
-
-    <ImageView
-        android:id="@+id/img_chofer"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="50dp"
-        app:srcCompat="@drawable/chofer" />
+        android:layout_height="match_parent"
+        android:background="@drawable/fondoregistro2"
+        tools:ignore="UselessParent">
 
-    <ImageView
-        android:id="@+id/img_pasajero"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="50dp"
-        app:srcCompat="@drawable/pasajero" />
+        <TextView
+            android:id="@+id/img_pasajero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="cursive"
+            android:paddingBottom="110dp"
+            android:paddingTop="100dp"
+            android:text="@string/opc_pasajero"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="70sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/img_chofer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="cursive"
+            android:paddingBottom="120dp"
+            android:paddingTop="90dp"
+            android:text="@string/opc_chofer"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="70sp"
+            android:textStyle="bold"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
 
 
 </LinearLayout>

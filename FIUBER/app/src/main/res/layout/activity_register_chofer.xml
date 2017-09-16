@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/choferregistro"
     android:orientation="vertical"
     tools:context="com.taller.fiuber.RegisterActivity">
 
@@ -36,81 +37,57 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/register_mail"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register_mail"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/register_in_mail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/register_in_mail"
-                android:inputType="textPersonName" />
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_mail"
+                    android:maxLines="1" />
 
-            <TextView
-                android:id="@+id/register_nombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register_nombre"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/register_in_nombre"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/register_in_nombre"
-                android:inputType="textPersonName" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/register_apellido"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register_apellido"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_nombre"
+                    android:maxLines="1" />
 
-            <EditText
-                android:id="@+id/register_in_apellido"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/register_in_apellido"
-                android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/register_cuentaFace"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register_cuentaFace"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/register_in_cuentaFace"
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_apellido"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/register_in_cuentaFace"
-                android:inputType="textPersonName" />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_cuentaFace"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <TextView
                 android:id="@+id/info_auto"
@@ -124,81 +101,57 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/register_modelo"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register_modelo"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/register_in_modelo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/register_in_modelo"
-                android:inputType="textPersonName" />
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_modelo"
+                    android:maxLines="1" />
 
-            <TextView
-                android:id="@+id/register_color"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register_color"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/register_in_color"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/register_in_color"
-                android:inputType="textPersonName" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/register_patente"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register_patente"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_color"
+                    android:maxLines="1" />
 
-            <EditText
-                android:id="@+id/register_in_patente"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/register_in_patente"
-                android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/register_anio"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register_anio"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/register_in_anio"
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_patente"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/register_in_anio"
-                android:inputType="textPersonName" />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_anio"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <TextView
                 android:id="@+id/register_estado"
@@ -269,24 +222,18 @@
                     android:text="@string/no" />
             </RadioGroup>
 
-            <TextView
-                android:id="@+id/register_musica"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/register_musica"
-                android:textAlignment="viewStart"
-                android:textAllCaps="false"
-                android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/register_in_musica"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/register_in_musica"
-                android:inputType="textPersonName" />
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_musica"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <Button
                 android:id="@+id/btn_guardar"

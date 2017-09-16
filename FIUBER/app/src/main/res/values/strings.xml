@@ -3,7 +3,7 @@
     <string name="datos">com.taller.fiuber</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
+    <string name="prompt_email">Usuario</string>
     <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">Iniciar sesión</string>
     <string name="action_sign_in_short">Iniciar sesión</string>
@@ -57,6 +57,7 @@
     <string name="register_tarjetaCredito">Número de tarjeta de crédito</string>
     <string name="register_in_tarjetaCredito">Ingrese el número de su tarjeta de crédito</string>
     <string name="guardar_continuar">Guardar y continuar</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>

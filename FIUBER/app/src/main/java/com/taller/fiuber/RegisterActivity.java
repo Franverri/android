@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -14,15 +15,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        ImageView registerChofer = (ImageView) findViewById(R.id.img_chofer);
-        registerChofer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goRegisterChofer();
-            }
-        });
-
-        ImageView registerPasajero = (ImageView) findViewById(R.id.img_pasajero);
+        TextView registerPasajero = (TextView) findViewById(R.id.img_pasajero);
         registerPasajero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -30,6 +23,13 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        TextView registerChofer = (TextView) findViewById(R.id.img_chofer);
+        registerChofer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goRegisterChofer();
+            }
+        });
     }
 
     private void goRegisterPasajero() {

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/pasajeroregistro"
     android:orientation="vertical"
     tools:context="com.taller.fiuber.RegisterActivity">
 
@@ -49,8 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/register_in_mail" />
+            android:hint="@string/register_in_mail"
+            android:inputType="textPersonName" />
 
         <TextView
             android:id="@+id/register_nombre"
@@ -68,8 +69,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/register_in_nombre" />
+            android:hint="@string/register_in_nombre"
+            android:inputType="textPersonName" />
 
         <TextView
             android:id="@+id/register_apellido"
@@ -87,8 +88,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/register_in_apellido" />
+            android:hint="@string/register_in_apellido"
+            android:inputType="textPersonName" />
 
         <TextView
             android:id="@+id/info_cobranza"
@@ -118,8 +119,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="@string/register_in_tarjetaCredito" />
+            android:hint="@string/register_in_tarjetaCredito"
+            android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/btn_guardar"
