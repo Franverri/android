@@ -80,7 +80,19 @@ public class LoginActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
         sharedServer = new SharedServer();
-        sharedPref = getSharedPreferences(getString(R.string.datos), Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editorShared = sharedPref.edit();
+        //editorShared.putInt("prueba", 0);
+        //editorShared.putBoolean("logueado", true);
+        //editorShared.clear();
+        //editorShared.apply();
+
+        int intPrueba = sharedPref.getInt("prueba", -1);
+        boolean boolPrueba = sharedPref.getBoolean("boole", false);
+        Log.v(TAG, "Prueba SharedPref: "+intPrueba);
+        Log.v(TAG, "Prueba SharedPref: "+boolPrueba);
+
+
 
         //Inicializa el sdk de facebook.
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -88,7 +100,7 @@ public class LoginActivity extends AppCompatActivity  {
 
         //Si ya se encuentra logeado va directo a la pantalla principal
         //Falta verificar tambien el login con usuario y contraseña (Esta solo el de Facebook)
-        if (AccessToken.getCurrentAccessToken() != null){
+        if ((AccessToken.getCurrentAccessToken() != null) ||(sharedPref.getBoolean("logueado", false))){
             goMain();
         }
 
