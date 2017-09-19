@@ -12,21 +12,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="280dp"
-        app:srcCompat="@drawable/logochico" />
+        app:srcCompat="@drawable/logochico"
+        tools:ignore="ContentDescription" />
 
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/register_login_form"
+        android:id="@+id/registerP_login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="30dp">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/info_personal"
+            android:id="@+id/infoP_personal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
             android:text="@string/info_personal"
             android:textAlignment="viewStart"
             android:textAllCaps="false"
@@ -34,62 +37,84 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/register_mail"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_mail"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/register_in_mail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/register_in_mail"
-            android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/regP_usuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_in_usuario"
+                android:maxLines="1" />
 
-        <TextView
-            android:id="@+id/register_nombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_nombre"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/register_in_nombre"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/register_in_nombre"
-            android:inputType="textPersonName" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/register_apellido"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_apellido"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            <EditText
+                android:id="@+id/regP_contrasenia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_in_contrasenia"
+                android:maxLines="1" />
 
-        <EditText
-            android:id="@+id/register_in_apellido"
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/register_in_apellido"
-            android:inputType="textPersonName" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/regP_mail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_in_mail"
+                android:inputType="textEmailAddress"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/regP_nombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_in_nombre"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/regP_apellido"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_in_apellido"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/regP_cuentaFacebook"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_in_cuentaFace"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <TextView
             android:id="@+id/info_cobranza"
@@ -103,30 +128,29 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/register_tarjetaCredito"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/register_tarjetaCredito"
-            android:textAlignment="viewStart"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/register_in_tarjetaCredito"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/register_in_tarjetaCredito"
-            android:inputType="textPersonName" />
+            <EditText
+                android:id="@+id/regP_tarjetaCredito"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_in_tarjetaCredito"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/btn_guardar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/guardar_continuar" />
+            android:id="@+id/regP_btn_registrarse"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:background="@drawable/buttonshapepasajero"
+            android:text="@string/register_btn"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
+</ScrollView>
 </LinearLayout>

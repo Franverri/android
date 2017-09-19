@@ -35,4 +35,32 @@ public class SharedServer extends InterfazRest {
         enviarPOST(URLAPIREST+"/token",json,callback);
     }
 
+    public void darAltaChofer(String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String modeloAuto, String colorAuto, String patenteAuto, String añoAuto, String musicaAuto, String estadoAuto, boolean aireAuto, JSONCallback callback)
+    {
+        JSONObject jsonUsuario = new JSONObject();
+        JSONObject jsonAuto = new JSONObject();
+
+        try {
+            jsonUsuario.put("type", "driver");
+            jsonUsuario.put("username", usuario);
+            jsonUsuario.put("password", contraseña);
+            //Ver tema facebook cono la API del APP Server
+            jsonUsuario.put("firstName", nombre);
+            jsonUsuario.put("lastName", apellido);
+            //Ver si es necesaria la nacionalidad (De ser así agregar a la pantalla de registro)
+            jsonUsuario.put("email", mail);
+            jsonUsuario.put("username", usuario);
+            //Ver si es necesaria la fecha de nacimiento (De ser así agregar a la pantalla de registro)
+            //Ver tema imagen
+
+
+
+        }
+        catch(JSONException e)
+        {
+
+        }
+        enviarPOST(URLAPIREST+"user/",jsonUsuario,callback);
+    }
+
 }

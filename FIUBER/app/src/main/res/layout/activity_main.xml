@@ -1,28 +1,37 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<android.support.v4.widget.DrawerLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.taller.fiuber.LoginActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout">
 
-
-    <Button
-        android:onClick="cerrarSesion"
-        android:id="@+id/cerrar_sesion"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/cerrar_sesion" />
+        android:layout_height="match_parent"
+        android:background="@drawable/fondomain1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.taller.fiuber.LoginActivity">
 
-    <Button
-        android:onClick="irMapa"
-        android:id="@+id/ir_mapa"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ir al mapa" />
-</LinearLayout>
+        <Button
+            android:id="@+id/ir_mapa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="irMapa"
+            android:text="Ir al mapa" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:menu="@menu/navigation_menu"
+        android:layout_gravity="start">
+
+    </android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>
