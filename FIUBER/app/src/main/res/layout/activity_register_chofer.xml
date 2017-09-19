@@ -12,7 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="280dp"
-        app:srcCompat="@drawable/logochico" />
+        app:srcCompat="@drawable/logochico"
+        tools:ignore="ContentDescription" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,14 +23,12 @@
             android:id="@+id/register_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="30dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/info_personal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
                 android:text="@string/info_personal"
                 android:textAlignment="viewStart"
                 android:textAllCaps="false"
@@ -42,10 +41,10 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_usuario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/register_in_mail"
+                    android:hint="@string/register_in_usuario"
                     android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
@@ -55,7 +54,34 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_contrasenia"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_contrasenia"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/reg_mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/register_in_mail"
+                    android:maxLines="1"
+                    android:inputType="textEmailAddress"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/reg_nombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_in_nombre"
@@ -68,7 +94,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_apellido"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_in_apellido"
@@ -81,7 +107,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_cuentaFacebook"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_in_cuentaFace"
@@ -90,7 +116,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <TextView
-                android:id="@+id/info_auto"
+                android:id="@+id/reg_info_auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="10dp"
@@ -106,7 +132,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_modeloAuto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_in_modelo"
@@ -119,7 +145,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_colorAuto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_in_color"
@@ -132,7 +158,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_patenteAuto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_in_patente"
@@ -145,7 +171,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_anioAuto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_in_anio"
@@ -154,7 +180,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <TextView
-                android:id="@+id/register_estado"
+                android:id="@+id/reg_estado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/register_estado"
@@ -165,26 +191,27 @@
                 android:textStyle="bold" />
 
             <RadioGroup
+                android:id="@+id/reg_estado_grupo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/estado1"
+                    android:id="@+id/reg_estado1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/estado1" />
 
                 <RadioButton
-                    android:id="@+id/estado2"
+                    android:id="@+id/reg_estado2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/estado2" />
 
                 <RadioButton
-                    android:id="@+id/estado3"
+                    android:id="@+id/reg_estado3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -192,7 +219,7 @@
             </RadioGroup>
 
             <TextView
-                android:id="@+id/register_aire"
+                android:id="@+id/reg_aire"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/register_aire"
@@ -203,19 +230,20 @@
                 android:textStyle="bold" />
 
             <RadioGroup
+                android:id="@+id/reg_aire_grupo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/aire_si"
+                    android:id="@+id/reg_aire_si"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/si" />
 
                 <RadioButton
-                    android:id="@+id/aire_no"
+                    android:id="@+id/reg_aire_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -227,7 +255,7 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/reg_musicaAuto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/register_in_musica"
@@ -236,10 +264,15 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/btn_guardar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/guardar_continuar" />
+                android:id="@+id/reg_btn_registrarse"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:background="@drawable/buttonshapechofer"
+                android:text="@string/register_btn"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:layout_gravity="center"/>
+
 
         </LinearLayout>
     </ScrollView>

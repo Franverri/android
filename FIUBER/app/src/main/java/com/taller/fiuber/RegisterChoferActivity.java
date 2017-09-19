@@ -2,12 +2,123 @@ package com.taller.fiuber;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
 
 public class RegisterChoferActivity extends AppCompatActivity {
+
+    private static final String TAG = "RegisterChoferActivity";
+
+    private EditText usuario;
+    private EditText contraseña;
+    private EditText mail;
+    private EditText nombre;
+    private EditText apellido;
+    private EditText cuentaFacebook;
+    private EditText modeloAuto;
+    private EditText colorAuto;
+    private EditText patenteAuto;
+    private EditText añoAuto;
+    private String estadoAuto;
+    private boolean aireAcondicionado;
+    private EditText musicaAuto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_chofer);
+
+        usuario = (EditText) findViewById(R.id.reg_usuario);
+        contraseña = (EditText) findViewById(R.id.reg_contrasenia);
+        mail = (EditText) findViewById(R.id.reg_mail);
+        nombre = (EditText) findViewById(R.id.reg_nombre);
+        apellido = (EditText) findViewById(R.id.reg_apellido);
+        cuentaFacebook = (EditText) findViewById(R.id.reg_cuentaFacebook);
+        modeloAuto = (EditText) findViewById(R.id.reg_modeloAuto);
+        colorAuto = (EditText) findViewById(R.id.reg_colorAuto);
+        patenteAuto = (EditText) findViewById(R.id.reg_patenteAuto);
+        añoAuto = (EditText) findViewById(R.id.reg_anioAuto);
+        musicaAuto = (EditText) findViewById(R.id.reg_musicaAuto);
+
+        //Maneja la información del estado del auto según el boton que clickee
+        RadioGroup radioGroupEstado = (RadioGroup) findViewById(R.id.reg_estado_grupo);
+        radioGroupEstado.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+                switch (checkedId){
+                    case R.id.reg_estado1:
+                        Log.v(TAG, "Estado 1 clikeado");
+                        estadoAuto = "Malo";
+                        break;
+                    case R.id.reg_estado2:
+                        Log.v(TAG, "Estado 2 clikeado");
+                        estadoAuto = "Regular";
+                        break;
+                    case R.id.reg_estado3:
+                        Log.v(TAG, "Estado 3 clikeado");
+                        estadoAuto = "Bueno";
+                        break;
+                }
+            }
+        });
+
+        //Maneja la información del aire acondicionado del auto según el boton que clickee
+        RadioGroup radioGroupAire = (RadioGroup) findViewById(R.id.reg_aire_grupo);
+        radioGroupAire.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+                switch (checkedId){
+                    case R.id.reg_aire_no:
+                        Log.v(TAG, "Sin aire clikeado");
+                        aireAcondicionado = false;
+                        break;
+                    case R.id.reg_aire_si:
+                        Log.v(TAG, "Con aire clikeado");
+                        aireAcondicionado = true;
+                        break;
+                }
+            }
+        });
+
+        Button btnGuardar = (Button) findViewById(R.id.reg_btn_registrarse);
+        btnGuardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String strUsuario = usuario.getText().toString();
+                String strContraseña = contraseña.getText().toString();
+                String strMail = mail.getText().toString();
+                String strNombre = nombre.getText().toString();
+                String strApellido = apellido.getText().toString();
+                String strCuentaFacebook = cuentaFacebook.getText().toString();
+                String strModeloAuto = modeloAuto.getText().toString();
+                String strColorAuto = colorAuto.getText().toString();
+                String strPatenteAuto = patenteAuto.getText().toString();
+                String strAñoAuto = añoAuto.getText().toString();
+                String strMusicaAuto = musicaAuto.getText().toString();
+
+                Log.v(TAG, "Usuario    : "+strUsuario);
+                Log.v(TAG, "Contraseña : "+strContraseña);
+                Log.v(TAG, "Mail       : "+strMail);
+                Log.v(TAG, "Nombre     : "+strNombre);
+                Log.v(TAG, "Apellido   : "+strApellido);
+                Log.v(TAG, "Cuenta Face: "+strCuentaFacebook);
+                Log.v(TAG, " ---AUTO----");
+                Log.v(TAG, "Modelo     : "+strModeloAuto);
+                Log.v(TAG, "Color      : "+strColorAuto);
+                Log.v(TAG, "Patente    : "+strPatenteAuto);
+                Log.v(TAG, "Año        : "+strAñoAuto);
+                Log.v(TAG, "Estado     : "+estadoAuto);
+                Log.v(TAG, "Aire       : "+aireAcondicionado);
+                Log.v(TAG, "Música     : "+strMusicaAuto);
+
+            }
+        });
     }
 }
