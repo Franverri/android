@@ -48,7 +48,7 @@ import org.json.JSONObject;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity  {
+public class LoginActivity extends HashFunction  {
 
     private static final String TAG = "LoginActivity";
     SharedServer sharedServer;

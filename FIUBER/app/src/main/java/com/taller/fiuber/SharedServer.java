@@ -23,7 +23,7 @@ public class SharedServer extends InterfazRest {
 
         try {
             json.put("nombreUsuario", usuario);
-            json.put("contraseña",contrasena);
+            json.put("contrasena",contrasena);
         }
         catch(JSONException e)
         {
