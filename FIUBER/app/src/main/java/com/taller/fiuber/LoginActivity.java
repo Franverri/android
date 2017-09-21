@@ -48,7 +48,7 @@ import org.json.JSONObject;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity  {
+public class LoginActivity extends HashFunction  {
 
     private static final String TAG = "LoginActivity";
     SharedServer sharedServer;
@@ -83,9 +83,9 @@ public class LoginActivity extends AppCompatActivity  {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         SharedPreferences.Editor editorShared = sharedPref.edit();
         //editorShared.putInt("prueba", 0);
-        //editorShared.putBoolean("logueado", true);
+        editorShared.putBoolean("logueado", true);
         //editorShared.clear();
-        //editorShared.apply();
+        editorShared.apply();
 
         int intPrueba = sharedPref.getInt("prueba", -1);
         boolean boolPrueba = sharedPref.getBoolean("boole", false);
