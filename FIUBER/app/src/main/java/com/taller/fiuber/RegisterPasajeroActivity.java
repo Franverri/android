@@ -2,12 +2,18 @@ package com.taller.fiuber;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class RegisterPasajeroActivity extends AppCompatActivity {
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+public class RegisterPasajeroActivity extends HashFunction {
 
     private static final String TAG = "RegisterPasajeroAct";
 
@@ -49,6 +55,8 @@ public class RegisterPasajeroActivity extends AppCompatActivity {
                 Log.v(TAG, "Nombre     : "+strNombre);
                 Log.v(TAG, "Apellido   : "+strApellido);
                 Log.v(TAG, "Cuenta Face: "+strCuentaFacebook);
+
+                computeSHAHash(strContraseña);
             }
         });
     }

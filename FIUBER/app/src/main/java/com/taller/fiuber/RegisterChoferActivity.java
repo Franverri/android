@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
-public class RegisterChoferActivity extends AppCompatActivity {
+public class RegisterChoferActivity extends HashFunction {
 
     private static final String TAG = "RegisterChoferActivity";
 
@@ -118,6 +118,7 @@ public class RegisterChoferActivity extends AppCompatActivity {
                 Log.v(TAG, "Aire       : "+aireAcondicionado);
                 Log.v(TAG, "Música     : "+strMusicaAuto);
 
+                computeSHAHash(strContraseña);
             }
         });
     }

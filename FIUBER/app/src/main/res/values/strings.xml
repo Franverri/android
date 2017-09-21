@@ -78,5 +78,13 @@
     <string name="profile_save">Guardar cambios</string>
 
 
+    <!-- Strings related to Map screen -->
+    <string name="buscar_ruta">Buscar ruta</string>
+    <string name="km_ruta">0 km</string>
+    <string name="min_ruta">0 min</string>
+    <string name="direccion_origen">Dirección de origen</string>
+    <string name="direccion_destino">Dirección destino</string>
+    <string name="confirmar_viaje">Confirmar viaje</string>
+
 
 </resources>
