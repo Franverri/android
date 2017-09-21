@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -60,9 +61,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         boolean permissionGranted = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
         if(permissionGranted) {
-            // {Some Code}
+            Log.v(TAG, "Ya tiene los permisos de localización necesarios");
         } else {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+            Log.v(TAG, "Se le otrogaron los permisos de localización necesarios");
         }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -71,8 +73,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         btnFindPath = (Button) findViewById(R.id.btnFindPath);
-        //etOrigin = (EditText) findViewById(R.id.etOrigin);
-        //etDestination = (EditText) findViewById(R.id.etDestination);
 
         //AUTO Complete Origen
         PlaceAutocompleteFragment autocompleteFragmentOrigen = (PlaceAutocompleteFragment)
@@ -85,7 +85,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // TODO: Get info about the selected place.
                 Log.v(TAG, "Origen: " + place.getName());
                 Log.v(TAG, "Address: " + place.getAddress());
-                //strOrigen = place.getName().toString();
                 strOrigen = place.getAddress().toString();
             }
 
@@ -107,7 +106,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // TODO: Get info about the selected place.
                 Log.v(TAG, "Destino: " + place.getName());
                 Log.v(TAG, "Address: " + place.getAddress());
-                //strDestino = place.getName().toString();
                 strDestino = place.getAddress().toString();
             }
 
@@ -118,6 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        //Click en el boton de "Buscar Ruta"
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,8 +126,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void sendRequest() {
-        //String origin = etOrigin.getText().toString();
-        //String destination = etDestination.getText().toString();
         String origin = strOrigen;
         String destination = strDestino;
 
@@ -170,7 +167,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Log.v("ERROR", "ENTRO ACA");
+            Log.v(TAG, "Problema con los permisos de localización");
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -218,6 +215,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
+
+        //Obtengo la hora actual
+        int horaActual = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int minutosActuales = Calendar.getInstance().get(Calendar.MINUTE);
+        Log.v(TAG, "Hora actual     : "+ horaActual);
+        Log.v(TAG, "Minutos actuales: "+ minutosActuales);
+
 
         for (Route route : routes) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
