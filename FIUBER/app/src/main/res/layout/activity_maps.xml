@@ -42,6 +42,14 @@
             android:text="@string/confirmar_viaje"
             android:id="@+id/btnConfirmarViaje"
             android:layout_gravity="center"/>
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mi ubicación"
+            android:id="@+id/btnUbicacion"
+            android:layout_gravity="center"/>
     </LinearLayout>
 
     <LinearLayout

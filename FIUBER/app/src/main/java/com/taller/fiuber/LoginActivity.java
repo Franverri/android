@@ -53,6 +53,7 @@ public class LoginActivity extends HashFunction  {
     private static final String TAG = "LoginActivity";
     SharedServer sharedServer;
     SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -81,11 +82,11 @@ public class LoginActivity extends HashFunction  {
 
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorShared = sharedPref.edit();
+        editorShared = sharedPref.edit();
         //editorShared.putInt("prueba", 0);
-        editorShared.putBoolean("logueado", true);
+        //editorShared.putBoolean("logueado", true);
         //editorShared.clear();
-        editorShared.apply();
+        //editorShared.apply();
 
         int intPrueba = sharedPref.getInt("prueba", -1);
         boolean boolPrueba = sharedPref.getBoolean("boole", false);
@@ -183,6 +184,11 @@ public class LoginActivity extends HashFunction  {
                 Log.v(TAG, "Token: "+strToken);
             } catch (JSONException e) {
                 Log.v(TAG, "Error al intentar leer el token");
+            }
+            if(codigoServidor == 200){
+                editorShared.putBoolean("logueado", true);
+                editorShared.apply();
+                goMain();
             }
         }
     }
