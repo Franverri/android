@@ -56,3 +56,9 @@ freeline_project_description.json
 
 # Mac OS
 .DS_Store
+
+
+# documentacion
+**/FIUBER/documentacion/latex
+**/FIUBER/documentacion/html
+

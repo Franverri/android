@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.x">
+<Placemark>
+    <name>franco sale de su casa</name>
+        <Point><coordinates>-109.0450005395891,33.39487928579279,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>franco camina un paso</name>
+        <Point><coordinates>-110.0450005395891,33.39487928579279,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>franco se canso y se vuelve</name>
+        <Point><coordinates>-111.0450005395891,33.39487928579279,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>franco murio</name>
+        <Point><coordinates>-112.0450005395891,33.39487928579279,0</coordinates></Point>
+</Placemark>
+</kml>
