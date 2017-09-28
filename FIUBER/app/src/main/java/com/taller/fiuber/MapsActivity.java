@@ -421,7 +421,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void goProfile() {
         Intent intent = new Intent(this, ProfileActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

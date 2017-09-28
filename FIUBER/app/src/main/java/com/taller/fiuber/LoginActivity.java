@@ -368,7 +368,7 @@ public class LoginActivity extends HashFunction  {
     }
 
     private void goMain() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

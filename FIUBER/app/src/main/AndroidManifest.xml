@@ -43,9 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/Main" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".RegisterChoferActivity" />
         <activity android:name=".RegisterPasajeroActivity" />
