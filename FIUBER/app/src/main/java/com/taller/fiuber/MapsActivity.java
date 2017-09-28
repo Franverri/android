@@ -1,22 +1,39 @@
 package com.taller.fiuber;
 
+import android.*;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,16 +50,16 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.jar.*;
+import java.util.jar.Manifest;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener, ActivityCompat.OnRequestPermissionsResultCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, DirectionFinderListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = "MapsActivity";
 
     private GoogleMap mMap;
     private UiSettings mUiSettings;
     private Button btnFindPath;
-    private EditText etOrigin;
-    private EditText etDestination;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
@@ -51,16 +68,75 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String strDestino;
     private String duracionViaje;
     private String kilometrosViaje;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private Button btnUbicacion;
+    private double latitud;
+    private double longitud;
+
+    SharedServer sharedServer;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+    NavigationView navigationView;
+
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        //Sacarle la barra de notificaciones
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_maps);
+
+        //Iniciliazación sharedPref
+        sharedServer = new SharedServer();
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+
+        //Menu de navegación lateral
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_menu);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+
+                switch (item.getItemId()){
+                    case R.id.nav_account:
+                        Log.v(TAG, "Perfil clikeado");
+                        goProfile();
+                        return true;
+                    case R.id.nav_settings:
+                        Log.v(TAG, "Configuración clikeado");
+                        return true;
+                    case R.id.nav_logout:
+                        LoginManager.getInstance().logOut();
+                        Log.v(TAG, "Cerrar sesión clikeado");
+                        editorShared.remove("logueado");
+                        editorShared.apply();
+                        goLogin();
+                        return true;
+                }
+                return false;
+            }
+        });
 
         //Permisos de localizacion
         boolean permissionGranted = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
-        if(permissionGranted) {
+        if (permissionGranted) {
             Log.v(TAG, "Ya tiene los permisos de localización necesarios");
         } else {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 200);
@@ -120,20 +196,88 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendRequest();
+                sendRequest(strOrigen, strDestino);
+            }
+        });
+
+        //Mi ubicación
+        btnUbicacion = (Button) findViewById(R.id.btnUbicacion);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                latitud = location.getLatitude();
+                longitud = location.getLongitude();
+                Log.v(TAG, "Latitud: "+location.getLatitude() + " Longitud: "+ location.getLongitude());
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{
+                    android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.INTERNET
+            }, 10);
+            return;
+        } else {
+            configureButton();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+            case 10:
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    configureButton();
+                    return;
+                }
+        }
+    }
+
+    private void configureButton(){
+        btnUbicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
+                Log.v(TAG, "Latitud: "+latitud + " Longitud: "+ longitud);
             }
         });
     }
 
-    private void sendRequest() {
-        String origin = strOrigen;
-        String destination = strDestino;
+    private void sendRequest(String origin, String destination) {
+        origin = strOrigen;
+        destination = strDestino;
+        Log.v(TAG, "Origen : " + origin);
+        Log.v(TAG, "Destino: " + destination);
 
-        if (origin.isEmpty()) {
+        if (origin == null) {
             Toast.makeText(this, "Ingrese la dirección de origen", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (destination.isEmpty()) {
+        if (destination == null) {
             Toast.makeText(this, "Ingrese la dirección de destino", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -170,10 +314,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.v(TAG, "Problema con los permisos de localización");
             return;
         }
-        mMap.setMyLocationEnabled(true);
+        //mMap.setMyLocationEnabled(true);
         mUiSettings = mMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(true);
-        mUiSettings.setMyLocationButtonEnabled(true);
+        //mUiSettings.setMyLocationButtonEnabled(true);
+
+        final GoogleMap finalMap = mMap;
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                //LatLng loc = new LatLng(finalMap.getMyLocation().getLatitude(),finalMap.getMyLocation().getLongitude());
+                LatLng loc = new LatLng(-34.617308, -58.368349);
+                mMap.addMarker(new MarkerOptions()
+                        .position(loc)
+                        .title("FIUBA")
+                );
+                finalMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15));
+                Log.v(TAG, "myLocation clikeado");
+                return true;
+            }
+        });
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
@@ -251,5 +411,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
         }
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void goProfile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
     }
 }
