@@ -23,12 +23,6 @@
                 android:layout_height="wrap_content"
                 android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
                 />
-            <Button
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/LocationFindPath"
-                android:layout_gravity="center"/>
         </LinearLayout>
 
         <LinearLayout
@@ -66,13 +60,6 @@
                 android:id="@+id/btnConfirmarViaje"
                 android:layout_gravity="center"/>
 
-            <Button
-                android:layout_weight="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mi ubicación"
-                android:id="@+id/btnUbicacion"
-                android:layout_gravity="center"/>
         </LinearLayout>
 
         <LinearLayout

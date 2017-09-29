@@ -40,6 +40,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -201,14 +202,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         //Mi ubicación
-        btnUbicacion = (Button) findViewById(R.id.btnUbicacion);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 latitud = location.getLatitude();
                 longitud = location.getLongitude();
+                LatLng ubicacion = new LatLng(latitud, longitud);
                 Log.v(TAG, "Latitud: "+location.getLatitude() + " Longitud: "+ location.getLongitude());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion, 15));
             }
 
             @Override
@@ -233,8 +235,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.INTERNET
             }, 10);
             return;
-        } else {
-            configureButton();
         }
     }
 
@@ -244,27 +244,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case 10:
-                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    configureButton();
-                    return;
-                }
-        }
-    }
-
-    private void configureButton(){
-        btnUbicacion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
-                Log.v(TAG, "Latitud: "+latitud + " Longitud: "+ longitud);
-            }
-        });
     }
 
     private void sendRequest(String origin, String destination) {
@@ -314,35 +293,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.v(TAG, "Problema con los permisos de localización");
             return;
         }
-        //mMap.setMyLocationEnabled(true);
+        mMap.setMyLocationEnabled(true);
         mUiSettings = mMap.getUiSettings();
         mUiSettings.setZoomControlsEnabled(true);
-        //mUiSettings.setMyLocationButtonEnabled(true);
+        mUiSettings.setMyLocationButtonEnabled(true);
+
+        locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
 
         final GoogleMap finalMap = mMap;
-        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
-            @Override
-            public boolean onMyLocationButtonClick() {
-                //LatLng loc = new LatLng(finalMap.getMyLocation().getLatitude(),finalMap.getMyLocation().getLongitude());
-                LatLng loc = new LatLng(-34.617308, -58.368349);
-                mMap.addMarker(new MarkerOptions()
-                        .position(loc)
-                        .title("FIUBA")
-                );
-                finalMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 15));
-                Log.v(TAG, "myLocation clikeado");
-                return true;
-            }
-        });
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.personicon))
-        );
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     @Override
