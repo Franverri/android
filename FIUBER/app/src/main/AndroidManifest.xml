@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -60,9 +60,12 @@
 
         <activity
             android:name=".MapsActivity"
-            android:theme="@style/Main"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".ProfileActivity"></activity>
+            android:label="@string/title_activity_maps"
+            android:theme="@style/Main" />
+        <activity android:name=".ProfileActivity" />
+        <activity
+            android:name=".MainChoferActivity"
+            android:theme="@style/Main" />
     </application>
 
 </manifest>

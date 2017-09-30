@@ -121,6 +121,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         return true;
                     case R.id.nav_settings:
                         Log.v(TAG, "Configuración clikeado");
+                        goNuevo();
                         return true;
                     case R.id.nav_logout:
                         LoginManager.getInstance().logOut();
@@ -379,6 +380,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void goProfile() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void goNuevo() {
+        Intent intent = new Intent(this, MainChoferActivity.class);
         startActivity(intent);
     }
 }
