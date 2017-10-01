@@ -35,11 +35,13 @@
                 android:paddingLeft="250dp">
 
                 <Button
+                    android:id="@+id/btnAceptar"
                     android:layout_width="30dp"
                     android:layout_height="40dp"
                     android:background="@drawable/check"/>
 
                 <Button
+                    android:id="@+id/btnRechazar"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@drawable/ic_action_cross"/>
