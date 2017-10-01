@@ -6,6 +6,7 @@
     <string name="menu_perfil">Mi perfil</string>
     <string name="menu_configuracion">Configuración</string>
     <string name="menu_logout">Cerrar sesión</string>
+    <string name="menu_autos">Mis autos</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Usuario</string>
@@ -76,6 +77,7 @@
 
     <!-- Strings related to Perfil screen -->
     <string name="profile_save">Guardar cambios</string>
+
 
 
 </resources>

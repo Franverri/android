@@ -48,7 +48,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
             public void onClick(View v) {
                 Log.v("CARDVIEW", "Rechazar clickeado de item "+position);
                 listItems.remove(position);
-                notifyDataSetChanged();
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, getItemCount());
             }
         });
     }
