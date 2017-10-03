@@ -6,44 +6,40 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
+import com.facebook.GraphResponse;
 import com.facebook.LoggingBehavior;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Objects;
 
 /**
  * A login screen that offers login via email/password.
@@ -54,18 +50,6 @@ public class LoginActivity extends HashFunction  {
     SharedServer sharedServer;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private Usuario usuarioIngresado = null;
 
     // UI references.
     private AutoCompleteTextView emailIngresado;
@@ -83,26 +67,18 @@ public class LoginActivity extends HashFunction  {
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
-        //editorShared.putInt("prueba", 0);
-        //editorShared.putBoolean("logueado", true);
-        //editorShared.clear();
-        //editorShared.apply();
-
-        int intPrueba = sharedPref.getInt("prueba", -1);
-        boolean boolPrueba = sharedPref.getBoolean("boole", false);
-        Log.v(TAG, "Prueba SharedPref: "+intPrueba);
-        Log.v(TAG, "Prueba SharedPref: "+boolPrueba);
-
-
 
         //Inicializa el sdk de facebook.
         FacebookSdk.sdkInitialize(getApplicationContext());
         FacebookSdk.addLoggingBehavior(LoggingBehavior.REQUESTS);
 
         //Si ya se encuentra logeado va directo a la pantalla principal
-        //Falta verificar tambien el login con usuario y contraseña (Esta solo el de Facebook)
         if ((AccessToken.getCurrentAccessToken() != null) ||(sharedPref.getBoolean("logueado", false))){
-            goMain();
+            if(Objects.equals(sharedPref.getString("tipo", null), "chofer")){
+                goMainChofer();
+            } else {
+                goMainPasajero();
+            }
         }
 
         setContentView(R.layout.activity_login);
@@ -115,6 +91,8 @@ public class LoginActivity extends HashFunction  {
         btnLogIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                 attemptLogin();
             }
         });
@@ -153,8 +131,18 @@ public class LoginActivity extends HashFunction  {
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                goMain();
-                Log.i(TAG, "Inicio sesión con Facebook exitoso");
+                final AccessToken accessToken = loginResult.getAccessToken();
+
+                GraphRequestAsyncTask request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject user, GraphResponse graphResponse) {
+                        String nombreFace = user.optString("name");
+                        String IDFace = user.optString("id");
+                        Log.v(TAG, "Nombre Face: "+nombreFace);
+                        Log.v(TAG, "ID Face    : "+IDFace);
+                    }
+                }).executeAsync();
+                goMainPasajero();
             }
 
             @Override
@@ -175,20 +163,39 @@ public class LoginActivity extends HashFunction  {
     {
         @Override
         public void ejecutar(JSONObject respuesta, long codigoServidor) {
-                String codStr = Long.toString(codigoServidor);
-                Log.v(TAG, "Codigo server: "+codStr);
-                String str = respuesta.toString();
-                Log.v(TAG, "Respueta server: "+str);
-            try {
-                String strToken = respuesta.getString("token");
-                Log.v(TAG, "Token: "+strToken);
-            } catch (JSONException e) {
-                Log.v(TAG, "Error al intentar leer el token");
-            }
+            String str = respuesta.toString();
+            Log.v(TAG, "Respueta server: "+str);
+
             if(codigoServidor == 200){
-                editorShared.putBoolean("logueado", true);
-                editorShared.apply();
-                goMain();
+                //Usuario y contraseña correctos
+                try {
+                    String strToken = respuesta.getString("token");
+                    Log.v(TAG, "Token: "+strToken);
+                    String strTipo = respuesta.getString("tipo");
+                    Log.v(TAG, "Tipo: "+strTipo);
+                    editorShared.putBoolean("logueado", true);
+                    editorShared.putString("tipo", strTipo);
+                    editorShared.apply();
+                    if(Objects.equals(strTipo, "chofer")){
+                        Log.v(TAG, "ENRTRA ACA");
+                        goMainChofer();
+                    } else {
+                        goMainPasajero();
+                    }
+                } catch (JSONException e) {
+                    Log.v(TAG, "Error al intentar leer el JSON");
+                }
+            } else {
+                //El usuario no existe o la contraseña es invalida
+                String strMsj;
+                try {
+                    strMsj = respuesta.getString("message");
+                    Log.v(TAG, "Mensaje: "+strMsj);
+                    showProgress(false);
+                    Toast.makeText(getApplicationContext(), strMsj, Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    Log.v(TAG, "Error al intentar leer el JSON");
+                }
             }
         }
     }
@@ -208,15 +215,6 @@ public class LoginActivity extends HashFunction  {
         String email = emailIngresado.getText().toString();
         String password = contraseñaIngresada.getText().toString();
 
-        //Log.v(TAG, email);
-        //Log.v(TAG, password);
-
-        //Prueba dummy de autenticación con el server
-
-        sharedServer.obtenerToken(email,password,new IngresarUsuarioCallback());
-
-        // ---------- Fin prueba dummy --------
-
         boolean cancel = false;
         View focusView = null;
 
@@ -232,44 +230,16 @@ public class LoginActivity extends HashFunction  {
             focusView = emailIngresado;
             cancel = true;
             Log.v(TAG, "Se intentó loguear sin ingresar ningun mail");
-        } else if (!isEmailValid(email)) {
-            emailIngresado.setError(getString(R.string.error_invalid_email));
-            focusView = emailIngresado;
-            cancel = true;
-            Log.v(TAG, "Se intento loguear con un mail incorrecto");
         }
 
-        if(!esUsuarioValido(email, password)){
-            emailIngresado.setError(getString(R.string.error_invalid_user));
-            focusView = emailIngresado;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // Hubo algún error en los campos ingresados
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+        //Autenticación con el server
+        if(!cancel) {
             showProgress(true);
-            usuarioIngresado = new Usuario(email, password);
-            usuarioIngresado.execute((Void) null);
+            sharedServer.obtenerToken(email, password, new IngresarUsuarioCallback());
+        } else {
+            // Algun campo incompleto
+            focusView.requestFocus();
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
-
-    private boolean esUsuarioValido(String email, String password) {
-        //TODO: Replace this with your own logic
-        return true;
     }
 
     /**
@@ -308,67 +278,14 @@ public class LoginActivity extends HashFunction  {
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class Usuario extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mail;
-        private final String contraseña;
-
-        Usuario(String email, String password) {
-            mail = email;
-            contraseña = password;
-        }
-
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(contraseña);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            usuarioIngresado = null;
-            showProgress(false);
-
-            if (success) {
-                //finish();
-                goMain();
-            } else {
-                contraseñaIngresada.setError(getString(R.string.error_incorrect_password));
-                contraseñaIngresada.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            usuarioIngresado = null;
-            showProgress(false);
-        }
+    private void goMainPasajero() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
-    private void goMain() {
-        Intent intent = new Intent(this, MapsActivity.class);
+    private void goMainChofer() {
+        Intent intent = new Intent(this, MainChoferActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

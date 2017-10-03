@@ -1,5 +1,8 @@
 package com.taller.fiuber;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -25,6 +28,10 @@ public class MainChoferActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private List<ListItem> listItems;
 
+    private SharedServer sharedServer;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editorShared;
+
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
@@ -40,6 +47,11 @@ public class MainChoferActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main_chofer);
+
+        //Iniciliazación sharedPref
+        sharedServer = new SharedServer();
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -80,7 +92,11 @@ public class MainChoferActivity extends AppCompatActivity {
                         Log.v(TAG, "Configuración clikeado");
                         return true;
                     case R.id.nav_logout:
+                        LoginManager.getInstance().logOut();
                         Log.v(TAG, "Cerrar sesión clikeado");
+                        editorShared.clear();
+                        editorShared.apply();
+                        goLogin();
                         return true;
                 }
                 return false;
@@ -94,5 +110,11 @@ public class MainChoferActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

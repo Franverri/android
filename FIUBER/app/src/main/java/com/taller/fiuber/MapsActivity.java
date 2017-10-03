@@ -126,7 +126,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     case R.id.nav_logout:
                         LoginManager.getInstance().logOut();
                         Log.v(TAG, "Cerrar sesión clikeado");
-                        editorShared.remove("logueado");
+                        editorShared.clear();
                         editorShared.apply();
                         goLogin();
                         return true;
