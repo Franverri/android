@@ -27,7 +27,11 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphRequestAsyncTask;
+import com.facebook.GraphResponse;
 import com.facebook.LoggingBehavior;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -46,18 +50,6 @@ public class LoginActivity extends HashFunction  {
     SharedServer sharedServer;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
-
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
-    private Usuario usuarioIngresado = null;
 
     // UI references.
     private AutoCompleteTextView emailIngresado;
@@ -139,8 +131,18 @@ public class LoginActivity extends HashFunction  {
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                final AccessToken accessToken = loginResult.getAccessToken();
+
+                GraphRequestAsyncTask request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject user, GraphResponse graphResponse) {
+                        String nombreFace = user.optString("name");
+                        String IDFace = user.optString("id");
+                        Log.v(TAG, "Nombre Face: "+nombreFace);
+                        Log.v(TAG, "ID Face    : "+IDFace);
+                    }
+                }).executeAsync();
                 goMainPasajero();
-                Log.i(TAG, "Inicio sesión con Facebook exitoso");
             }
 
             @Override
@@ -238,40 +240,6 @@ public class LoginActivity extends HashFunction  {
             // Algun campo incompleto
             focusView.requestFocus();
         }
-
-        /*
-        if(!esUsuarioValido(email, password)){
-            emailIngresado.setError(getString(R.string.error_invalid_user));
-            focusView = emailIngresado;
-            cancel = true;
-        }*/
-
-        /*
-        if (cancel) {
-            // Hubo algún error en los campos ingresados
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            usuarioIngresado = new Usuario(email, password);
-            usuarioIngresado.execute((Void) null);
-        }*/
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
-
-    private boolean esUsuarioValido(String email, String password) {
-        //TODO: Replace this with your own logic
-        return true;
     }
 
     /**
@@ -310,65 +278,6 @@ public class LoginActivity extends HashFunction  {
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    public class Usuario extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mail;
-        private final String contraseña;
-
-        Usuario(String email, String password) {
-            mail = email;
-            contraseña = password;
-        }
-
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(contraseña);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            usuarioIngresado = null;
-            showProgress(false);
-
-            if (success) {
-                //finish();
-                goMainPasajero();
-            } else {
-                contraseñaIngresada.setError(getString(R.string.error_incorrect_password));
-                contraseñaIngresada.requestFocus();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            usuarioIngresado = null;
-            showProgress(false);
-        }
-    }
-
     private void goMainPasajero() {
         Intent intent = new Intent(this, MapsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -383,12 +292,6 @@ public class LoginActivity extends HashFunction  {
 
     private void goRegister() {
         Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
-    }
-
-    private void goLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }
