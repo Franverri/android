@@ -13,15 +13,10 @@
     <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">Iniciar sesión</string>
     <string name="action_sign_in_short">Iniciar sesión</string>
-    <string name="error_invalid_email">Mail inválido</string>
-    <string name="error_invalid_password">Contraseña demasiado corta</string>
-    <string name="error_incorrect_password">Contraseña incorrecta</string>
     <string name="error_field_required">Campo necesario</string>
-    <string name="cerrar_sesion">Cerrar sesión</string>
     <string name="cancel_login">Proceso cancelado</string>
     <string name="error_login">Ocurrió un error</string>
     <string name="error_empty_password">Ingrese su contraseña</string>
-    <string name="error_invalid_user">Usuario inválido</string>
 
     <!-- Strings related to Facebook login -->
     <string name="facebook_app_id">772599149578608</string>
@@ -29,21 +24,21 @@
 
     <!-- Strings related to register -->
     <string name="register_text">¿No tienes cuenta? Regístrate</string>
-    <string name="register_in_mail">Ingrese su mail</string>
-    <string name="register_in_nombre">Ingrese su nombre</string>
-    <string name="register_in_apellido">Ingrese su apellido</string>
+    <string name="register_in_mail">Mail</string>
+    <string name="register_in_nombre">Nombre</string>
+    <string name="register_in_apellido">Apellido</string>
     <string name="opc_chofer">Chofer</string>
     <string name="opc_pasajero">Pasajero</string>
-    <string name="register_cuentaFace">Cuenta de Facebook</string>
-    <string name="register_in_cuentaFace">Ingrese su cuenta de Facebook</string>
+    <string name="register_in_cuentaFace">Cuenta de Facebook</string>
     <string name="info_auto">Información sobre el auto</string>
     <string name="info_personal">Información personal</string>
-    <string name="register_in_modelo">Ingrese el modelo de su auto</string>
-    <string name="register_in_color">Ingrese el color de su auto</string>
-    <string name="register_in_patente">Ingrese la patente de su auto</string>
-    <string name="register_in_anio">Ingrese el año de su auto</string>
+    <string name="register_in_modelo">Modelo del auto</string>
+    <string name="register_in_color">Color del auto</string>
+    <string name="register_in_patente">Patente del auto</string>
+    <string name="register_in_anio">Año del auto</string>
     <string name="register_in_usuario">Usuario</string>
     <string name="register_in_contrasenia">Contraseña</string>
+    <string name="register_in_fechaNacimiento">Fecha de nacimiento</string>
     <string name="estado1">Malo</string>
     <string name="estado2">Regular</string>
     <string name="estado3">Bueno</string>
@@ -51,29 +46,21 @@
     <string name="si">Si</string>
     <string name="no">No</string>
     <string name="register_aire">Aire acondicionado</string>
-    <string name="register_musica">Música</string>
-    <string name="register_in_musica">Ingrese la música escuchada en su auto</string>
+    <string name="register_in_musica">Música escuchada en el auto</string>
     <string name="info_cobranza">Información para pagos</string>
-    <string name="register_tarjetaCredito">Número de tarjeta de crédito</string>
-    <string name="register_in_tarjetaCredito">Ingrese el número de su tarjeta de crédito</string>
+    <string name="register_in_tarjetaCredito">Número de su tarjeta de crédito</string>
     <string name="register_btn">Registrarse</string>
+
+
     <string name="title_activity_maps">FIUBER</string>
     <string name="open">open</string>
     <string name="close">close</string>
-
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="action_settings">Settings</string>
 
     <!-- Strings related to Map screen -->
     <string name="buscar_ruta">Buscar ruta</string>
     <string name="km_ruta">0 km</string>
     <string name="min_ruta">0 min</string>
-    <string name="direccion_origen">Dirección de origen</string>
-    <string name="direccion_destino">Dirección destino</string>
     <string name="confirmar_viaje">Confirmar viaje</string>
-
 
     <!-- Strings related to Perfil screen -->
     <string name="profile_save">Guardar cambios</string>
