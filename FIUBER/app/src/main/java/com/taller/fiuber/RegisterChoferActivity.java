@@ -1,12 +1,18 @@
 package com.taller.fiuber;
 
+import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+
+import java.util.Calendar;
 
 public class RegisterChoferActivity extends HashFunction {
 
@@ -25,6 +31,10 @@ public class RegisterChoferActivity extends HashFunction {
     private String estadoAuto;
     private boolean aireAcondicionado;
     private EditText musicaAuto;
+    private Button btnFecha;
+    private EditText fechaNacimiento;
+    private int dia, mes, año;
+    private DatePickerDialog.OnDateSetListener mDataSetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +52,31 @@ public class RegisterChoferActivity extends HashFunction {
         patenteAuto = (EditText) findViewById(R.id.reg_patenteAuto);
         añoAuto = (EditText) findViewById(R.id.reg_anioAuto);
         musicaAuto = (EditText) findViewById(R.id.reg_musicaAuto);
+        btnFecha = (Button) findViewById(R.id.btnFecha);
+        fechaNacimiento = (EditText) findViewById(R.id.reg_fechaNacimiento);
+
+        btnFecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar calendar = Calendar.getInstance();
+                dia = calendar.get(Calendar.DAY_OF_MONTH);
+                mes = calendar.get(Calendar.MONTH);
+                año = calendar.get(Calendar.YEAR);
+
+                DatePickerDialog dialog = new DatePickerDialog(RegisterChoferActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth, mDataSetListener, año, mes, dia);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+
+            }
+        });
+
+        mDataSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int año, int mes, int dia) {
+                String fecha = dia+"/"+(mes+1)+"/"+año;
+                fechaNacimiento.setText(fecha);
+            }
+        };
 
         //Maneja la información del estado del auto según el boton que clickee
         RadioGroup radioGroupEstado = (RadioGroup) findViewById(R.id.reg_estado_grupo);
@@ -102,6 +137,7 @@ public class RegisterChoferActivity extends HashFunction {
                 String strPatenteAuto = patenteAuto.getText().toString();
                 String strAñoAuto = añoAuto.getText().toString();
                 String strMusicaAuto = musicaAuto.getText().toString();
+                String strFechaNacimiento = fechaNacimiento.getText().toString();
 
                 Log.v(TAG, "Usuario    : "+strUsuario);
                 Log.v(TAG, "Contraseña : "+strContraseña);
@@ -109,6 +145,7 @@ public class RegisterChoferActivity extends HashFunction {
                 Log.v(TAG, "Nombre     : "+strNombre);
                 Log.v(TAG, "Apellido   : "+strApellido);
                 Log.v(TAG, "Cuenta Face: "+strCuentaFacebook);
+                Log.v(TAG, "Fecha nacim: "+strFechaNacimiento);
                 Log.v(TAG, " ---AUTO----");
                 Log.v(TAG, "Modelo     : "+strModeloAuto);
                 Log.v(TAG, "Color      : "+strColorAuto);
