@@ -55,22 +55,24 @@ abstract public class InterfazRest {
                 {
                     //Configura post para que envie el json.
 
-                    Log.v("InterfazRest", "JSON enviado: ");
-                    Log.v("InterfazRest", json.toString());
+                    Log.v("InterfazRest", "JSON enviado: "+json.toString());
 
                     StringEntity entidad = new StringEntity(json.toString());
                     post.setEntity(entidad);
 
+                    Log.v("InterfazRest", "1");
+
                     //Envio y espero la peticion.
                     HttpResponse resp = httpClient.execute(post);
+                    Log.v("InterfazRest", "2");
                     String respStr = EntityUtils.toString(resp.getEntity());
+                    Log.v("InterfazRest", "3");
                     codigoServidor = resp.getStatusLine().getStatusCode();
+                    Log.v("InterfazRest", "4");
 
-                    Log.v("InterfazRest", "Respuesta server: ");
-                    Log.v("InterfazRest", respStr);
+                    Log.v("InterfazRest", "Respuesta server: "+respStr);
                     String codStr = Long.toString(codigoServidor);
-                    Log.v("InterfazRest", "Codigo server: ");
-                    Log.v("InterfazRest", codStr);
+                    Log.v("InterfazRest", "Codigo server: "+codStr);
 
                     result = new JSONObject(respStr);
                 }
