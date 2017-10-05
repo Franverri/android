@@ -50,6 +50,8 @@
     <string name="info_cobranza">Información para pagos</string>
     <string name="register_in_tarjetaCredito">Número de su tarjeta de crédito</string>
     <string name="register_btn">Registrarse</string>
+    <string name="registo_usr_exitoso">Usuario registrado correctamente</string>
+    <string name="registo_usr_error">Error al intentar registrar el usuario</string>
 
 
     <string name="title_activity_maps">FIUBER</string>
@@ -64,7 +66,6 @@
 
     <!-- Strings related to Perfil screen -->
     <string name="profile_save">Guardar cambios</string>
-
 
 
 </resources>

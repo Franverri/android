@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 public class SharedServer extends InterfazRest {
 
+    private static final String TAG = "SharedServer";
+
     private long id;
 
     private static final String URLAPIREST = "https://fiuberappserver.herokuapp.com";
@@ -29,38 +31,44 @@ public class SharedServer extends InterfazRest {
         {
 
         }
-        Log.v("URL", URLAPIREST+"/token");
+        Log.v(TAG, "URL: "+URLAPIREST+"/token");
         String str = json.toString();
-        Log.v("JSON", str);
+        Log.v(TAG, "JSON: "+ str);
         enviarPOST(URLAPIREST+"/token",json,callback);
     }
 
-    public void darAltaChofer(String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String modeloAuto, String colorAuto, String patenteAuto, String añoAuto, String musicaAuto, String estadoAuto, boolean aireAuto, JSONCallback callback)
+    public void darAltaUsuario(String tipo, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento, JSONCallback callback)
     {
         JSONObject jsonUsuario = new JSONObject();
-        JSONObject jsonAuto = new JSONObject();
 
         try {
-            jsonUsuario.put("type", "driver");
+            jsonUsuario.put("type", tipo);
             jsonUsuario.put("username", usuario);
             jsonUsuario.put("password", contraseña);
             //Ver tema facebook cono la API del APP Server
+            jsonUsuario.put("fb",
+                    new JSONArray()
+                            .put(new JSONObject()
+                                    .put("userId", "FACE ID")
+                                    .put("authToken", "FACE TOKEN")
+                            )
+            );
+            // ---FIN FACE---
             jsonUsuario.put("firstName", nombre);
             jsonUsuario.put("lastName", apellido);
-            //Ver si es necesaria la nacionalidad (De ser así agregar a la pantalla de registro)
+            jsonUsuario.put("country", "Argentina");
             jsonUsuario.put("email", mail);
-            jsonUsuario.put("username", usuario);
-            //Ver si es necesaria la fecha de nacimiento (De ser así agregar a la pantalla de registro)
-            //Ver tema imagen
-
-
-
+            jsonUsuario.put("birthdate", fechaNacimiento);
+            //jsonUsuario.put("image", "IMAGEN");
         }
         catch(JSONException e)
         {
 
         }
-        enviarPOST(URLAPIREST+"user/",jsonUsuario,callback);
+        Log.v(TAG, "URL: "+URLAPIREST+"/users");
+        String str = jsonUsuario.toString();
+        Log.v(TAG, "JSON: "+ str);
+        enviarPOST(URLAPIREST+"/users",jsonUsuario,callback);
     }
 
 }
