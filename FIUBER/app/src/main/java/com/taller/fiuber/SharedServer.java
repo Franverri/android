@@ -76,7 +76,7 @@ public class SharedServer extends InterfazRest {
         JSONObject jsonUsuario = new JSONObject();
 
         try {
-            jsonUsuario.put("idUsr", idUsr);
+            jsonUsuario.put("type", idUsr);
             jsonUsuario.put("username", usuario);
             jsonUsuario.put("password", contraseña);
             //Ver tema facebook cono la API del APP Server
@@ -92,6 +92,7 @@ public class SharedServer extends InterfazRest {
             jsonUsuario.put("lastName", apellido);
             jsonUsuario.put("country", "Argentina");
             jsonUsuario.put("email", mail);
+            jsonUsuario.put("birthdate", "fecha nacimiento");
             //jsonUsuario.put("image", "IMAGEN");
         }
         catch(JSONException e)

@@ -61,7 +61,8 @@ public class ProfileActivity extends HashFunction {
 
             computeSHAHash(strContraseña);
 
-            modificarPerfilenServidor("idUsr", strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, "Argentina");
+            //Por ahora se le manda un JSON cualquier y devuelve "OK"
+            modificarPerfilenServidor("2", strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, "Argentina");
             }
         });
     }
@@ -93,7 +94,6 @@ public class ProfileActivity extends HashFunction {
             if(codigoServidor == 200){
                 Log.i(TAG, "Modificación de usuario exitoso");
                 Toast.makeText(getApplicationContext(), R.string.modificacion_usr_exitoso, Toast.LENGTH_SHORT).show();
-                goMain();
             } else {
                 Log.w(TAG, "Error al intentar modificar el usuario");
                 Toast.makeText(getApplicationContext(), R.string.modificacion_usr_error, Toast.LENGTH_SHORT).show();
@@ -103,11 +103,5 @@ public class ProfileActivity extends HashFunction {
 
     private void modificarPerfilenServidor(String idUsr, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad){
         sharedServer.modificarUsuario(idUsr, usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, new ModificarUsuarioCallback());
-    }
-
-    private void goMain() {
-        Intent intent = new Intent(this, MapsActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
     }
 }

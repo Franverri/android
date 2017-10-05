@@ -170,6 +170,10 @@ abstract public class InterfazRest {
                     String respStr = EntityUtils.toString(resp.getEntity());
                     codigoServidor = resp.getStatusLine().getStatusCode();
 
+                    Log.v("InterfazRest", "Respuesta server: "+respStr);
+                    String codStr = Long.toString(codigoServidor);
+                    Log.v("InterfazRest", "Codigo server: "+codStr);
+
                     result = new JSONObject(respStr);
                 }
                 catch(Exception ex)
