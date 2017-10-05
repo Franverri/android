@@ -84,6 +84,7 @@ public class MainChoferActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.nav_account:
                         Log.v(TAG, "Perfil clikeado");
+                        goProfile();
                         return true;
                     case R.id.nav_autos:
                         Log.v(TAG, "Autos clikeado");
@@ -115,6 +116,11 @@ public class MainChoferActivity extends AppCompatActivity {
     private void goLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void goProfile() {
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 }
