@@ -1,6 +1,8 @@
 package com.taller.fiuber;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,11 +14,16 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
+import org.json.JSONObject;
+
 import java.util.Calendar;
 
 public class RegisterChoferActivity extends HashFunction {
 
     private static final String TAG = "RegisterChoferActivity";
+    private SharedServer sharedServer;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editorShared;
 
     private EditText usuario;
     private EditText contraseña;
@@ -40,6 +47,10 @@ public class RegisterChoferActivity extends HashFunction {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_chofer);
+
+        sharedServer = new SharedServer();
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
 
         usuario = (EditText) findViewById(R.id.reg_usuario);
         contraseña = (EditText) findViewById(R.id.reg_contrasenia);
@@ -156,7 +167,22 @@ public class RegisterChoferActivity extends HashFunction {
                 Log.v(TAG, "Música     : "+strMusicaAuto);
 
                 computeSHAHash(strContraseña);
+                registrarUsuarioEnServidor("driver", strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, "Argentina", strFechaNacimiento);
+
             }
         });
+    }
+
+    private class RegistrarUsuarioCallback extends JSONCallback {
+        @Override
+        public void ejecutar(JSONObject respuesta, long codigoServidor) {
+            Log.v(TAG, "Codigo server  :"+codigoServidor);
+            String str = respuesta.toString();
+            Log.v(TAG, "Respueta server: "+str);
+        }
+    }
+
+    private void registrarUsuarioEnServidor(String tipo, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento){
+        sharedServer.darAltaUsuario("driver", usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, fechaNacimiento, new RegisterChoferActivity.RegistrarUsuarioCallback());
     }
 }

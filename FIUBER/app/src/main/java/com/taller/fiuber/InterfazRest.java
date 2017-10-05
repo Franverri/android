@@ -60,15 +60,10 @@ abstract public class InterfazRest {
                     StringEntity entidad = new StringEntity(json.toString());
                     post.setEntity(entidad);
 
-                    Log.v("InterfazRest", "1");
-
                     //Envio y espero la peticion.
                     HttpResponse resp = httpClient.execute(post);
-                    Log.v("InterfazRest", "2");
                     String respStr = EntityUtils.toString(resp.getEntity());
-                    Log.v("InterfazRest", "3");
                     codigoServidor = resp.getStatusLine().getStatusCode();
-                    Log.v("InterfazRest", "4");
 
                     Log.v("InterfazRest", "Respuesta server: "+respStr);
                     String codStr = Long.toString(codigoServidor);
