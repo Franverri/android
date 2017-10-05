@@ -105,8 +105,8 @@ abstract public class InterfazRest {
 
                 get.setHeader("content-type", "application/json");
 
-                if(!token.isEmpty())
-                    get.setHeader("Authorization:", "Basic " + token);
+                //if(!token.isEmpty())
+                //    get.setHeader("Authorization:", "Basic " + token);
 
 
                 try
@@ -115,6 +115,10 @@ abstract public class InterfazRest {
                     HttpResponse resp = httpClient.execute(get);
                     String respStr = EntityUtils.toString(resp.getEntity());
                     codigoServidor = resp.getStatusLine().getStatusCode();
+
+                    Log.v("InterfazRest", "Respuesta server: "+respStr);
+                    String codStr = Long.toString(codigoServidor);
+                    Log.v("InterfazRest", "Codigo server: "+codStr);
 
                     result = new JSONObject(respStr);
                 }
@@ -152,8 +156,8 @@ abstract public class InterfazRest {
 
                 put.setHeader("content-type", "application/json");
 
-                if(!token.isEmpty())
-                    put.setHeader("Authorization:", "Basic "+token);
+                //if(!token.isEmpty())
+                //    put.setHeader("Authorization:", "Basic "+token);
 
                 try
                 {
@@ -165,6 +169,10 @@ abstract public class InterfazRest {
                     HttpResponse resp = httpClient.execute(put);
                     String respStr = EntityUtils.toString(resp.getEntity());
                     codigoServidor = resp.getStatusLine().getStatusCode();
+
+                    Log.v("InterfazRest", "Respuesta server: "+respStr);
+                    String codStr = Long.toString(codigoServidor);
+                    Log.v("InterfazRest", "Codigo server: "+codStr);
 
                     result = new JSONObject(respStr);
                 }

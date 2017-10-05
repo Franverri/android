@@ -66,6 +66,8 @@
 
     <!-- Strings related to Perfil screen -->
     <string name="profile_save">Guardar cambios</string>
+    <string name="modificacion_usr_exitoso">Cambios guardados exitosamente</string>
+    <string name="modificacion_usr_error">Error al modificar los datos</string>
 
 
 </resources>
