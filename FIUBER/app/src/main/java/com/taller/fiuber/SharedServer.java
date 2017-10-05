@@ -71,4 +71,43 @@ public class SharedServer extends InterfazRest {
         enviarPOST(URLAPIREST+"/users",jsonUsuario,callback);
     }
 
+    public void modificarUsuario(String idUsr, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, JSONCallback callback)
+    {
+        JSONObject jsonUsuario = new JSONObject();
+
+        try {
+            jsonUsuario.put("idUsr", idUsr);
+            jsonUsuario.put("username", usuario);
+            jsonUsuario.put("password", contraseña);
+            //Ver tema facebook cono la API del APP Server
+            jsonUsuario.put("fb",
+                    new JSONArray()
+                            .put(new JSONObject()
+                                    .put("userId", "FACE ID")
+                                    .put("authToken", "FACE TOKEN")
+                            )
+            );
+            // ---FIN FACE---
+            jsonUsuario.put("firstName", nombre);
+            jsonUsuario.put("lastName", apellido);
+            jsonUsuario.put("country", "Argentina");
+            jsonUsuario.put("email", mail);
+            //jsonUsuario.put("image", "IMAGEN");
+        }
+        catch(JSONException e)
+        {
+
+        }
+        Log.v(TAG, "URL: "+URLAPIREST+"/user/"+idUsr);
+        String str = jsonUsuario.toString();
+        Log.v(TAG, "JSON: "+ str);
+        enviarPUT(URLAPIREST+"/user/"+idUsr,jsonUsuario,callback);
+    }
+
+    public void obtenerDatosUsrServidor(String idUsr, JSONCallback callback)
+    {
+        Log.v(TAG, "JSON: "+ idUsr);
+        enviarGET(URLAPIREST+"/user/"+idUsr,callback);
+    }
+
 }
