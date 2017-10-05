@@ -2,6 +2,7 @@ package com.taller.fiuber;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -116,10 +118,24 @@ public class RegisterPasajeroActivity extends HashFunction {
             Log.v(TAG, "Codigo server  :"+codigoServidor);
             String str = respuesta.toString();
             Log.v(TAG, "Respueta server: "+str);
+            if(codigoServidor == 200){
+                Log.i(TAG, "Registro de usuario exitoso");
+                Toast.makeText(getApplicationContext(), R.string.registo_usr_exitoso, Toast.LENGTH_SHORT).show();
+                goLogin();
+            } else {
+                Log.w(TAG, "Error al intentar registrar el usuario");
+                Toast.makeText(getApplicationContext(), R.string.registo_usr_error, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     private void registrarUsuarioEnServidor(String tipo, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento){
         sharedServer.darAltaUsuario("passenger", usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, fechaNacimiento, new RegistrarUsuarioCallback());
+    }
+
+    private void goLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
