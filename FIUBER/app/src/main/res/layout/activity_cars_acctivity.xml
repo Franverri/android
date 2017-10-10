@@ -1,34 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.taller.fiuber.CarsActivity">
 
-    <com.bakerj.infinitecards.InfiniteCardView
-        android:id="@+id/cars_view"
-        app:animDuration="1000"
-        app:cardRatio="1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </com.bakerj.infinitecards.InfiniteCardView>
-
-    <LinearLayout
-        android:weightSum="2"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
+    <android.support.v7.widget.CardView
+        android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/cars_next"
-            android:text="Siguiente"
-            android:layout_weight="2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/cars_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Auto X"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="30dp"/>
 
-</RelativeLayout>
+            <com.bakerj.infinitecards.InfiniteCardView
+                android:id="@+id/cars_view"
+                app:animDuration="1000"
+                app:cardRatio="1"
+                android:layout_gravity="center"
+                android:layout_marginTop="35dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="380dp"
+                android:layout_height="400dp">
+
+            </com.bakerj.infinitecards.InfiniteCardView>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:id="@+id/cars_next"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Siguiente" />
+
+    <Button
+        android:id="@+id/cars_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar auto" />
+
+</LinearLayout>
