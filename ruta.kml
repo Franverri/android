@@ -1,19 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://earth.google.com/kml/2.x">
 <Placemark>
-    <name>franco sale de su casa</name>
-        <Point><coordinates>-109.0450005395891,33.39487928579279,0</coordinates></Point>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3683,-34.6175,0</coordinates></Point>
 </Placemark>
 <Placemark>
-    <name>franco camina un paso</name>
-        <Point><coordinates>-110.0450005395891,33.39487928579279,0</coordinates></Point>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3684,-34.6175,0</coordinates></Point>
 </Placemark>
 <Placemark>
-    <name>franco se canso y se vuelve</name>
-        <Point><coordinates>-111.0450005395891,33.39487928579279,0</coordinates></Point>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3685,-34.6175,0</coordinates></Point>
 </Placemark>
 <Placemark>
-    <name>franco murio</name>
-        <Point><coordinates>-112.0450005395891,33.39487928579279,0</coordinates></Point>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3686,-34.6175,0</coordinates></Point>
 </Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3687,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3688,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3689,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3690,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3691,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3692,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3693,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3694,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3695,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3696,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3697,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3698,-34.6175,0</coordinates></Point>
+</Placemark>
+<Placemark>
+    <name>Punto 1</name>
+        <Point><coordinates>-58.3699,-34.6175,0</coordinates></Point>
+</Placemark>
+
 </kml>

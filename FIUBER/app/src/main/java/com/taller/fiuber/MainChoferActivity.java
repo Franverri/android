@@ -92,6 +92,7 @@ public class MainChoferActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_autos:
                         Log.v(TAG, "Autos clikeado");
+                        goCars();
                         return true;
                     case R.id.nav_settings:
                         Log.v(TAG, "Configuración clikeado");
@@ -125,6 +126,11 @@ public class MainChoferActivity extends AppCompatActivity {
 
     private void goProfile() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void goCars() {
+        Intent intent = new Intent(this, CarsActivity.class);
         startActivity(intent);
     }
 }

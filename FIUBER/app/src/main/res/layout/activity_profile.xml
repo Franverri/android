@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Mail"
                 android:maxLines="1"
-                android:inputType="textEmailAddress"
+
                 android:layout_below="@+id/perfil_usuario"
                 android:layout_alignParentStart="true" />
 
