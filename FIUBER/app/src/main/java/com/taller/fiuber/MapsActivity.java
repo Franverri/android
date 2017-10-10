@@ -54,6 +54,10 @@ import java.util.List;
 import java.util.jar.*;
 import java.util.jar.Manifest;
 
+/**
+ * Pantalla principal para los usuarios de tipo pasajero en la cual se puede solicitar un viaje indicando
+ * dirección de origen y de destino. La ruta se mostrará en el mapa de la pantalla.
+ */
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, DirectionFinderListener, ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = "MapsActivity";
@@ -101,38 +105,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         editorShared = sharedPref.edit();
 
         //Menu de navegación lateral
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
-
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        navigationView = (NavigationView) findViewById(R.id.nav_menu);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-
-                switch (item.getItemId()){
-                    case R.id.nav_account:
-                        Log.v(TAG, "Perfil clikeado");
-                        goProfile();
-                        return true;
-                    case R.id.nav_settings:
-                        Log.v(TAG, "Configuración clikeado");
-                        return true;
-                    case R.id.nav_logout:
-                        LoginManager.getInstance().logOut();
-                        Log.v(TAG, "Cerrar sesión clikeado");
-                        editorShared.clear();
-                        editorShared.apply();
-                        goLogin();
-                        return true;
-                }
-                return false;
-            }
-        });
+        configurarMenuLateral();
 
         //Permisos de localizacion
         boolean permissionGranted = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -238,6 +211,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Configura el el menu lateral desplegable y identifica que acción realizar al clickear cada uno
+     * de los botones que lo componen.
+     */
+    public void configurarMenuLateral(){
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_menu);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+
+                switch (item.getItemId()){
+                    case R.id.nav_account:
+                        Log.v(TAG, "Perfil clikeado");
+                        goProfile();
+                        return true;
+                    case R.id.nav_settings:
+                        Log.v(TAG, "Configuración clikeado");
+                        return true;
+                    case R.id.nav_logout:
+                        LoginManager.getInstance().logOut();
+                        Log.v(TAG, "Cerrar sesión clikeado");
+                        editorShared.clear();
+                        editorShared.apply();
+                        goLogin();
+                        return true;
+                }
+                return false;
+            }
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(toggle.onOptionsItemSelected(item)) {
@@ -271,13 +283,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     * Se llamará cuando el mapa se encuentre listo para ser utilizado y se lo configra para que muestre
+     * los botones y realicé las acciones deseadas (Botones de zoom, de ubicación, obtener las actualizaciones
+     * de la posición, entre otros).
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -303,10 +311,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final GoogleMap finalMap = mMap;
     }
 
+    /**
+     * Muestra un loader indicando que se está buscando la ruta entre los puntos indicados
+     */
     @Override
     public void onDirectionFinderStart() {
-        progressDialog = ProgressDialog.show(this, "Please wait.",
-                "Finding direction..!", true);
+        progressDialog = ProgressDialog.show(this, "Por favor espere.",
+                "Buscando la mejor ruta.", true);
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
@@ -327,6 +338,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Marca en el mapa la ruta e indica también la duración de viaje junto con la distancia en km.
+     * Adicionalmente se obtiene la hora actual.
+     */
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
         progressDialog.dismiss();
@@ -371,12 +386,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    /**
+     * Transiciona la APP hacía la pantalla de login de usuarios.
+     */
     private void goLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    /**
+     * Transiciona la APP hacía la pantalla de prefil del usuario.
+     */
     private void goProfile() {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);

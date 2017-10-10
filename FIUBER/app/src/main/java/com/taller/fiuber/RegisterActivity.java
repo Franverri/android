@@ -8,6 +8,10 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+/**
+ * Pantalla de registro de usuarios en la que únicamente se seleccionará el tipo de usuario que desea
+ * registrar (Chofer o Pasajero).
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     @Override
@@ -32,11 +36,17 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Transiciona la APP hacía la pantalla de registro de pasajeros.
+     */
     private void goRegisterPasajero() {
         Intent intent = new Intent(this, RegisterPasajeroActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Transiciona la APP hacía la pantalla de registro de choferes.
+     */
     private void goRegisterChofer() {
         Intent intent = new Intent(this, RegisterChoferActivity.class);
         startActivity(intent);

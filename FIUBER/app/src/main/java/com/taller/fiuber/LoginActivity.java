@@ -42,7 +42,9 @@ import org.json.JSONObject;
 import java.util.Objects;
 
 /**
- * A login screen that offers login via email/password.
+ * Pantalla de inicio de sesión en la cual se puede ingresar mediante usuario y contraseña o a través de
+ * Facebook. Adicionalmente se ofrece la posibilidad de ir a registrarse en el caso de no disponer de un
+ * usuario.
  */
 public class LoginActivity extends HashFunction  {
 
@@ -118,6 +120,11 @@ public class LoginActivity extends HashFunction  {
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Controla el inicio de sesión mediante Facebook. En el caso de ser exitoso redirige el control hacía
+     * la pantalla principal de la aplicación. Caso contrario muestra en la misma pantalla información sobre
+     * el error o la cancelación del proceso.
+     */
     void manejarLoginFacebook() {
 
         faceLoginButton = (LoginButton) findViewById(R.id.face_login_button);
@@ -159,6 +166,12 @@ public class LoginActivity extends HashFunction  {
         });
     }
 
+    /**
+     * Contiene la información devuelta por el APP Server. Según el código devuelto por el servidor realiza
+     * distintas acciones. Código 200: corresponde a un usuario y contraseña correcto y redirige el control
+     * hacia la pantalla principal de pasajero o chofer según corresponda. Otro código: implica que el usuario
+     * no existe, por lo que se informa por pantalla que el usuario/contraseña son incorrectos.
+     */
     private class IngresarUsuarioCallback extends JSONCallback
     {
         @Override
@@ -201,9 +214,9 @@ public class LoginActivity extends HashFunction  {
     }
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * verifica que los campos de usuario y contraseña no estén vacios. De cumplirse estas condiciones procede
+     * a enviar la información al APP Server para validar si el usuario y contraseña son correctos. De lo contrario
+     * se le solicita al usuario que ingrese algun usuario/contraseña.
      */
     private void attemptLogin() {
 
@@ -243,7 +256,8 @@ public class LoginActivity extends HashFunction  {
     }
 
     /**
-     * Shows the progress UI and hides the login form.
+     * Muestra un loader para mejorar la UI y evidenciar que se está procesando la información para
+     * obtener una respuesta.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
@@ -278,18 +292,27 @@ public class LoginActivity extends HashFunction  {
         }
     }
 
+    /**
+     * Transiciona la APP hacía la pantalla principal para un usuario de tipo pasajero.
+     */
     private void goMainPasajero() {
         Intent intent = new Intent(this, MapsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    /**
+     * Transiciona la APP hacía la pantalla principal para un usuario de tipo chofer.
+     */
     private void goMainChofer() {
         Intent intent = new Intent(this, MainChoferActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    /**
+     * Transiciona la APP hacía la pantalla de registro de usuarios.
+     */
     private void goRegister() {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);

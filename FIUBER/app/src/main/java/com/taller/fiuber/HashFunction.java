@@ -9,6 +9,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Clase utilizada para hasehar la contraseña mediante SHA 1
+ */
 abstract public class HashFunction extends AppCompatActivity {
     private static final String TAG = "Hash SHA-1";
     private String SHAHash;
