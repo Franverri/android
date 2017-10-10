@@ -66,6 +66,7 @@
         <activity
             android:name=".MainChoferActivity"
             android:theme="@style/Main" />
+        <activity android:name=".CarsActivity"></activity>
     </application>
 
 </manifest>
