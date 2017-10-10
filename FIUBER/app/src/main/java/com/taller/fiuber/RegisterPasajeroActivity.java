@@ -24,6 +24,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 
+/**
+ * Pantalla de registro de choferes en la cual el usuario debe ingresar todos sus datos.
+ */
 public class RegisterPasajeroActivity extends HashFunction {
 
     private static final String TAG = "RegisterPasajeroAct";
@@ -112,6 +115,10 @@ public class RegisterPasajeroActivity extends HashFunction {
         });
     }
 
+    /**
+     * Clase en la cual se almacena la información devuelta por el APP Server luego de la llamada para
+     * registrar un chofer.
+     */
     private class RegistrarUsuarioCallback extends JSONCallback {
         @Override
         public void ejecutar(JSONObject respuesta, long codigoServidor) {
@@ -129,10 +136,16 @@ public class RegisterPasajeroActivity extends HashFunction {
         }
     }
 
+    /**
+     * Envía la información ingresada por el usuario hacía el APP Server para su procesamiento.
+     */
     private void registrarUsuarioEnServidor(String tipo, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento){
         sharedServer.darAltaUsuario("passenger", usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, fechaNacimiento, new RegistrarUsuarioCallback());
     }
 
+    /**
+     * Transiciona la APP hacía la pantalla de inicio de sesión.
+     */
     private void goLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

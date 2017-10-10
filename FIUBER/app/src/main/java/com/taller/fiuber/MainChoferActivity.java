@@ -20,6 +20,10 @@ import com.facebook.login.LoginManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Pantalla principal para los usuarios de tipo chofer en la cual se van a mostrar todos los viajes
+ * disponibles dandole la opción al chofer de aceptar o rechazar cada uno de ellos.
+ */
 public class MainChoferActivity extends AppCompatActivity {
 
     private static final String TAG = "MainChoferActivity";

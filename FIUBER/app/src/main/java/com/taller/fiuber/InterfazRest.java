@@ -13,6 +13,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+/**
+ * Encargada de implementar todas las conexiones directas con el APP Server
+ */
 abstract public class InterfazRest {
 
     private long id;
@@ -32,6 +35,10 @@ abstract public class InterfazRest {
     }
 
 
+    /**
+     * Envía un JSON con datos a la URL pasada como parámetro (que será la del APP Server) mediante un POST
+     * para luego almacenar la respuesta recibida en otro JSON (callback) que finalmente sera procesado.
+     */
     protected void enviarPOST(final String URL, final JSONObject json, final JSONCallback callback)
     {
         class POST extends AsyncTask<String,Integer,JSONObject> {
@@ -79,6 +86,9 @@ abstract public class InterfazRest {
                 return result;
             }
 
+            /**
+             * Método en el cual se procede a ejecutar/procesar la respuesta del APP Server
+             */
             protected void onPostExecute(JSONObject result) {
                 callback.ejecutar(result, codigoServidor);
             }
@@ -89,6 +99,10 @@ abstract public class InterfazRest {
         peticion.execute();
     }
 
+    /**
+     * Envía un JSON con datos a la URL pasada como parámetro (que será la del APP Server) mediante un GET
+     * para luego almacenar la respuesta recibida en otro JSON (callback) que finalmente sera procesado.
+     */
     protected void enviarGET(final String URL, final JSONCallback callback)
     {
         class GET extends AsyncTask<String,Integer,JSONObject> {
@@ -130,6 +144,9 @@ abstract public class InterfazRest {
                 return result;
             }
 
+            /**
+             * Método en el cual se procede a ejecutar/procesar la respuesta del APP Server
+             */
             protected void onPostExecute(JSONObject result) {
                 callback.ejecutar(result, codigoServidor);
             }
@@ -140,6 +157,10 @@ abstract public class InterfazRest {
         peticion.execute();
     }
 
+    /**
+     * Envía un JSON con datos a la URL pasada como parámetro (que será la del APP Server) mediante un PUT
+     * para luego almacenar la respuesta recibida en otro JSON (callback) que finalmente sera procesado.
+     */
     protected void enviarPUT(final String URL, final JSONObject json, final JSONCallback callback)
     {
         class PUT extends AsyncTask<String,Integer,JSONObject> {
@@ -184,6 +205,9 @@ abstract public class InterfazRest {
                 return result;
             }
 
+            /**
+             * Método en el cual se procede a ejecutar/procesar la respuesta del APP Server
+             */
             protected void onPostExecute(JSONObject result) {
                 callback.ejecutar(result, codigoServidor);
             }

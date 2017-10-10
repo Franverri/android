@@ -20,6 +20,9 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 
+/**
+ * Pantalla de registro de choferes en la cual el usuario debe ingresar todos sus datos.
+ */
 public class RegisterChoferActivity extends HashFunction {
 
     private static final String TAG = "RegisterChoferActivity";
@@ -175,6 +178,10 @@ public class RegisterChoferActivity extends HashFunction {
         });
     }
 
+    /**
+     * Clase en la cual se almacena la información devuelta por el APP Server luego de la llamada para
+     * registrar un chofer.
+     */
     private class RegistrarUsuarioCallback extends JSONCallback {
         @Override
         public void ejecutar(JSONObject respuesta, long codigoServidor) {
@@ -192,10 +199,16 @@ public class RegisterChoferActivity extends HashFunction {
         }
     }
 
+    /**
+     * Envía la información ingresada por el usuario hacía el APP Server para su procesamiento.
+     */
     private void registrarUsuarioEnServidor(String tipo, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento){
         sharedServer.darAltaUsuario("driver", usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, fechaNacimiento, new RegisterChoferActivity.RegistrarUsuarioCallback());
     }
 
+    /**
+     * Transiciona la APP hacía la pantalla de inicio de sesión.
+     */
     private void goLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

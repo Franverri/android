@@ -19,6 +19,10 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase que se ocupa de obtener la ruta a través del envío de los datos necesarios a Google Maps y luego
+ * decodifica el JSON que recibe como respuesta
+ */
 public class DirectionFinder {
     private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
     private static final String GOOGLE_API_KEY = "AIzaSyB77lY-c3nJQJ8Atbv9hkKauZMcULHBHDI";
@@ -37,6 +41,9 @@ public class DirectionFinder {
         new DownloadRawData().execute(createUrl());
     }
 
+    /**
+     * Crea la URL en la cual se le envían los datos a Google Maps (Origen y destino)
+     */
     private String createUrl() throws UnsupportedEncodingException {
         String urlOrigin = URLEncoder.encode(origin, "utf-8");
         String urlDestination = URLEncoder.encode(destination, "utf-8");
@@ -80,6 +87,10 @@ public class DirectionFinder {
         }
     }
 
+    /**
+     * Parsea el JSON que recibe como respuesta desde Google Maps para obtener la ruta, la distancia
+     * y la duración del viaje
+     */
     private void parseJSon(String data) throws JSONException {
         if (data == null)
             return;
@@ -113,6 +124,9 @@ public class DirectionFinder {
         listener.onDirectionFinderSuccess(routes);
     }
 
+    /**
+     * Retorna toda la lista de puntos intermedios que debe recorrer para generar la ruta correctamente
+     */
     private List<LatLng> decodePolyLine(final String poly) {
         int len = poly.length();
         int index = 0;

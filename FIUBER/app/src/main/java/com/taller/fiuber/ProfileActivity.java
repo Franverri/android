@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+/**
+ * Pantalla de perfil en la que se mostraran los datos del usuario que se encuentra logueado
+ */
 public class ProfileActivity extends HashFunction {
 
     private static final String TAG = "ProfileActivity";
@@ -67,6 +70,10 @@ public class ProfileActivity extends HashFunction {
         });
     }
 
+    /**
+     * Clase utilizada para procesar la respuesta del APP Server al enviarle una petición para obtener
+     * los datos de un usuario específico.
+     */
     private class PerfilUsuarioCallback extends JSONCallback {
         @Override
         public void ejecutar(JSONObject respuesta, long codigoServidor) {
@@ -81,10 +88,17 @@ public class ProfileActivity extends HashFunction {
         }
     }
 
+    /**
+     * Envía la petición al APP Server para obtener los datos de un usuario específico.
+     */
     private void cargarDatosUsuario(String idUsr){
         sharedServer.obtenerDatosUsrServidor(idUsr, new PerfilUsuarioCallback());
     }
 
+    /**
+     * Clase utilizada para procesar la respuesta del APP Server al enviarle una petición para modificar
+     * los datos de un usuario específico.
+     */
     private class ModificarUsuarioCallback extends JSONCallback {
         @Override
         public void ejecutar(JSONObject respuesta, long codigoServidor) {
@@ -101,6 +115,9 @@ public class ProfileActivity extends HashFunction {
         }
     }
 
+    /**
+     * Envía la petición al APP Server para modificar los datos de un usuario específico.
+     */
     private void modificarPerfilenServidor(String idUsr, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad){
         sharedServer.modificarUsuario(idUsr, usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, new ModificarUsuarioCallback());
     }
