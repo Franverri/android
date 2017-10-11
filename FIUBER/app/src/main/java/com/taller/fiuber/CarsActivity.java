@@ -25,6 +25,7 @@ public class CarsActivity extends AppCompatActivity {
     InfiniteCardView infiniteCardView;
     CarAdapter carAdapter;
     List<Integer> images = new ArrayList<>();
+    List<Car> autos = new ArrayList<>();
     int indice;
 
     @Override
@@ -42,11 +43,21 @@ public class CarsActivity extends AppCompatActivity {
 
         //Creo la lista de autos junto con su indice
         indice = 0;
-        images.add(R.drawable.auto1);
-        images.add(R.drawable.auto2);
-        images.add(R.drawable.auto3);
+        //images.add(R.drawable.auto1);
+        //images.add(R.drawable.auto2);
+        //images.add(R.drawable.auto3);
 
-        carAdapter = new CarAdapter(this, images);
+        //Prueba con lista de autos (Clase auto)
+        Car auto1 = new Car("Auto 1", R.drawable.auto1);
+        Car auto2 = new Car("Auto 2", R.drawable.auto2);
+        Car auto3 = new Car("Auto 3", R.drawable.auto3);
+        autos.add(auto1);
+        autos.add(auto2);
+        autos.add(auto3);
+        // -----------------------
+
+        //carAdapter = new CarAdapter(this, images);
+        carAdapter = new CarAdapter(this, autos);
         infiniteCardView.setClickable(true);
         infiniteCardView.setAnimType(InfiniteCardView.ANIM_TYPE_FRONT);
         infiniteCardView.setAnimInterpolator(new LinearInterpolator());
