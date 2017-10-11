@@ -74,7 +74,7 @@ public class CarsActivity extends AppCompatActivity {
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Log.v(TAG, "Auto "+ indice +" seleccionado.");
             }
         });
 
