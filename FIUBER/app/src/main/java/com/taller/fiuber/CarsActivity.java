@@ -25,28 +25,29 @@ public class CarsActivity extends AppCompatActivity {
     InfiniteCardView infiniteCardView;
     CarAdapter carAdapter;
     List<Integer> images = new ArrayList<>();
+    List<Car> autos = new ArrayList<>();
     int indice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cars_acctivity);
+        setContentView(R.layout.activity_cars);
 
         btnNext = (Button) findViewById(R.id.cars_next);
         btnSelect = (Button) findViewById(R.id.cars_select);
         infiniteCardView = (InfiniteCardView) findViewById(R.id.cars_view);
         carsTitle = (TextView) findViewById(R.id.cars_title);
 
-        //Seteo el primer nombre de titulo
-        carsTitle.setText("Auto 0");
-
         //Creo la lista de autos junto con su indice
         indice = 0;
-        images.add(R.drawable.auto1);
-        images.add(R.drawable.auto2);
-        images.add(R.drawable.auto3);
+        Car auto1 = new Car("Auto naranja", R.drawable.auto1);
+        Car auto2 = new Car("Auto rojo", R.drawable.auto2);
+        Car auto3 = new Car("Auto azul", R.drawable.auto3);
+        autos.add(auto1);
+        autos.add(auto2);
+        autos.add(auto3);
 
-        carAdapter = new CarAdapter(this, images);
+        carAdapter = new CarAdapter(this, autos);
         infiniteCardView.setClickable(true);
         infiniteCardView.setAnimType(InfiniteCardView.ANIM_TYPE_FRONT);
         infiniteCardView.setAnimInterpolator(new LinearInterpolator());
@@ -54,6 +55,10 @@ public class CarsActivity extends AppCompatActivity {
         infiniteCardView.setTransformerToBack(new DefaultTransformerToBack());
         infiniteCardView.setZIndexTransformerToBack(new DefaultZIndexTransformerCommon());
         infiniteCardView.setAdapter(carAdapter);
+
+        //Seteo el nombre del primer a auto
+        String nombrePrimero = carAdapter.getCarTitle(indice);
+        carsTitle.setText(nombrePrimero);
 
         //Click en "Siguiente"
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -65,8 +70,7 @@ public class CarsActivity extends AppCompatActivity {
                 } else {
                     indice --;
                 }
-                Log.v(TAG, "Auto "+ indice);
-                carsTitle.setText("Auto "+ indice);
+                carsTitle.setText(carAdapter.getCarTitle(indice));
             }
         });
 
@@ -74,7 +78,7 @@ public class CarsActivity extends AppCompatActivity {
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(TAG, "Auto "+ indice +" seleccionado.");
+                Log.v(TAG, carAdapter.getCarTitle(indice) +" seleccionado.");
             }
         });
 
