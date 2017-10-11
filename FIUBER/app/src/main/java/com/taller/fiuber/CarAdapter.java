@@ -45,6 +45,10 @@ public class CarAdapter extends BaseAdapter {
         return autos.get(i).getImagen();
     }
 
+    public String getCarTitle(int i){
+        return autos.get(i).getModelo();
+    }
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if(view == null){
