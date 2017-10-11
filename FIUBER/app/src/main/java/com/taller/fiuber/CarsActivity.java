@@ -31,7 +31,7 @@ public class CarsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cars_acctivity);
+        setContentView(R.layout.activity_cars);
 
         btnNext = (Button) findViewById(R.id.cars_next);
         btnSelect = (Button) findViewById(R.id.cars_select);
