@@ -308,7 +308,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationManager.requestLocationUpdates("gps", 5000, 0, locationListener);
 
-        final GoogleMap finalMap = mMap;
+        latitud = -34.617335;
+        longitud = -58.368231;
+        LatLng ubicacion = new LatLng(latitud, longitud);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion, 15));
     }
 
     /**
