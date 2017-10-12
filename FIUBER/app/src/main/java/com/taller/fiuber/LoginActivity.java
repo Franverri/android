@@ -76,7 +76,7 @@ public class LoginActivity extends HashFunction  {
 
         //Si ya se encuentra logeado va directo a la pantalla principal
         if ((AccessToken.getCurrentAccessToken() != null) ||(sharedPref.getBoolean("logueado", false))){
-            if(Objects.equals(sharedPref.getString("tipo", null), "chofer")){
+            if(Objects.equals(sharedPref.getString("tipo", null), "driver")){
                 goMainChofer();
             } else {
                 goMainPasajero();
@@ -179,18 +179,20 @@ public class LoginActivity extends HashFunction  {
             String str = respuesta.toString();
             Log.v(TAG, "Respueta server: "+str);
 
-            if(codigoServidor == 200){
+            if((codigoServidor >= 200) && (codigoServidor <= 210)){
                 //Usuario y contraseña correctos
                 try {
                     String strToken = respuesta.getString("token");
-                    Log.v(TAG, "Token: "+strToken);
+                    Log.v(TAG, "Token : "+strToken);
                     String strTipo = respuesta.getString("tipo");
-                    Log.v(TAG, "Tipo: "+strTipo);
+                    Log.v(TAG, "Tipo  : "+strTipo);
+                    String strIDusr = respuesta.getString("id");
+                    Log.v(TAG, "ID Usr: "+strIDusr);
                     editorShared.putBoolean("logueado", true);
                     editorShared.putString("tipo", strTipo);
+                    editorShared.putString("ID", strIDusr);
                     editorShared.apply();
-                    if(Objects.equals(strTipo, "chofer")){
-                        Log.v(TAG, "ENRTRA ACA");
+                    if(Objects.equals(strTipo, "driver")){
                         goMainChofer();
                     } else {
                         goMainPasajero();
@@ -205,7 +207,7 @@ public class LoginActivity extends HashFunction  {
                     strMsj = respuesta.getString("message");
                     Log.v(TAG, "Mensaje: "+strMsj);
                     showProgress(false);
-                    Toast.makeText(getApplicationContext(), strMsj, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Usuario incorrecto", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     Log.v(TAG, "Error al intentar leer el JSON");
                 }
@@ -246,7 +248,7 @@ public class LoginActivity extends HashFunction  {
         }
 
         //Autenticación con el server
-        if(!cancel) {
+        if (!cancel) {
             showProgress(true);
             sharedServer.obtenerToken(email, password, new IngresarUsuarioCallback());
         } else {

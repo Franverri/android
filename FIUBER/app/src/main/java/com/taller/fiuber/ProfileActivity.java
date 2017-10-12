@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
@@ -34,6 +35,16 @@ public class ProfileActivity extends HashFunction {
     private int dia, mes, año;
     private DatePickerDialog.OnDateSetListener mDataSetListener;
 
+    //Campos de texto
+    TextView usuario;
+    EditText contraseña;
+    EditText mail;
+    EditText nombre;
+    EditText apellido;
+    EditText cuentaFacebook;
+    EditText fechaNacimiento;
+    EditText nacionalidad;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,17 +54,21 @@ public class ProfileActivity extends HashFunction {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
-        //Debería obtener el ID del usr desde el sharedPref
-        //Por el momento utilizo el ID = 2
-        cargarDatosUsuario("2");
+        //Obtengo el ID del usuario logueado
+        final String IDusr = sharedPref.getString("ID", null);
+        Log.v(TAG, "ID Usr: "+IDusr);
 
-        final TextView usuario = (TextView) findViewById(R.id.perfil_usuario);
-        final EditText contraseña = (EditText) findViewById(R.id.perfil_contraseña);
-        final EditText mail = (EditText) findViewById(R.id.perfil_mail);
-        final EditText nombre = (EditText) findViewById(R.id.perfil_nombre);
-        final EditText apellido = (EditText) findViewById(R.id.perfil_apellido);
-        final EditText cuentaFacebook = (EditText) findViewById(R.id.perfil_facebook);
-        final EditText fechaNacimiento = (EditText) findViewById(R.id.perfil_fechaNacimiento);
+        //Obtengo los datos del usuario logueado
+        cargarDatosUsuario(IDusr);
+
+        usuario = (TextView) findViewById(R.id.perfil_usuario);
+        contraseña = (EditText) findViewById(R.id.perfil_contraseña);
+        mail = (EditText) findViewById(R.id.perfil_mail);
+        nombre = (EditText) findViewById(R.id.perfil_nombre);
+        apellido = (EditText) findViewById(R.id.perfil_apellido);
+        cuentaFacebook = (EditText) findViewById(R.id.perfil_facebook);
+        fechaNacimiento = (EditText) findViewById(R.id.perfil_fechaNacimiento);
+        nacionalidad = (EditText) findViewById(R.id.perfil_nacionalidad);
 
         btnFecha = (Button) findViewById(R.id.btnPerfilFecha);
 
@@ -92,19 +107,21 @@ public class ProfileActivity extends HashFunction {
             String strApellido = apellido.getText().toString();
             String strCuentaFacebook = cuentaFacebook.getText().toString();
             String strFechaNacimiento = fechaNacimiento.getText().toString();
+            String strNacionalidad = nacionalidad.getText().toString();
 
-            Log.v(TAG, "Usuario    : "+strUsuario);
-            Log.v(TAG, "Contraseña : "+strContraseña);
-            Log.v(TAG, "Mail       : "+strMail);
-            Log.v(TAG, "Nombre     : "+strNombre);
-            Log.v(TAG, "Apellido   : "+strApellido);
-            Log.v(TAG, "Cuenta Face: "+strCuentaFacebook);
-            Log.v(TAG, "Fecha Nacim: "+strFechaNacimiento);
+            Log.v(TAG, "Usuario     : "+strUsuario);
+            //Log.v(TAG, "Contraseña : "+strContraseña);
+            Log.v(TAG, "Mail        : "+strMail);
+            Log.v(TAG, "Nombre      : "+strNombre);
+            Log.v(TAG, "Apellido    : "+strApellido);
+            Log.v(TAG, "Cuenta Face : "+strCuentaFacebook);
+            Log.v(TAG, "Fecha Nacim : "+strFechaNacimiento);
+            Log.v(TAG, "Nacionalidad: "+strNacionalidad);
 
             computeSHAHash(strContraseña);
 
             //Por ahora se le manda un JSON cualquier y devuelve "OK"
-            modificarPerfilenServidor("2", strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, "Argentina");
+            modificarPerfilenServidor(IDusr, "passenger", strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, strNacionalidad, strFechaNacimiento);
             }
         });
     }
@@ -119,8 +136,40 @@ public class ProfileActivity extends HashFunction {
             Log.v(TAG, "Codigo server  :"+codigoServidor);
             String str = respuesta.toString();
             Log.v(TAG, "Respueta server: "+str);
-            if(codigoServidor == 200){
+            if((codigoServidor >= 200) && (codigoServidor <= 210)){
                 Log.i(TAG, "Get de usuario exitoso");
+                try {
+                    String strUser = respuesta.getString("username");
+                    //Log.v(TAG, "Usuario : "+strUser);
+                    usuario.setText(strUser);
+
+                    String strFirstName = respuesta.getString("name");
+                    //Log.v(TAG, "Nombre : "+strFirstName);
+                    nombre.setText(strFirstName);
+
+                    String strLastName = respuesta.getString("surname");
+                    //Log.v(TAG, "Apellido: "+strFirstName);
+                    apellido.setText(strLastName);
+
+                    //String strPassword = respuesta.getString("password");
+                    //Log.v(TAG, "Contraseña: "+strPassword);
+                    contraseña.setText("******");
+
+                    String strMail = respuesta.getString("email");
+                    //Log.v(TAG, "Mail: "+strMail);
+                    mail.setText(strMail);
+
+                    String strBirthdate = respuesta.getString("birthdate");
+                    //Log.v(TAG, "Fecha nac: "+strBirthdate);
+                    fechaNacimiento.setText(strBirthdate);
+
+                    String strCountry = respuesta.getString("country");
+                    //Log.v(TAG, "Nacionalidad: "+strBirthdate);
+                    nacionalidad.setText(strCountry);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             } else {
                 Log.w(TAG, "Error en get de usuario");
             }
@@ -144,7 +193,7 @@ public class ProfileActivity extends HashFunction {
             Log.v(TAG, "Codigo server  :"+codigoServidor);
             String str = respuesta.toString();
             Log.v(TAG, "Respueta server: "+str);
-            if(codigoServidor == 200){
+            if((codigoServidor >= 200) && (codigoServidor <= 210)){
                 Log.i(TAG, "Modificación de usuario exitoso");
                 Toast.makeText(getApplicationContext(), R.string.modificacion_usr_exitoso, Toast.LENGTH_SHORT).show();
             } else {
@@ -157,7 +206,7 @@ public class ProfileActivity extends HashFunction {
     /**
      * Envía la petición al APP Server para modificar los datos de un usuario específico.
      */
-    private void modificarPerfilenServidor(String idUsr, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad){
-        sharedServer.modificarUsuario(idUsr, usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, new ModificarUsuarioCallback());
+    private void modificarPerfilenServidor(String idUsr, String tipoUsuario, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento){
+        sharedServer.modificarUsuario(idUsr, tipoUsuario, usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, fechaNacimiento, new ModificarUsuarioCallback());
     }
 }

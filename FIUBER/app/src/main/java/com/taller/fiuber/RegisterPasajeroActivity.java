@@ -125,7 +125,7 @@ public class RegisterPasajeroActivity extends HashFunction {
             Log.v(TAG, "Codigo server  :"+codigoServidor);
             String str = respuesta.toString();
             Log.v(TAG, "Respueta server: "+str);
-            if(codigoServidor == 200){
+            if((codigoServidor >= 200) && (codigoServidor <= 210)){
                 Log.i(TAG, "Registro de usuario exitoso");
                 Toast.makeText(getApplicationContext(), R.string.registo_usr_exitoso, Toast.LENGTH_SHORT).show();
                 goLogin();
