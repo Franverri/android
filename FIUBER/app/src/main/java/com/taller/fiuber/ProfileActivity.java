@@ -133,7 +133,6 @@ public class ProfileActivity extends HashFunction {
      */
     private void cargarDatosUsuario(){
         String strUser = sharedPref.getString("usuario", null);
-        Log.v(TAG, strUser);
         usuario.setText(strUser);
 
         String strFirstName = sharedPref.getString("nombre", null);
@@ -167,6 +166,27 @@ public class ProfileActivity extends HashFunction {
             Log.v(TAG, "Respueta server: "+str);
             if((codigoServidor >= 200) && (codigoServidor <= 210)){
                 Log.i(TAG, "Modificación de usuario exitoso");
+
+                String strUsuario = usuario.getText().toString();
+                String strContraseña = contraseña.getText().toString();
+                String strMail = mail.getText().toString();
+                String strNombre = nombre.getText().toString();
+                String strApellido = apellido.getText().toString();
+                String strCuentaFacebook = cuentaFacebook.getText().toString();
+                String strFechaNacimiento = fechaNacimiento.getText().toString();
+                String strNacionalidad = nacionalidad.getText().toString();
+
+                editorShared.putString("usuario", strUsuario);
+                editorShared.putString("nombre", strNombre);
+                editorShared.putString("apellido", strApellido);
+                editorShared.putString("contraseña", strContraseña);
+                editorShared.putString("mail", strMail);
+                editorShared.putString("fechaNacimiento", strFechaNacimiento);
+                editorShared.putString("nacionalidad", strNacionalidad);
+                editorShared.putString("cuentaFacebook", strCuentaFacebook);
+
+                editorShared.apply();
+
                 Toast.makeText(getApplicationContext(), R.string.modificacion_usr_exitoso, Toast.LENGTH_SHORT).show();
             } else {
                 Log.w(TAG, "Error al intentar modificar el usuario");

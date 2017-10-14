@@ -243,7 +243,7 @@ public class LoginActivity extends HashFunction  {
                     editorShared.putString("nombre", strFirstName);
 
                     String strLastName = respuesta.getString("surname");
-                    Log.v(TAG, "Apellido: "+strFirstName);
+                    Log.v(TAG, "Apellido: "+strLastName);
                     editorShared.putString("apellido", strLastName);
 
                     //String strPassword = respuesta.getString("password");
@@ -258,7 +258,7 @@ public class LoginActivity extends HashFunction  {
                     editorShared.putString("fechaNacimiento", strBirthdate);
 
                     String strCountry = respuesta.getString("country");
-                    Log.v(TAG, "Nacionalidad: "+strBirthdate);
+                    Log.v(TAG, "Nacionalidad: "+strCountry);
                     editorShared.putString("nacionalidad", strCountry);
 
                     editorShared.apply();
