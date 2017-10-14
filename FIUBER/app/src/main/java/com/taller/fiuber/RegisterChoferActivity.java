@@ -203,7 +203,7 @@ public class RegisterChoferActivity extends HashFunction {
      * Envía la información ingresada por el usuario hacía el APP Server para su procesamiento.
      */
     private void registrarUsuarioEnServidor(String tipo, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento){
-        sharedServer.darAltaUsuario("driver", usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, fechaNacimiento, new RegisterChoferActivity.RegistrarUsuarioCallback());
+        sharedServer.darAltaUsuario("driver", usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, fechaNacimiento, new RegistrarUsuarioCallback());
     }
 
     /**
