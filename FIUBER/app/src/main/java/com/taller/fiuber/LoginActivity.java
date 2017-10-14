@@ -192,6 +192,10 @@ public class LoginActivity extends HashFunction  {
                     editorShared.putString("tipo", strTipo);
                     editorShared.putString("ID", strIDusr);
                     editorShared.apply();
+
+                    //Obtengo los datos del usuario logueado
+                    cargarDatosUsuario(strIDusr);
+
                     if(Objects.equals(strTipo, "driver")){
                         goMainChofer();
                     } else {
@@ -203,6 +207,8 @@ public class LoginActivity extends HashFunction  {
             } else {
                 //El usuario no existe o la contraseña es invalida
                 String strMsj;
+                editorShared.remove("name");
+                editorShared.apply();
                 try {
                     strMsj = respuesta.getString("message");
                     Log.v(TAG, "Mensaje: "+strMsj);
@@ -213,6 +219,64 @@ public class LoginActivity extends HashFunction  {
                 }
             }
         }
+    }
+
+    /**
+     * Clase utilizada para procesar la respuesta del APP Server al enviarle una petición para obtener
+     * los datos de un usuario específico.
+     */
+    private class PerfilUsuarioCallback extends JSONCallback {
+        @Override
+        public void ejecutar(JSONObject respuesta, long codigoServidor) {
+            Log.v(TAG, "Codigo server  :"+codigoServidor);
+            String str = respuesta.toString();
+            Log.v(TAG, "Respueta server: "+str);
+            if((codigoServidor >= 200) && (codigoServidor <= 210)){
+                Log.i(TAG, "Get de usuario exitoso");
+                try {
+                    String strUser = respuesta.getString("username");
+                    Log.v(TAG, "Usuario : "+strUser);
+                    editorShared.putString("usuario", strUser);
+
+                    String strFirstName = respuesta.getString("name");
+                    Log.v(TAG, "Nombre : "+strFirstName);
+                    editorShared.putString("nombre", strFirstName);
+
+                    String strLastName = respuesta.getString("surname");
+                    Log.v(TAG, "Apellido: "+strFirstName);
+                    editorShared.putString("apellido", strLastName);
+
+                    //String strPassword = respuesta.getString("password");
+                    //Log.v(TAG, "Contraseña: "+strPassword);
+
+                    String strMail = respuesta.getString("email");
+                    Log.v(TAG, "Mail: "+strMail);
+                    editorShared.putString("mail", strMail);
+
+                    String strBirthdate = respuesta.getString("birthdate");
+                    Log.v(TAG, "Fecha nac: "+strBirthdate);
+                    editorShared.putString("fechaNacimiento", strBirthdate);
+
+                    String strCountry = respuesta.getString("country");
+                    Log.v(TAG, "Nacionalidad: "+strBirthdate);
+                    editorShared.putString("nacionalidad", strCountry);
+
+                    editorShared.apply();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.w(TAG, "Error en get de usuario");
+            }
+        }
+    }
+
+    /**
+     * Envía la petición al APP Server para obtener los datos de un usuario específico.
+     */
+    private void cargarDatosUsuario(String idUsr){
+        sharedServer.obtenerDatosUsrServidor(idUsr, new PerfilUsuarioCallback());
     }
 
     /**
@@ -250,6 +314,8 @@ public class LoginActivity extends HashFunction  {
         //Autenticación con el server
         if (!cancel) {
             showProgress(true);
+            editorShared.putString("contraseña", password);
+            editorShared.apply();
             sharedServer.obtenerToken(email, password, new IngresarUsuarioCallback());
         } else {
             // Algun campo incompleto

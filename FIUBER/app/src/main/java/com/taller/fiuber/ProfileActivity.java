@@ -58,9 +58,6 @@ public class ProfileActivity extends HashFunction {
         final String IDusr = sharedPref.getString("ID", null);
         Log.v(TAG, "ID Usr: "+IDusr);
 
-        //Obtengo los datos del usuario logueado
-        cargarDatosUsuario(IDusr);
-
         usuario = (TextView) findViewById(R.id.perfil_usuario);
         contraseña = (EditText) findViewById(R.id.perfil_contraseña);
         mail = (EditText) findViewById(R.id.perfil_mail);
@@ -71,6 +68,9 @@ public class ProfileActivity extends HashFunction {
         nacionalidad = (EditText) findViewById(R.id.perfil_nacionalidad);
 
         btnFecha = (Button) findViewById(R.id.btnPerfilFecha);
+
+        //Obtengo los datos del usuario logueado
+        cargarDatosUsuario();
 
         btnFecha.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,67 +120,39 @@ public class ProfileActivity extends HashFunction {
 
             computeSHAHash(strContraseña);
 
-            //Por ahora se le manda un JSON cualquier y devuelve "OK"
-            modificarPerfilenServidor(IDusr, "passenger", strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, strNacionalidad, strFechaNacimiento);
+            //Obtengo el tipo de usuario
+            String tipoUsr = sharedPref.getString("tipo", null);
+
+            modificarPerfilenServidor(IDusr, tipoUsr, strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, strNacionalidad, strFechaNacimiento);
             }
         });
     }
 
     /**
-     * Clase utilizada para procesar la respuesta del APP Server al enviarle una petición para obtener
-     * los datos de un usuario específico.
+     * Carga en la pantalla los datos del usuario que se encuentra logueado actualmente.
      */
-    private class PerfilUsuarioCallback extends JSONCallback {
-        @Override
-        public void ejecutar(JSONObject respuesta, long codigoServidor) {
-            Log.v(TAG, "Codigo server  :"+codigoServidor);
-            String str = respuesta.toString();
-            Log.v(TAG, "Respueta server: "+str);
-            if((codigoServidor >= 200) && (codigoServidor <= 210)){
-                Log.i(TAG, "Get de usuario exitoso");
-                try {
-                    String strUser = respuesta.getString("username");
-                    //Log.v(TAG, "Usuario : "+strUser);
-                    usuario.setText(strUser);
+    private void cargarDatosUsuario(){
+        String strUser = sharedPref.getString("usuario", null);
+        Log.v(TAG, strUser);
+        usuario.setText(strUser);
 
-                    String strFirstName = respuesta.getString("name");
-                    //Log.v(TAG, "Nombre : "+strFirstName);
-                    nombre.setText(strFirstName);
+        String strFirstName = sharedPref.getString("nombre", null);
+        nombre.setText(strFirstName);
 
-                    String strLastName = respuesta.getString("surname");
-                    //Log.v(TAG, "Apellido: "+strFirstName);
-                    apellido.setText(strLastName);
+        String strLastName = sharedPref.getString("apellido", null);
+        apellido.setText(strLastName);
 
-                    //String strPassword = respuesta.getString("password");
-                    //Log.v(TAG, "Contraseña: "+strPassword);
-                    contraseña.setText("******");
+        String strPassword = sharedPref.getString("contraseña", null);
+        contraseña.setText(strPassword);
 
-                    String strMail = respuesta.getString("email");
-                    //Log.v(TAG, "Mail: "+strMail);
-                    mail.setText(strMail);
+        String strMail = sharedPref.getString("mail", null);
+        mail.setText(strMail);
 
-                    String strBirthdate = respuesta.getString("birthdate");
-                    //Log.v(TAG, "Fecha nac: "+strBirthdate);
-                    fechaNacimiento.setText(strBirthdate);
+        String strBirthdate = sharedPref.getString("fechaNacimiento", null);
+        fechaNacimiento.setText(strBirthdate);
 
-                    String strCountry = respuesta.getString("country");
-                    //Log.v(TAG, "Nacionalidad: "+strBirthdate);
-                    nacionalidad.setText(strCountry);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Log.w(TAG, "Error en get de usuario");
-            }
-        }
-    }
-
-    /**
-     * Envía la petición al APP Server para obtener los datos de un usuario específico.
-     */
-    private void cargarDatosUsuario(String idUsr){
-        sharedServer.obtenerDatosUsrServidor(idUsr, new PerfilUsuarioCallback());
+        String strCountry = sharedPref.getString("nacionalidad", null);
+        nacionalidad.setText(strCountry);
     }
 
     /**
