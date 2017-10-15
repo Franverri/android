@@ -1,9 +1,14 @@
 package com.taller.fiuber;
 
 import android.*;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,6 +21,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +53,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.taller.fiuber.Config.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -87,6 +95,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+
+    //Firebase Notifications
+    private BroadcastReceiver mRegistrarionBroadcastReceiver;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrarionBroadcastReceiver);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrarionBroadcastReceiver,
+                new IntentFilter("RegistrarionComplete"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrarionBroadcastReceiver,
+                new IntentFilter(Config.STR_PUSH));
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +241,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }, 10);
             return;
         }
+
+
+
+        //Notificaciones Firebase
+        mRegistrarionBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(Config.STR_PUSH)){
+                    Log.v("FIREBASE", "Entra aca");
+                    String message = intent.getStringExtra("message");
+                    showNotification("FIUBER", message);
+                }
+            }
+        };
+
+    }
+
+    private void showNotification(String title, String message) {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder b = new NotificationCompat.Builder(getApplicationContext());
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentIntent(contentIntent);
+        NotificationManager notificationManager = (NotificationManager)getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1,b.build()) ;
     }
 
     private void configurarConfirmarViaje() {
