@@ -65,6 +65,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private UiSettings mUiSettings;
     private Button btnFindPath;
+    private Button btnConfirmarViaje;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
@@ -166,6 +167,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        //Click en el boton de "Confirmar viaje"
+        configurarConfirmarViaje();
+
         //Click en el boton de "Buscar Ruta"
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,6 +213,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }, 10);
             return;
         }
+    }
+
+    private void configurarConfirmarViaje() {
+        btnConfirmarViaje = (Button) findViewById(R.id.btnConfirmarViaje);
+        btnConfirmarViaje.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goSeleccionarChofer();
+            }
+        });
     }
 
     /**
@@ -403,6 +417,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private void goProfile() {
         Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Transiciona la APP hacía la pantalla de selección de chofer.
+     */
+    private void goSeleccionarChofer() {
+        Intent intent = new Intent(this, ChoferSelection.class);
         startActivity(intent);
     }
 }
