@@ -129,8 +129,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
+        //Prueba contador notificaciones
+        editorShared.putInt("mensajes", 10);
+        editorShared.apply();
+
         //Menu de navegación lateral
         configurarMenuLateral();
+
+        //CAMBIAR ESTA HARDCODEADO
+        setNavItemCount(R.id.nav_chat, 10);
 
         //Permisos de localizacion
         boolean permissionGranted = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -251,10 +258,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         };
-
-
-        //Prueba contador notificaciones
-        setNavItemCount(R.id.nav_chat, 10);
     }
 
     private void setNavItemCount(@IdRes int itemId, int count) {
@@ -287,6 +290,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private void configurarNotificaciones(){
+
+        badgeDrawable.setText("");
+
+        //Para cuando no hay notificaciones
+        int cantMsj = sharedPref.getInt("mensajes", -1);
+        Log.v(TAG, "Mensajes: "+cantMsj);
+        if(cantMsj == 0){
+            badgeDrawable.setEnabled(false);
+        }
+
+    }
+
     /**
      * Configura el el menu lateral desplegable y identifica que acción realizar al clickear cada uno
      * de los botones que lo componen.
@@ -298,9 +314,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         toggle.setDrawerArrowDrawable(badgeDrawable);
         badgeDrawable.setText("");
+        configurarNotificaciones();
+
+        /*
+        toggle.setDrawerArrowDrawable(badgeDrawable);
+        badgeDrawable.setText("");
 
         //Para cuando no hay notificaciones
-        //badgeDrawable.setEnabled(false);
+        int cantMsj = sharedPref.getInt("mensajes");
+        if(cantMsj == 0){
+            badgeDrawable.setEnabled(false);
+        }*/
 
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -327,6 +351,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         editorShared.apply();
                         goLogin();
                         return true;
+                    case R.id.nav_chat:
+                        editorShared.putInt("mensajes", 0);
+                        editorShared.apply();
+                        configurarNotificaciones();
+                        setNavItemCount(R.id.nav_chat, 0);
                 }
                 return false;
             }
