@@ -16,10 +16,9 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
+import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -40,14 +39,12 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -59,8 +56,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.jar.*;
-import java.util.jar.Manifest;
 
 /**
  * Pantalla principal para los usuarios de tipo pasajero en la cual se puede solicitar un viaje indicando
@@ -95,6 +90,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private BadgeDrawerArrowDrawable badgeDrawable;
 
     //Firebase Notifications
     private BroadcastReceiver mRegistrarionBroadcastReceiver;
@@ -256,6 +252,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
 
+
+        //Prueba contador notificaciones
+        setNavItemCount(R.id.nav_chat, 10);
+    }
+
+    private void setNavItemCount(@IdRes int itemId, int count) {
+        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
+        view.setText(count > 0 ? String.valueOf(count) : null);
     }
 
     private void showNotification(String title, String message) {
@@ -290,6 +294,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void configurarMenuLateral(){
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
+
+        toggle.setDrawerArrowDrawable(badgeDrawable);
+        badgeDrawable.setText("");
+
+        //Para cuando no hay notificaciones
+        //badgeDrawable.setEnabled(false);
 
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
