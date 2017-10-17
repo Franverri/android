@@ -153,6 +153,10 @@ public class MainChoferActivity extends AppCompatActivity {
                         editorShared.apply();
                         goLogin();
                         return true;
+                    case R.id.nav_chofer_autos:
+                        Log.v(TAG, "Autos clikeado");
+                        goCars();
+                        return true;
                     case R.id.nav_chofer_chat:
                         editorShared.putInt("mensajes", 0);
                         editorShared.apply();
