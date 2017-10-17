@@ -68,6 +68,19 @@
             android:theme="@style/Main" />
         <activity android:name=".CarsActivity" />
         <activity android:name=".ChoferSelection"></activity>
+
+        <service android:name=".FirebaseServices.MyFirebaseIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service android:name=".FirebaseServices.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

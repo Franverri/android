@@ -1,8 +1,10 @@
 package com.taller.fiuber;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 
@@ -32,13 +35,17 @@ public class MainChoferActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private List<ListItem> listItems;
 
-    private SharedServer sharedServer;
-    private SharedPreferences sharedPref;
-    private SharedPreferences.Editor editorShared;
+    SharedServer sharedServer;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+    NavigationView navigationView;
 
-    private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private BadgeDrawerArrowDrawable badgeDrawable;
+
+    //Firebase Notifications
+    private BroadcastReceiver mRegistrarionBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +64,10 @@ public class MainChoferActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
+        //Prueba contador notificaciones
+        editorShared.putInt("mensajes", 10);
+        editorShared.apply();
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -72,42 +83,28 @@ public class MainChoferActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         //Menu de navegación lateral
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        configurarMenuLateral();
 
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        //CAMBIAR ESTA HARDCODEADO
+        setNavItemCount(R.id.nav_chofer_chat, 10);
+    }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    private void setNavItemCount(int itemId, int count) {
+        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
+        view.setText(count > 0 ? String.valueOf(count) : null);
+    }
 
-        navigationView = (NavigationView) findViewById(R.id.nav_menu);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
+    private void configurarNotificaciones(){
 
-                switch (item.getItemId()){
-                    case R.id.nav_account:
-                        Log.v(TAG, "Perfil clikeado");
-                        goProfile();
-                        return true;
-                    case R.id.nav_autos:
-                        Log.v(TAG, "Autos clikeado");
-                        goCars();
-                        return true;
-                    case R.id.nav_settings:
-                        Log.v(TAG, "Configuración clikeado");
-                        return true;
-                    case R.id.nav_logout:
-                        LoginManager.getInstance().logOut();
-                        Log.v(TAG, "Cerrar sesión clikeado");
-                        editorShared.clear();
-                        editorShared.apply();
-                        goLogin();
-                        return true;
-                }
-                return false;
-            }
-        });
+        badgeDrawable.setText("");
+
+        //Para cuando no hay notificaciones
+        int cantMsj = sharedPref.getInt("mensajes", -1);
+        Log.v(TAG, "Mensajes: "+cantMsj);
+        if(cantMsj == 0){
+            badgeDrawable.setEnabled(false);
+        }
+
     }
 
     @Override
@@ -116,6 +113,61 @@ public class MainChoferActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Configura el el menu lateral desplegable y identifica que acción realizar al clickear cada uno
+     * de los botones que lo componen.
+     */
+    public void configurarMenuLateral(){
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayoutChofer);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
+
+        toggle.setDrawerArrowDrawable(badgeDrawable);
+        badgeDrawable.setText("");
+        configurarNotificaciones();
+
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_menu_chofer);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+
+                switch (item.getItemId()){
+                    case R.id.nav_chofer_account:
+                        Log.v(TAG, "Perfil clikeado");
+                        goProfile();
+                        return true;
+                    case R.id.nav_chofer_settings:
+                        Log.v(TAG, "Configuración clikeado");
+                        return true;
+                    case R.id.nav_chofer_logout:
+                        LoginManager.getInstance().logOut();
+                        Log.v(TAG, "Cerrar sesión clikeado");
+                        editorShared.clear();
+                        editorShared.apply();
+                        goLogin();
+                        return true;
+                    case R.id.nav_chofer_autos:
+                        Log.v(TAG, "Autos clikeado");
+                        goCars();
+                        return true;
+                    case R.id.nav_chofer_chat:
+                        editorShared.putInt("mensajes", 0);
+                        editorShared.apply();
+                        configurarNotificaciones();
+                        setNavItemCount(R.id.nav_chofer_chat, 0);
+                        //hideChat();
+                        return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void goLogin() {

@@ -42,5 +42,9 @@ dependencies {
     compile 'com.android.support:support-v13:26.+'
     compile 'com.bakerj:infinite-cards:1.0.2'
     compile 'com.github.devlight:infinitecycleviewpager:1.0.2'
+    compile 'com.google.firebase:firebase-messaging:9.8.0'
+    compile 'com.nex3z:notification-badge:0.1.0'
     testCompile 'junit:junit:4.12'
 }
+
+apply plugin: 'com.google.gms.google-services'

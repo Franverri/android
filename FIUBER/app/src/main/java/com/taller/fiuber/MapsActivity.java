@@ -1,9 +1,14 @@
 package com.taller.fiuber;
 
 import android.*;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -11,15 +16,17 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
+import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -33,26 +40,23 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.taller.fiuber.Config.Config;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.jar.*;
-import java.util.jar.Manifest;
 
 /**
  * Pantalla principal para los usuarios de tipo pasajero en la cual se puede solicitar un viaje indicando
@@ -87,6 +91,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
+    private BadgeDrawerArrowDrawable badgeDrawable;
+
+    //Firebase Notifications
+    private BroadcastReceiver mRegistrarionBroadcastReceiver;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrarionBroadcastReceiver);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrarionBroadcastReceiver,
+                new IntentFilter("RegistrarionComplete"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrarionBroadcastReceiver,
+                new IntentFilter(Config.STR_PUSH));
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +130,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
+        //Prueba contador notificaciones
+        editorShared.putInt("mensajes", 10);
+        editorShared.apply();
+
         //Menu de navegación lateral
         configurarMenuLateral();
+
+        //CAMBIAR ESTA HARDCODEADO
+        setNavItemCount(R.id.nav_chat, 10);
 
         //Permisos de localizacion
         boolean permissionGranted = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -213,6 +245,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }, 10);
             return;
         }
+
+
+
+        //Notificaciones Firebase
+        mRegistrarionBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(Config.STR_PUSH)){
+                    Log.v("FIREBASE", "Entra aca");
+                    String message = intent.getStringExtra("message");
+                    showNotification("FIUBER", message);
+                }
+            }
+        };
+    }
+
+    private void hideChat()
+    {
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_chat).setVisible(false);
+    }
+
+    private void setNavItemCount(@IdRes int itemId, int count) {
+        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
+        view.setText(count > 0 ? String.valueOf(count) : null);
+    }
+
+    private void showNotification(String title, String message) {
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder b = new NotificationCompat.Builder(getApplicationContext());
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentIntent(contentIntent);
+        NotificationManager notificationManager = (NotificationManager)getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1,b.build()) ;
     }
 
     private void configurarConfirmarViaje() {
@@ -225,6 +297,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
+    private void configurarNotificaciones(){
+
+        badgeDrawable.setText("");
+
+        //Para cuando no hay notificaciones
+        int cantMsj = sharedPref.getInt("mensajes", -1);
+        Log.v(TAG, "Mensajes: "+cantMsj);
+        if(cantMsj == 0){
+            badgeDrawable.setEnabled(false);
+        }
+
+    }
+
     /**
      * Configura el el menu lateral desplegable y identifica que acción realizar al clickear cada uno
      * de los botones que lo componen.
@@ -232,6 +317,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void configurarMenuLateral(){
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        badgeDrawable = new BadgeDrawerArrowDrawable(getSupportActionBar().getThemedContext());
+
+        toggle.setDrawerArrowDrawable(badgeDrawable);
+        badgeDrawable.setText("");
+        configurarNotificaciones();
 
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -257,6 +347,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         editorShared.clear();
                         editorShared.apply();
                         goLogin();
+                        return true;
+                    case R.id.nav_chat:
+                        editorShared.putInt("mensajes", 0);
+                        editorShared.apply();
+                        configurarNotificaciones();
+                        setNavItemCount(R.id.nav_chat, 0);
+                        //hideChat();
                         return true;
                 }
                 return false;

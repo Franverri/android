@@ -7,6 +7,7 @@
     <string name="menu_configuracion">Configuración</string>
     <string name="menu_logout">Cerrar sesión</string>
     <string name="menu_autos">Mis autos</string>
+    <string name="menu_chat">Mensajes</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Usuario</string>
@@ -68,9 +69,6 @@
     <string name="profile_save">Guardar cambios</string>
     <string name="modificacion_usr_exitoso">Cambios guardados exitosamente</string>
     <string name="modificacion_usr_error">Error al modificar los datos</string>
-    <string name="title_activity_cars">CarsActivity</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
 
 
 </resources>
