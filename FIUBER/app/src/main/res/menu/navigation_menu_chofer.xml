@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/nav_account"
+    <item android:id="@+id/nav_chofer_account"
         android:icon="@mipmap/ic_person_black_24dp"
         android:title="@string/menu_perfil" />
 
-    <item android:id="@+id/nav_autos"
+    <item android:id="@+id/nav_chofer_autos"
         android:icon="@mipmap/ic_directions_car_black_24dp"
         android:title="@string/menu_autos" />
 
-    <item android:id="@+id/nav_chat"
+    <item android:id="@+id/nav_chofer_chat"
         android:icon="@mipmap/ic_chat_black_24dp"
-        android:title="@string/menu_chat" />
+        android:title="@string/menu_chat"
+        app:actionLayout="@layout/nav_drawer_counter"/>
 
-    <item android:id="@+id/nav_settings"
+    <item android:id="@+id/nav_chofer_settings"
         android:icon="@mipmap/ic_settings_black_24dp"
         android:title="@string/menu_configuracion" />
 
-    <item android:id="@+id/nav_logout"
+    <item android:id="@+id/nav_chofer_logout"
         android:icon="@mipmap/ic_close_black_24dp"
         android:title="@string/menu_logout" />
 

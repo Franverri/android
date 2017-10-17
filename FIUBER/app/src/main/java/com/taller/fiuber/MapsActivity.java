@@ -26,6 +26,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -260,6 +261,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         };
     }
 
+    private void hideChat()
+    {
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_chat).setVisible(false);
+    }
+
     private void setNavItemCount(@IdRes int itemId, int count) {
         TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
         view.setText(count > 0 ? String.valueOf(count) : null);
@@ -316,16 +323,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         badgeDrawable.setText("");
         configurarNotificaciones();
 
-        /*
-        toggle.setDrawerArrowDrawable(badgeDrawable);
-        badgeDrawable.setText("");
-
-        //Para cuando no hay notificaciones
-        int cantMsj = sharedPref.getInt("mensajes");
-        if(cantMsj == 0){
-            badgeDrawable.setEnabled(false);
-        }*/
-
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -356,6 +353,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         editorShared.apply();
                         configurarNotificaciones();
                         setNavItemCount(R.id.nav_chat, 0);
+                        //hideChat();
+                        return true;
                 }
                 return false;
             }
