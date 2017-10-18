@@ -1,23 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondoautos"
+    android:orientation="vertical"
     tools:context="com.taller.fiuber.ChoferSelection">
+
+    <TextView
+        android:id="@+id/chofer_selection_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Chofer X"
+        android:textSize="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="50dp"
+        android:textStyle="bold" />
 
     <com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager
         android:id="@+id/horizontal_cycle"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:icvp_interpolator="@android:anim/accelerate_decelerate_interpolator"
-        app:icvp_scroll_duration="250"
+        android:layout_width="380dp"
+        android:layout_height="400dp"
+        android:layout_gravity="center"
         app:icvp_center_page_scale_offset="30dp"
-        app:icvp_min_page_scale_offset="5dp"
+        app:icvp_interpolator="@android:anim/accelerate_decelerate_interpolator"
         app:icvp_max_page_scale="0.8"
-        app:icvp_min_page_scale="0.55"
         app:icvp_medium_scaled="false"
-        />
+        app:icvp_min_page_scale="0.55"
+        app:icvp_min_page_scale_offset="5dp"
+        app:icvp_scroll_duration="250" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/chofer_btn_select"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:text="Seleccionar chofer" />
+
+</LinearLayout>
