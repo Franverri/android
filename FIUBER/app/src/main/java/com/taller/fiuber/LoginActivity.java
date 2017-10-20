@@ -39,6 +39,7 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -143,10 +144,21 @@ public class LoginActivity extends HashFunction  {
                 GraphRequestAsyncTask request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject user, GraphResponse graphResponse) {
+                        Log.v(TAG, "PERFIL     : "+user);
                         String nombreFace = user.optString("name");
                         String IDFace = user.optString("id");
+                        String mail = user.optString("email");
                         Log.v(TAG, "Nombre Face: "+nombreFace);
                         Log.v(TAG, "ID Face    : "+IDFace);
+                        Log.v(TAG, "Mail       : "+mail);
+
+                        String[] parts = nombreFace.split(" ");
+                        String strNombre = parts[0];
+                        String strApellido = parts[1];
+                        Log.v(TAG, "Nombre  : "+strNombre);
+                        Log.v(TAG, "Apellido: "+strApellido);
+                        //editorShared.putString("nombre", strNombre);
+                        //editorShared.putString("apellido", strApellido);
                     }
                 }).executeAsync();
                 goMainPasajero();

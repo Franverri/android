@@ -67,20 +67,20 @@
             android:name=".MainChoferActivity"
             android:theme="@style/Main" />
         <activity android:name=".CarsActivity" />
-        <activity android:name=".ChoferSelection"></activity>
+        <activity android:name=".ChoferSelection" />
 
         <service android:name=".FirebaseServices.MyFirebaseIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".FirebaseServices.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
+        <activity android:name=".ChatActivity"></activity>
     </application>
 
 </manifest>

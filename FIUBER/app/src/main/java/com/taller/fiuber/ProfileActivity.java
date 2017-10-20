@@ -2,11 +2,9 @@ package com.taller.fiuber;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +14,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Calendar;
@@ -100,30 +97,34 @@ public class ProfileActivity extends HashFunction {
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            String strUsuario = usuario.getText().toString();
-            String strContraseña = contraseña.getText().toString();
-            String strMail = mail.getText().toString();
-            String strNombre = nombre.getText().toString();
-            String strApellido = apellido.getText().toString();
-            String strCuentaFacebook = cuentaFacebook.getText().toString();
-            String strFechaNacimiento = fechaNacimiento.getText().toString();
-            String strNacionalidad = nacionalidad.getText().toString();
+                String strUsuario = usuario.getText().toString();
+                String strContraseña = contraseña.getText().toString();
+                String strMail = mail.getText().toString();
+                String strNombre = nombre.getText().toString();
+                String strApellido = apellido.getText().toString();
+                String strCuentaFacebook = cuentaFacebook.getText().toString();
+                String strFechaNacimiento = fechaNacimiento.getText().toString();
+                String strNacionalidad = nacionalidad.getText().toString();
 
-            Log.v(TAG, "Usuario     : "+strUsuario);
-            //Log.v(TAG, "Contraseña : "+strContraseña);
-            Log.v(TAG, "Mail        : "+strMail);
-            Log.v(TAG, "Nombre      : "+strNombre);
-            Log.v(TAG, "Apellido    : "+strApellido);
-            Log.v(TAG, "Cuenta Face : "+strCuentaFacebook);
-            Log.v(TAG, "Fecha Nacim : "+strFechaNacimiento);
-            Log.v(TAG, "Nacionalidad: "+strNacionalidad);
+                Log.v(TAG, "Usuario     : "+strUsuario);
+                //Log.v(TAG, "Contraseña : "+strContraseña);
+                Log.v(TAG, "Mail        : "+strMail);
+                Log.v(TAG, "Nombre      : "+strNombre);
+                Log.v(TAG, "Apellido    : "+strApellido);
+                Log.v(TAG, "Cuenta Face : "+strCuentaFacebook);
+                Log.v(TAG, "Fecha Nacim : "+strFechaNacimiento);
+                Log.v(TAG, "Nacionalidad: "+strNacionalidad);
 
-            computeSHAHash(strContraseña);
+                computeSHAHash(strContraseña);
 
-            //Obtengo el tipo de usuario
-            String tipoUsr = sharedPref.getString("tipo", null);
+                //Obtengo el tipo de usuario
+                String tipoUsr = sharedPref.getString("tipo", null);
 
-            modificarPerfilenServidor(IDusr, tipoUsr, strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, strNacionalidad, strFechaNacimiento);
+                if(camposCompletos()){
+                    modificarPerfilenServidor(IDusr, tipoUsr, strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, strNacionalidad, strFechaNacimiento);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.modificacion_usr_datos_incompletos, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -200,5 +201,37 @@ public class ProfileActivity extends HashFunction {
      */
     private void modificarPerfilenServidor(String idUsr, String tipoUsuario, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento){
         sharedServer.modificarUsuario(idUsr, tipoUsuario, usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, fechaNacimiento, new ModificarUsuarioCallback());
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(camposCompletos() || estaLogueado()){
+            finish();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.modificacion_usr_datos_incompletos, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean estaLogueado() {
+        return (sharedPref.getBoolean("logueado", false));
+    }
+
+    private boolean camposCompletos() {
+        String strUsuario = usuario.getText().toString();
+        String strContraseña = contraseña.getText().toString();
+        String strMail = mail.getText().toString();
+        String strNombre = nombre.getText().toString();
+        String strApellido = apellido.getText().toString();
+        String strCuentaFacebook = cuentaFacebook.getText().toString();
+        String strFechaNacimiento = fechaNacimiento.getText().toString();
+        String strNacionalidad = nacionalidad.getText().toString();
+
+        if(strUsuario.trim().isEmpty() || strContraseña.trim().isEmpty() || strMail.trim().isEmpty() || strNombre.trim().isEmpty()
+                || strApellido.trim().isEmpty() || strFechaNacimiento.trim().isEmpty()
+                || strNacionalidad.trim().isEmpty()){
+            return false;
+        } else {
+            return true;
+        }
     }
 }
