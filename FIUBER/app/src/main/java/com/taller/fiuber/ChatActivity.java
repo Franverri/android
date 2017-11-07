@@ -3,12 +3,18 @@ package com.taller.fiuber;
 import android.app.Activity;
 import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class ChatActivity extends Activity {
@@ -19,6 +25,8 @@ public class ChatActivity extends Activity {
     private EditText chatText;
     private Button buttonSend;
     private boolean side = false;
+
+    FirebaseListAdapter<ChatMessage> mensajes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,12 +68,27 @@ public class ChatActivity extends Activity {
                 listView.setSelection(chatArrayAdapter.getCount() - 1);
             }
         });
+
+        mostrarChat();
     }
 
     private boolean sendChatMessage() {
         chatArrayAdapter.add(new ChatMessage(side, chatText.getText().toString()));
+
+        //Ponerlo en firebase
+        DatabaseReference baseDeDatos = FirebaseDatabase.getInstance().getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+"1"+"/mensajes/"+"Usuario1");
+        baseDeDatos.push().setValue(new ChatMessage(side, chatText.getText().toString()));
+
         chatText.setText("");
-        side = !side;
+        //side = !side;
+
         return true;
     }
+
+    private void mostrarChat() {
+
+        //DatabaseReference baseDeDatos = FirebaseDatabase.getInstance().getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+"1"+"/mensajes/"+"Usuario 1");
+        //Log.v(TAG, baseDeDatos.toString());
+
+        }
 }
