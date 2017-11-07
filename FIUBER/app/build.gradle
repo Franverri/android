@@ -43,6 +43,8 @@ dependencies {
     compile 'com.bakerj:infinite-cards:1.0.2'
     compile 'com.github.devlight:infinitecycleviewpager:1.0.2'
     compile 'com.google.firebase:firebase-messaging:9.8.0'
+    compile 'com.firebaseui:firebase-ui:0.6.2'
+    compile 'com.google.firebase:firebase-database:10.2.6'
     compile 'com.nex3z:notification-badge:0.1.0'
     testCompile 'junit:junit:4.12'
 }

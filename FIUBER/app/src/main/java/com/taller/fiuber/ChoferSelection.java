@@ -1,5 +1,6 @@
 package com.taller.fiuber;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,16 +30,14 @@ public class ChoferSelection extends AppCompatActivity {
         ChoferAdapter adapter = new ChoferAdapter(lstImages, getBaseContext());
         pager.setAdapter(adapter);
 
-
-
         //Configurar click boton "Seleccionar chofer"
-
         Button btnSelect = (Button) findViewById(R.id.chofer_btn_select);
 
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.v(TAG, "Chofer " + String.valueOf(pager.getRealItem()) + " seleccionado.");
+                goChat();
             }
         });
 
@@ -48,5 +47,10 @@ public class ChoferSelection extends AppCompatActivity {
         lstImages.add(R.drawable.auto1);
         lstImages.add(R.drawable.auto2);
         lstImages.add(R.drawable.auto3);
+    }
+
+    private void goChat() {
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
     }
 }
