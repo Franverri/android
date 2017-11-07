@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 public class ChatActivity extends AppCompatActivity {
 
     private static final String TAG = "ChatActivity";
@@ -88,5 +90,32 @@ public class ChatActivity extends AppCompatActivity {
 
     public String getLoggedInUserName() {
         return IDUsuario;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(Objects.equals(sharedPref.getString("tipo", null), "driver")){
+            goMainChofer();
+        } else {
+            goMainPasajero();
+        }
+    }
+
+    /**
+     * Transiciona la APP hacía la pantalla principal para un usuario de tipo pasajero.
+     */
+    private void goMainPasajero() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    /**
+     * Transiciona la APP hacía la pantalla principal para un usuario de tipo chofer.
+     */
+    private void goMainChofer() {
+        Intent intent = new Intent(this, MainChoferActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
