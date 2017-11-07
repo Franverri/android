@@ -88,4 +88,8 @@ public class ChatActivity extends AppCompatActivity {
                 FirebaseDatabase.getInstance().getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+idOrigen+idDestino));
         listView.setAdapter(adapter);
     }
+
+    public String getLoggedInUserName() {
+        return IDUsuario;
+    }
 }

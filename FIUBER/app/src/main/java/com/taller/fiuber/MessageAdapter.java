@@ -33,10 +33,10 @@ public class MessageAdapter extends FirebaseListAdapter<ChatMessage> {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
         ChatMessage chatMessage = getItem(position);
-        //if (chatMessage.getMessageUserId().equals(activity.getLoggedInUserName()))
-        //    view = activity.getLayoutInflater().inflate(R.layout.item_out_message, viewGroup, false);
-        //else
+        if (chatMessage.getMessageUserId().equals(activity.getLoggedInUserName()))
             view = activity.getLayoutInflater().inflate(R.layout.item_in_message, viewGroup, false);
+        else
+            view = activity.getLayoutInflater().inflate(R.layout.item_out_message, viewGroup, false);
 
         //generating view
         populateView(view, chatMessage, position);
