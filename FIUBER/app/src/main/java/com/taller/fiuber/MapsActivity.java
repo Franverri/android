@@ -267,6 +267,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         nav_Menu.findItem(R.id.nav_chat).setVisible(false);
     }
 
+    private void showChat()
+    {
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_chat).setVisible(true);
+    }
+
     private void setNavItemCount(@IdRes int itemId, int count) {
         TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
         view.setText(count > 0 ? String.valueOf(count) : null);
@@ -329,6 +335,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         navigationView = (NavigationView) findViewById(R.id.nav_menu);
+
+        //Esconder el boton de mensaje hasta que se confirme un viaje
+        hideChat();
+
+        if(sharedPref.getString("viajeConfirmado", "no").equals("si")){
+            showChat();
+        }
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -353,7 +367,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         editorShared.apply();
                         configurarNotificaciones();
                         setNavItemCount(R.id.nav_chat, 0);
-                        //hideChat();
+                        goChat();
                         return true;
                 }
                 return false;
@@ -522,6 +536,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     private void goSeleccionarChofer() {
         Intent intent = new Intent(this, ChoferSelection.class);
+        startActivity(intent);
+    }
+
+    private void goChat() {
+        Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }
 }

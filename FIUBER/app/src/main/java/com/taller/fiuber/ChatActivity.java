@@ -1,94 +1,95 @@
 package com.taller.fiuber;
 
-import android.app.Activity;
-import android.database.DataSetObserver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.firebase.database.DatabaseReference;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+public class ChatActivity extends AppCompatActivity {
 
-public class ChatActivity extends Activity {
     private static final String TAG = "ChatActivity";
+    private SharedServer sharedServer;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editorShared;
 
-    private ChatArrayAdapter chatArrayAdapter;
+    private FirebaseListAdapter<ChatMessage> adapter;
     private ListView listView;
-    private EditText chatText;
-    private Button buttonSend;
-    private boolean side = false;
+    private String nombreUsuario = "";
+    private String IDUsuario = "";
 
-    FirebaseListAdapter<ChatMessage> mensajes;
+    private EditText input;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_chat);
 
-        buttonSend = (Button) findViewById(R.id.send);
+        sharedServer = new SharedServer();
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
 
-        listView = (ListView) findViewById(R.id.msgview);
+        //Obtengo el usuario logueado
+        nombreUsuario = sharedPref.getString("usuario", null);
+        IDUsuario = sharedPref.getString("ID", null);
 
-        chatArrayAdapter = new ChatArrayAdapter(getApplicationContext(), R.layout.right_message);
-        listView.setAdapter(chatArrayAdapter);
+        //find views by Ids
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        input = (EditText) findViewById(R.id.input);
+        listView = (ListView) findViewById(R.id.list);
 
-        chatText = (EditText) findViewById(R.id.msg);
-        chatText.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    return sendChatMessage();
+        showAllOldMessages(IDUsuario, "idDestino");
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (input.getText().toString().trim().equals("")) {
+                    Toast.makeText(ChatActivity.this, "Ingrese el mensaje", Toast.LENGTH_SHORT).show();
+                } else {
+                    ponerMensajeFirebase(IDUsuario, "idDestino", nombreUsuario);
                 }
-                return false;
-            }
-        });
-        buttonSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                sendChatMessage();
             }
         });
 
-        listView.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-        listView.setAdapter(chatArrayAdapter);
-
-        //to scroll the list view to bottom on data change
-        chatArrayAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                super.onChanged();
-                listView.setSelection(chatArrayAdapter.getCount() - 1);
-            }
-        });
-
-        mostrarChat();
     }
 
-    private boolean sendChatMessage() {
-        chatArrayAdapter.add(new ChatMessage(side, chatText.getText().toString()));
-
-        //Ponerlo en firebase
-        DatabaseReference baseDeDatos = FirebaseDatabase.getInstance().getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+"1"+"/mensajes/"+"Usuario1");
-        baseDeDatos.push().setValue(new ChatMessage(side, chatText.getText().toString()));
-
-        chatText.setText("");
-        //side = !side;
-
-        return true;
+    private void ponerMensajeFirebase(String idOrigen, String idDestino, String nombreUsr) {
+        FirebaseDatabase.getInstance()
+                .getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+idOrigen+idDestino)
+                .push()
+                .setValue(new ChatMessage(input.getText().toString(),
+                        nombreUsr,
+                        idOrigen)
+                );
+        input.setText("");
     }
 
-    private void mostrarChat() {
+    private void showAllOldMessages(String idOrigen, String idDestino) {
+        //loggedInUserName = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        //Log.d("Main", "user id: " + loggedInUserName);
 
-        //DatabaseReference baseDeDatos = FirebaseDatabase.getInstance().getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+"1"+"/mensajes/"+"Usuario 1");
-        //Log.v(TAG, baseDeDatos.toString());
+        adapter = new MessageAdapter(this, ChatMessage.class, R.layout.item_in_message,
+                FirebaseDatabase.getInstance().getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+idOrigen+idDestino));
+        listView.setAdapter(adapter);
+    }
 
-        }
+    public String getLoggedInUserName() {
+        return IDUsuario;
+    }
 }
