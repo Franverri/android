@@ -1,6 +1,8 @@
 package com.taller.fiuber;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,11 +21,20 @@ public class ChoferSelection extends AppCompatActivity {
     private List<Integer> lstImages = new ArrayList<>();
     private HorizontalInfiniteCycleViewPager pager;
 
+    SharedServer sharedServer;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editorShared;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chofer_selection);
-        
+
+        //Iniciliazación sharedPref
+        sharedServer = new SharedServer();
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+
         initData();
 
         pager = (HorizontalInfiniteCycleViewPager)findViewById(R.id.horizontal_cycle);
@@ -37,7 +48,9 @@ public class ChoferSelection extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.v(TAG, "Chofer " + String.valueOf(pager.getRealItem()) + " seleccionado.");
-                goChat();
+                editorShared.putString("viajeConfirmado","si");
+                editorShared.apply();
+                goMain();
             }
         });
 
@@ -49,8 +62,9 @@ public class ChoferSelection extends AppCompatActivity {
         lstImages.add(R.drawable.auto3);
     }
 
-    private void goChat() {
-        Intent intent = new Intent(this, ChatActivity.class);
+    private void goMain() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 }

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
@@ -134,6 +135,15 @@ public class MainChoferActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         navigationView = (NavigationView) findViewById(R.id.nav_menu_chofer);
+
+        //Esconder el boton de mensaje hasta que se confirme un viaje
+        if((sharedPref.getString("viajeConfirmado", null)!=null)){
+
+        } else {
+            hideChat();
+        }
+
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -162,12 +172,18 @@ public class MainChoferActivity extends AppCompatActivity {
                         editorShared.apply();
                         configurarNotificaciones();
                         setNavItemCount(R.id.nav_chofer_chat, 0);
-                        //hideChat();
+                        goChat();
                         return true;
                 }
                 return false;
             }
         });
+    }
+
+    private void hideChat()
+    {
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_chat).setVisible(false);
     }
 
     private void goLogin() {
@@ -183,6 +199,11 @@ public class MainChoferActivity extends AppCompatActivity {
 
     private void goCars() {
         Intent intent = new Intent(this, CarsActivity.class);
+        startActivity(intent);
+    }
+
+    private void goChat() {
+        Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }
 }
