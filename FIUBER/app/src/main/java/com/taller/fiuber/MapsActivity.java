@@ -93,29 +93,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ActionBarDrawerToggle toggle;
     private BadgeDrawerArrowDrawable badgeDrawable;
 
-    //DELETE
-    //Firebase Notifications
-    //private BroadcastReceiver mRegistrarionBroadcastReceiver;
-
     @Override
     protected void onPause() {
         super.onPause();
-        //DELETE
-        //LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrarionBroadcastReceiver);
-
     }
-
-    //DELETE
-    /*
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrarionBroadcastReceiver,
-                new IntentFilter("RegistrarionComplete"));
-        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrarionBroadcastReceiver,
-                new IntentFilter(Config.STR_PUSH));
-
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,21 +233,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }, 10);
             return;
         }
-
-
-        //DELETE
-        /*
-        //Notificaciones Firebase
-        mRegistrarionBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(Config.STR_PUSH)){
-                    Log.v("FIREBASE", "Entra aca");
-                    String message = intent.getStringExtra("message");
-                    showNotification("FIUBER", message);
-                }
-            }
-        };*/
     }
 
     private void hideChat()
@@ -285,23 +251,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
         view.setText(count > 0 ? String.valueOf(count) : null);
     }
-
-    //DELETE
-    /*
-    private void showNotification(String title, String message) {
-        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder b = new NotificationCompat.Builder(getApplicationContext());
-        b.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setContentIntent(contentIntent);
-        NotificationManager notificationManager = (NotificationManager)getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1,b.build()) ;
-    }*/
 
     private void configurarConfirmarViaje() {
         btnConfirmarViaje = (Button) findViewById(R.id.btnConfirmarViaje);

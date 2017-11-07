@@ -45,9 +45,6 @@ public class MainChoferActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private BadgeDrawerArrowDrawable badgeDrawable;
 
-    //Firebase Notifications
-    private BroadcastReceiver mRegistrarionBroadcastReceiver;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +56,8 @@ public class MainChoferActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main_chofer);
+
+        Log.v(TAG, "LLEGA ACA");
 
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
@@ -137,12 +136,11 @@ public class MainChoferActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.nav_menu_chofer);
 
         //Esconder el boton de mensaje hasta que se confirme un viaje
-        if((sharedPref.getString("viajeConfirmado", null)!=null)){
+        //hideChat();
 
-        } else {
-            hideChat();
-        }
-
+        //if(sharedPref.getString("viajeConfirmado", "no").equals("si")){
+        //    showChat();
+        //}
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -183,7 +181,13 @@ public class MainChoferActivity extends AppCompatActivity {
     private void hideChat()
     {
         Menu nav_Menu = navigationView.getMenu();
-        nav_Menu.findItem(R.id.nav_chat).setVisible(false);
+        nav_Menu.findItem(R.id.nav_chofer_chat).setVisible(false);
+    }
+
+    private void showChat()
+    {
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.nav_chofer_chat).setVisible(true);
     }
 
     private void goLogin() {
