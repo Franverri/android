@@ -51,7 +51,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.taller.fiuber.Config.Config;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -93,16 +93,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ActionBarDrawerToggle toggle;
     private BadgeDrawerArrowDrawable badgeDrawable;
 
+    //DELETE
     //Firebase Notifications
-    private BroadcastReceiver mRegistrarionBroadcastReceiver;
+    //private BroadcastReceiver mRegistrarionBroadcastReceiver;
 
     @Override
     protected void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrarionBroadcastReceiver);
+        //DELETE
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrarionBroadcastReceiver);
 
     }
 
+    //DELETE
+    /*
     @Override
     protected void onResume() {
         super.onResume();
@@ -111,7 +115,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrarionBroadcastReceiver,
                 new IntentFilter(Config.STR_PUSH));
 
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +128,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_maps);
+
+        //Suscribirse a un tópico de notificaciones
+        FirebaseMessaging.getInstance().subscribeToTopic("NEWS");
 
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
@@ -247,7 +254,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
 
-
+        //DELETE
+        /*
         //Notificaciones Firebase
         mRegistrarionBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -258,7 +266,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     showNotification("FIUBER", message);
                 }
             }
-        };
+        };*/
     }
 
     private void hideChat()
@@ -278,6 +286,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         view.setText(count > 0 ? String.valueOf(count) : null);
     }
 
+    //DELETE
+    /*
     private void showNotification(String title, String message) {
         Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
@@ -291,7 +301,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setContentIntent(contentIntent);
         NotificationManager notificationManager = (NotificationManager)getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1,b.build()) ;
-    }
+    }*/
 
     private void configurarConfirmarViaje() {
         btnConfirmarViaje = (Button) findViewById(R.id.btnConfirmarViaje);

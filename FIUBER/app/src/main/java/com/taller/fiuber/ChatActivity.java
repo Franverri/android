@@ -81,9 +81,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void showAllOldMessages(String idOrigen, String idDestino) {
-        //loggedInUserName = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        //Log.d("Main", "user id: " + loggedInUserName);
-
         adapter = new MessageAdapter(this, ChatMessage.class, R.layout.item_in_message,
                 FirebaseDatabase.getInstance().getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+idOrigen+idDestino));
         listView.setAdapter(adapter);
