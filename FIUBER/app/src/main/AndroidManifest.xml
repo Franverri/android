@@ -67,7 +67,7 @@
             android:name=".MainChoferActivity"
             android:theme="@style/Main">
             <intent-filter>
-                <action android:name="MAPSACTIVITY"></action>
+                <action android:name="MAINCHOFERACTIVITY"></action>
                 <category android:name="android.intent.category.DEFAULT"></category>
             </intent-filter>
         </activity>
