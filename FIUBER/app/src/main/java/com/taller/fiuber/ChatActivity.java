@@ -35,6 +35,7 @@ public class ChatActivity extends AppCompatActivity {
     private ListView listView;
     private String nombreUsuario = "";
     private String IDUsuario = "";
+    private String tipoUsr = "";
 
     private EditText input;
 
@@ -50,13 +51,18 @@ public class ChatActivity extends AppCompatActivity {
         //Obtengo el usuario logueado
         nombreUsuario = sharedPref.getString("usuario", null);
         IDUsuario = sharedPref.getString("ID", null);
+        tipoUsr = sharedPref.getString("tipo",null);
 
         //find views by Ids
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         input = (EditText) findViewById(R.id.input);
         listView = (ListView) findViewById(R.id.list);
 
-        showAllOldMessages(IDUsuario, "idDestino");
+        if(tipoUsr.equals("driver")){
+            showAllOldMessages("7", IDUsuario);
+        } else {
+            showAllOldMessages(IDUsuario, "6");
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,20 +70,26 @@ public class ChatActivity extends AppCompatActivity {
                 if (input.getText().toString().trim().equals("")) {
                     Toast.makeText(ChatActivity.this, "Ingrese el mensaje", Toast.LENGTH_SHORT).show();
                 } else {
-                    ponerMensajeFirebase(IDUsuario, "idDestino", nombreUsuario);
+                    if(tipoUsr.equals("driver")){
+                        //Faltaría tener un "pasajeroAsignado" en el sharedPref
+                        ponerMensajeFirebase(IDUsuario, "7", IDUsuario, nombreUsuario);
+                    } else {
+                        //Faltaría tener un "pasajeroAsignado" en el sharedPref
+                        ponerMensajeFirebase(IDUsuario, IDUsuario, "6", nombreUsuario);
+                    }
                 }
             }
         });
 
     }
 
-    private void ponerMensajeFirebase(String idOrigen, String idDestino, String nombreUsr) {
+    private void ponerMensajeFirebase(String idUsuario, String idPasajero, String idChofer, String nombreUsr) {
         FirebaseDatabase.getInstance()
-                .getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+idOrigen+idDestino)
+                .getReferenceFromUrl("https://fiuber-177714.firebaseio.com/"+idPasajero+idChofer)
                 .push()
                 .setValue(new ChatMessage(input.getText().toString(),
                         nombreUsr,
-                        idOrigen)
+                        idUsuario)
                 );
         input.setText("");
     }
