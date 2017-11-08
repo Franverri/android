@@ -70,6 +70,7 @@
     <string name="modificacion_usr_exitoso">Cambios guardados exitosamente</string>
     <string name="modificacion_usr_error">Error al modificar los datos</string>
     <string name="modificacion_usr_datos_incompletos">Datos incompletos</string>
+    <string name="unable_delete_car">Mínimo un auto</string>
 
 
 </resources>
