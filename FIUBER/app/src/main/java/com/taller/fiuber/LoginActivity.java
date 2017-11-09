@@ -200,6 +200,7 @@ public class LoginActivity extends HashFunction  {
                     Log.v(TAG, "Tipo  : "+strTipo);
                     String strIDusr = respuesta.getString("id");
                     Log.v(TAG, "ID Usr: "+strIDusr);
+                    editorShared.putString("token", strToken);
                     editorShared.putBoolean("logueado", true);
                     editorShared.putString("tipo", strTipo);
                     editorShared.putString("ID", strIDusr);
@@ -207,6 +208,9 @@ public class LoginActivity extends HashFunction  {
 
                     //Obtengo los datos del usuario logueado
                     cargarDatosUsuario(strIDusr);
+
+                    //Almaceno el token del usuario
+                    sharedServer.configurarTokenAutenticacion(strToken);
 
                     if(Objects.equals(strTipo, "driver")){
                         goMainChofer();

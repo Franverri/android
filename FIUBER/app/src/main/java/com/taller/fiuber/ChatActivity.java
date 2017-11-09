@@ -3,10 +3,12 @@ package com.taller.fiuber;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Objects;
 
@@ -67,20 +79,51 @@ public class ChatActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String mensajeIngresado = input.getText().toString();
                 if (input.getText().toString().trim().equals("")) {
                     Toast.makeText(ChatActivity.this, "Ingrese el mensaje", Toast.LENGTH_SHORT).show();
                 } else {
                     if(tipoUsr.equals("driver")){
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
                         ponerMensajeFirebase(IDUsuario, "7", IDUsuario, nombreUsuario);
+                        //enviarNotificacion(nombreUsuario, "7", mensajeIngresado);
                     } else {
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
                         ponerMensajeFirebase(IDUsuario, IDUsuario, "6", nombreUsuario);
+                        //enviarNotificacion(nombreUsuario, "6", mensajeIngresado);
                     }
                 }
             }
         });
 
+    }
+
+    private void enviarNotificacion(String nombreUsuario, String IDDestino, String mensaje) {
+        JSONObject jsonMensaje = new JSONObject();
+        String topico = "topic/"+IDDestino;
+
+        try {
+            jsonMensaje.put("to", topico);
+            jsonMensaje.put("notification", new JSONObject()
+                                                    .put("title", nombreUsuario)
+                                                    .put("text", mensaje)
+                                                    .put("click_action", "CHATACTIVITY")
+                                                );
+        }
+        catch(JSONException e)
+        {
+
+        }
+        String str = jsonMensaje.toString();
+        Log.v(TAG, "JSON: "+ str);
+        enviarPOST("https://fcm.googleapis.com/fcm/send", jsonMensaje, new JSONCallback() {
+            @Override
+            public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                Log.v(TAG, "Codigdo servidor: "+ codigoServidor);
+                String str = respuesta.toString();
+                Log.v(TAG, "JSON: "+ str);
+            }
+        });
     }
 
     private void ponerMensajeFirebase(String idUsuario, String idPasajero, String idChofer, String nombreUsr) {
@@ -129,5 +172,63 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainChoferActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    protected void enviarPOST(final String URL, final JSONObject json, final JSONCallback callback)
+    {
+        class POST extends AsyncTask<String,Integer,JSONObject> {
+
+            long codigoServidor;
+
+            protected JSONObject doInBackground(String... params) {
+
+                JSONObject result;
+
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpPost post = new HttpPost(URL);
+
+                post.setHeader("Content-type", "application/json");
+                post.setHeader("Authorization:","key=AAAAIqy7cgs:APA91bFJ1BC7rlvrQKoQNcpubZqxg_jVy1rgSH0pWxGC6Z_yN_RUAmyduc5S9j2xcC7UeLT5fy2L9bm2HGtvzYhn7daWFJgalLBxtz7ID73KprwZhQXBmZcEd05d7k_cXftN_YVifStn");
+
+                try
+                {
+                    //Configura post para que envie el json.
+
+                    Log.v("InterfazRest", "JSON enviado: "+json.toString());
+
+                    StringEntity entidad = new StringEntity(json.toString());
+                    post.setEntity(entidad);
+
+                    //Envio y espero la peticion.
+                    HttpResponse resp = httpClient.execute(post);
+                    String respStr = EntityUtils.toString(resp.getEntity());
+                    codigoServidor = resp.getStatusLine().getStatusCode();
+
+                    Log.v("InterfazRest", "Respuesta server: "+respStr);
+                    String codStr = Long.toString(codigoServidor);
+                    Log.v("InterfazRest", "Codigo server: "+codStr);
+
+                    result = new JSONObject(respStr);
+                }
+                catch(Exception ex)
+                {
+                    result = new JSONObject();
+                }
+
+                return result;
+            }
+
+            /**
+             * Método en el cual se procede a ejecutar/procesar la respuesta del APP Server
+             */
+            protected void onPostExecute(JSONObject result) {
+                callback.ejecutar(result, codigoServidor);
+            }
+        }
+
+        POST peticion = new POST();
+
+        peticion.execute();
     }
 }
