@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +58,15 @@ public class MainChoferActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_chofer);
 
-        Log.v(TAG, "LLEGA ACA");
-
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        //Suscribirse a un tópico de notificaciones
+        //FirebaseMessaging.getInstance().subscribeToTopic("NEWSCHOFER");
+        String idUser = sharedPref.getString("ID", "noID");
+        FirebaseMessaging.getInstance().subscribeToTopic(idUser);
 
         //Prueba contador notificaciones
         editorShared.putInt("mensajes", 10);

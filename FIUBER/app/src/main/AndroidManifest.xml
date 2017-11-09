@@ -67,25 +67,28 @@
             android:name=".MainChoferActivity"
             android:theme="@style/Main">
             <intent-filter>
-                <action android:name="MAINCHOFERACTIVITY"></action>
-                <category android:name="android.intent.category.DEFAULT"></category>
+                <action android:name="MAINCHOFERACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity android:name=".CarsActivity" />
         <activity android:name=".ChoferSelection" />
         <activity android:name=".ChatActivity">
             <intent-filter>
-                <action android:name="CHATACTIVITY"></action>
-                <category android:name="android.intent.category.DEFAULT"></category>
+                <action android:name="CHATACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".FirebaseMessagingService">
+        <service android:name=".FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".RegisterCarActivity"></activity>
     </application>
 
 </manifest>

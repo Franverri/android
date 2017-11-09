@@ -54,9 +54,10 @@ abstract public class InterfazRest {
                 HttpPost post = new HttpPost(URL);
 
                 post.setHeader("Content-type", "application/json");
+                if(!token.isEmpty()){
+                    post.setHeader("Authorization:","Bearer "+token);
+                }
 
-                //if(!token.isEmpty())
-                //   post.setHeader("Authorization:","Basic "+token);
 
                 try
                 {

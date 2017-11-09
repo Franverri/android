@@ -110,13 +110,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setContentView(R.layout.activity_maps);
 
-        //Suscribirse a un tópico de notificaciones
-        FirebaseMessaging.getInstance().subscribeToTopic("NEWS");
-
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        //Suscribirse a un tópico de notificaciones
+        FirebaseMessaging.getInstance().subscribeToTopic("NEWSPASAJERO");
+        String idUser = sharedPref.getString("ID", "noID");
+        FirebaseMessaging.getInstance().subscribeToTopic(idUser);
 
         //Prueba contador notificaciones
         editorShared.putInt("mensajes", 10);

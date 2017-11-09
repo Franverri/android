@@ -1,5 +1,6 @@
 package com.taller.fiuber;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -110,6 +111,7 @@ public class CarsActivity extends AppCompatActivity {
     private void añadirAuto() {
         //Llamar al APP Server
         cantidadAutos++;
+        goRegisterCar();
     }
 
     private void configurarBotonSeleccionar() {
@@ -134,5 +136,10 @@ public class CarsActivity extends AppCompatActivity {
                 carsTitle.setText(carAdapter.getCarTitle(indice));
             }
         });
+    }
+
+    private void goRegisterCar() {
+        Intent intent = new Intent(this, RegisterCarActivity.class);
+        startActivity(intent);
     }
 }
