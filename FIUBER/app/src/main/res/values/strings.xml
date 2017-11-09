@@ -71,6 +71,8 @@
     <string name="modificacion_usr_error">Error al modificar los datos</string>
     <string name="modificacion_usr_datos_incompletos">Datos incompletos</string>
     <string name="unable_delete_car">Mínimo un auto</string>
+    <string name="registo_auto_exitoso">Auto registrado correctamente</string>
+    <string name="registo_auto_error">Error al registrar auto</string>
 
 
 </resources>

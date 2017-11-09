@@ -63,6 +63,11 @@ public class MainChoferActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
+        //Almaceno el token del usuario
+        String strToken = sharedPref.getString("token", "noToken");
+        Log.v(TAG, strToken);
+        sharedServer.configurarTokenAutenticacion(strToken);
+
         //Suscribirse a un tópico de notificaciones
         //FirebaseMessaging.getInstance().subscribeToTopic("NEWSCHOFER");
         String idUser = sharedPref.getString("ID", "noID");

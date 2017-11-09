@@ -115,6 +115,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
+        //Almaceno el token del usuario
+        String strToken = sharedPref.getString("token", "noToken");
+        sharedServer.configurarTokenAutenticacion(strToken);
+
         //Suscribirse a un tópico de notificaciones
         FirebaseMessaging.getInstance().subscribeToTopic("NEWSPASAJERO");
         String idUser = sharedPref.getString("ID", "noID");

@@ -133,4 +133,28 @@ public class SharedServer extends InterfazRest {
         enviarGET(URLAPIREST+"/users/"+idUsr,callback);
     }
 
+    public void darAltaAuto(String idUsr, String modelo, String color, String patente, String anio, String estado, String aire, String musica, JSONCallback callback)
+    {
+        JSONObject jsonAuto = new JSONObject();
+
+        try {
+            jsonAuto.put("modelo", modelo);
+            jsonAuto.put("color", color);
+            jsonAuto.put("patente", patente);
+            jsonAuto.put("anio", anio);
+            jsonAuto.put("estado", estado);
+            jsonAuto.put("aireAcondicionado", aire);
+            jsonAuto.put("musica", musica);
+
+        }
+        catch(JSONException e)
+        {
+
+        }
+        Log.v(TAG, "URL: "+URLAPIREST+"/driver/"+idUsr+"/cars");
+        String str = jsonAuto.toString();
+        Log.v(TAG, "JSON: "+ str);
+        enviarPOST(URLAPIREST+"/driver/"+idUsr+"/cars",jsonAuto,callback);
+    }
+
 }

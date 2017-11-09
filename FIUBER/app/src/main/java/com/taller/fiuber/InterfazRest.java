@@ -55,7 +55,8 @@ abstract public class InterfazRest {
 
                 post.setHeader("Content-type", "application/json");
                 if(!token.isEmpty()){
-                    post.setHeader("Authorization:","Bearer "+token);
+                    post.setHeader("Authorization","Bearer "+token);
+                    Log.v("INTERFAZ", "TOKEN: "+ token);
                 }
 
 
@@ -121,7 +122,7 @@ abstract public class InterfazRest {
                 get.setHeader("content-type", "application/json");
 
                 //if(!token.isEmpty())
-                //    get.setHeader("Authorization:", "Basic " + token);
+                //    get.setHeader("Authorization:", "Bearer " + token);
 
 
                 try
