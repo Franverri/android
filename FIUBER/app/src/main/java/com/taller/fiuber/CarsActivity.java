@@ -77,6 +77,7 @@ public class CarsActivity extends AppCompatActivity {
         Car auto3 = new Car("Auto azul", R.drawable.auto3);
         autos.add(auto2);
         autos.add(auto3);
+        //agregarAuto("Auto nuevo");
         cantidadAutos = 3;
 
         carAdapter = new CarAdapter(this, autos);
@@ -105,17 +106,34 @@ public class CarsActivity extends AppCompatActivity {
         configurarBotonEliminar();
     }
 
+    private void procesarAutos() {
+        String autosGuardados = sharedPref.getString("Autos","noAutos");
+        Log.v(TAG, "AUTOS GUARDADOS: "+ autosGuardados);
+        String[] listaAutos = sharedPref.getString("Autos","noAutos").split(",");
+        for (String auto : listaAutos) {
+            agregarAuto(auto);
+        }
+    }
+
+    private void agregarAuto(String modelo) {
+        Log.v(TAG, "Agregando auto");
+        Car autoNuevo = new Car(modelo, R.drawable.auto4);
+        autos.add(autoNuevo);
+    }
+
     private void obtenerAutos(String strIDusr) {
         sharedServer.obtenerAutos(strIDusr, new JSONCallback() {
             @Override
             public void ejecutar(JSONObject respuesta, long codigoServidor) {
                 Log.v(TAG, "Respuesta: "+ respuesta);
+                String strAutos = "";
 
                 Iterator<?> keys = respuesta.keys();
                 while(keys.hasNext()){
                     String key = (String)keys.next();
                     try {
                         String modelo = respuesta.getJSONObject(key).optString("modelo");
+                        strAutos = strAutos + modelo + ",";
                         String idAuto = respuesta.getJSONObject(key).optString("id");
                         Log.v(TAG, "Claves   :"+ respuesta.getJSONObject(key).optString("modelo"));
                         Log.v(TAG, "Claves   :"+ respuesta.getJSONObject(key).optString("id"));
@@ -125,8 +143,12 @@ public class CarsActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
+                editorShared.putString("Autos", strAutos);
+                Log.v(TAG, "Autos   :"+ strAutos);
+                editorShared.apply();
             }
         });
+        procesarAutos();
     }
 
     private void configurarBotonEliminar() {
