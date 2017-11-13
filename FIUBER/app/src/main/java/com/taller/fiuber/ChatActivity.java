@@ -87,11 +87,11 @@ public class ChatActivity extends AppCompatActivity {
                     if(tipoUsr.equals("driver")){
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
                         ponerMensajeFirebase(IDUsuario, "7", IDUsuario, nombreUsuario);
-                        //enviarNotificacion(nombreUsuario, "7", mensajeIngresado);
+                        enviarNotificacion(nombreUsuario, "7", mensajeIngresado);
                     } else {
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
                         ponerMensajeFirebase(IDUsuario, IDUsuario, "6", nombreUsuario);
-                        //enviarNotificacion(nombreUsuario, "6", mensajeIngresado);
+                        enviarNotificacion(nombreUsuario, "6", mensajeIngresado);
                     }
                 }
             }
@@ -100,24 +100,10 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void enviarNotificacion(String nombreUsuario, String IDDestino, String mensaje) {
-        JSONObject jsonMensaje = new JSONObject();
-        String topico = "topic/"+IDDestino;
 
-        try {
-            jsonMensaje.put("to", topico);
-            jsonMensaje.put("notification", new JSONObject()
-                                                    .put("title", nombreUsuario)
-                                                    .put("text", mensaje)
-                                                    .put("click_action", "CHATACTIVITY")
-                                                );
-        }
-        catch(JSONException e)
-        {
+        String body = "{\"to\": \"/topics/" + IDDestino +"\", \"notification\": {\"title\": \"" + nombreUsuario+ "\", \"text\": \"" + mensaje + "\", \"click_action\": \"CHATACTIVITY\" } }";
 
-        }
-        String str = jsonMensaje.toString();
-        Log.v(TAG, "JSON: "+ str.replaceAll("\\\\", ""));
-        enviarPOST("https://fcm.googleapis.com/fcm/send", jsonMensaje, new JSONCallback() {
+        enviarPOST("https://fcm.googleapis.com/fcm/send", body, new JSONCallback() {
             @Override
             public void ejecutar(JSONObject respuesta, long codigoServidor) {
                 Log.v(TAG, "Codigdo servidor: "+ codigoServidor);
@@ -175,7 +161,7 @@ public class ChatActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    protected void enviarPOST(final String URL, final JSONObject json, final JSONCallback callback)
+    protected void enviarPOST(final String URL, final String body, final JSONCallback callback)
     {
         class POST extends AsyncTask<String,Integer,JSONObject> {
 
@@ -196,9 +182,9 @@ public class ChatActivity extends AppCompatActivity {
                 {
                     //Configura post para que envie el json.
 
-                    Log.v("InterfazRest", "JSON enviado: "+json.toString());
+                    Log.v("InterfazRest", "JSON enviado: "+body);
 
-                    StringEntity entidad = new StringEntity(json.toString().replaceAll("\\\\", ""));
+                    StringEntity entidad = new StringEntity(body);
                     post.setEntity(entidad);
 
                     //Envio y espero la peticion.
