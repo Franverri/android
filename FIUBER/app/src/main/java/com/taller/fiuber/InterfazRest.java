@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -56,7 +57,6 @@ abstract public class InterfazRest {
                 post.setHeader("Content-type", "application/json");
                 if(!token.isEmpty()){
                     post.setHeader("Authorization","Bearer "+token);
-                    Log.v("INTERFAZ", "TOKEN: "+ token);
                 }
 
 
@@ -121,8 +121,8 @@ abstract public class InterfazRest {
 
                 get.setHeader("content-type", "application/json");
 
-                //if(!token.isEmpty())
-                //    get.setHeader("Authorization:", "Bearer " + token);
+                if(!token.isEmpty())
+                    get.setHeader("Authorization", "Bearer " + token);
 
 
                 try
@@ -179,8 +179,8 @@ abstract public class InterfazRest {
 
                 put.setHeader("content-type", "application/json");
 
-                //if(!token.isEmpty())
-                //    put.setHeader("Authorization:", "Basic "+token);
+                if(!token.isEmpty())
+                    put.setHeader("Authorization", "Bearer "+token);
 
                 try
                 {
@@ -216,6 +216,60 @@ abstract public class InterfazRest {
         }
 
         PUT peticion = new PUT();
+
+        peticion.execute();
+    }
+
+    protected void enviarDELETE(final String URL, final JSONCallback callback)
+    {
+        class DELETE extends AsyncTask<String,Integer,JSONObject> {
+
+            long codigoServidor;
+
+            protected JSONObject doInBackground(String... params) {
+
+                JSONObject result;
+
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpDelete delete = new HttpDelete(URL);
+
+                delete.setHeader("content-type", "application/json");
+
+                if(!token.isEmpty())
+                    delete.setHeader("Authorization", "Bearer " + token);
+
+
+                try
+                {
+                    //Envio y espero la peticion.
+                    HttpResponse resp = httpClient.execute(delete);
+                    String respStr = EntityUtils.toString(resp.getEntity());
+                    codigoServidor = resp.getStatusLine().getStatusCode();
+
+                    Log.v("InterfazRest", "Respuesta server: "+respStr);
+                    String codStr = Long.toString(codigoServidor);
+                    Log.v("InterfazRest", "Codigo server: "+codStr);
+
+                    result = new JSONObject(respStr);
+                }
+                catch(Exception ex)
+                {
+                    result = new JSONObject();
+                }
+
+                return result;
+            }
+
+            /**
+             * Método en el cual se procede a ejecutar/procesar la respuesta del APP Server
+             */
+            protected void onPostExecute(JSONObject result) {
+                callback.ejecutar(result, codigoServidor);
+            }
+        }
+
+        DELETE peticion = new DELETE();
 
         peticion.execute();
     }

@@ -129,7 +129,6 @@ public class SharedServer extends InterfazRest {
      */
     public void obtenerDatosUsrServidor(String idUsr, JSONCallback callback)
     {
-        Log.v(TAG, "JSON: "+ idUsr);
         enviarGET(URLAPIREST+"/users/"+idUsr,callback);
     }
 
@@ -155,6 +154,15 @@ public class SharedServer extends InterfazRest {
         String str = jsonAuto.toString();
         Log.v(TAG, "JSON: "+ str);
         enviarPOST(URLAPIREST+"/driver/"+idUsr+"/cars",jsonAuto,callback);
+    }
+
+    public void eliminarAuto(String idUsr, String idAuto, JSONCallback callback){
+        Log.v(TAG, "URL: "+URLAPIREST+"/driver/"+idUsr+"/cars/"+idAuto);
+        enviarDELETE(URLAPIREST+"/driver/"+idUsr+"/cars",callback);
+    }
+
+    public void obtenerAutos(String idUsr, JSONCallback callback){
+        enviarGET(URLAPIREST+"/driver/"+idUsr+"/cars",callback);
     }
 
 }
