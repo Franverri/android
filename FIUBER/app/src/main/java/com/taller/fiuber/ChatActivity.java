@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -115,7 +116,7 @@ public class ChatActivity extends AppCompatActivity {
 
         }
         String str = jsonMensaje.toString();
-        Log.v(TAG, "JSON: "+ str);
+        Log.v(TAG, "JSON: "+ str.replaceAll("\\\\", ""));
         enviarPOST("https://fcm.googleapis.com/fcm/send", jsonMensaje, new JSONCallback() {
             @Override
             public void ejecutar(JSONObject respuesta, long codigoServidor) {
@@ -189,7 +190,7 @@ public class ChatActivity extends AppCompatActivity {
                 HttpPost post = new HttpPost(URL);
 
                 post.setHeader("Content-type", "application/json");
-                post.setHeader("Authorization:","key=AAAAIqy7cgs:APA91bFJ1BC7rlvrQKoQNcpubZqxg_jVy1rgSH0pWxGC6Z_yN_RUAmyduc5S9j2xcC7UeLT5fy2L9bm2HGtvzYhn7daWFJgalLBxtz7ID73KprwZhQXBmZcEd05d7k_cXftN_YVifStn");
+                post.setHeader("Authorization","key=AAAAIqy7cgs:APA91bFJ1BC7rlvrQKoQNcpubZqxg_jVy1rgSH0pWxGC6Z_yN_RUAmyduc5S9j2xcC7UeLT5fy2L9bm2HGtvzYhn7daWFJgalLBxtz7ID73KprwZhQXBmZcEd05d7k_cXftN_YVifStn");
 
                 try
                 {
@@ -197,7 +198,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     Log.v("InterfazRest", "JSON enviado: "+json.toString());
 
-                    StringEntity entidad = new StringEntity(json.toString());
+                    StringEntity entidad = new StringEntity(json.toString().replaceAll("\\\\", ""));
                     post.setEntity(entidad);
 
                     //Envio y espero la peticion.

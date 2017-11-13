@@ -1,6 +1,8 @@
 package com.taller.fiuber;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +17,12 @@ import com.bakerj.infinitecards.transformer.DefaultTransformerToBack;
 import com.bakerj.infinitecards.transformer.DefaultTransformerToFront;
 import com.bakerj.infinitecards.transformer.DefaultZIndexTransformerCommon;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class CarsActivity extends AppCompatActivity {
@@ -29,13 +36,29 @@ public class CarsActivity extends AppCompatActivity {
     List<Integer> images = new ArrayList<>();
     List<Car> autos = new ArrayList<>();
     int indice;
-
     private int cantidadAutos;
+    String strIDusr;
+
+    private SharedServer sharedServer;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editorShared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cars);
+
+        sharedServer = new SharedServer();
+        sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
+        editorShared = sharedPref.edit();
+
+        //Almaceno el token del usuario
+        String strToken = sharedPref.getString("token", "noToken");
+        Log.v(TAG, strToken);
+        sharedServer.configurarTokenAutenticacion(strToken);
+
+        //Guardo ID de usuario
+        strIDusr = sharedPref.getString("ID", "noUsr");
 
         btnNext = (Button) findViewById(R.id.cars_next);
         btnSelect = (Button) findViewById(R.id.cars_select);
@@ -48,11 +71,13 @@ public class CarsActivity extends AppCompatActivity {
         //Debería pedir los autos al APP Server
         indice = 0;
         Car auto1 = new Car("Auto naranja", R.drawable.auto1);
+        autos.add(auto1);
+        obtenerAutos(strIDusr);
         Car auto2 = new Car("Auto rojo", R.drawable.auto2);
         Car auto3 = new Car("Auto azul", R.drawable.auto3);
-        autos.add(auto1);
         autos.add(auto2);
         autos.add(auto3);
+        //agregarAuto("Auto nuevo");
         cantidadAutos = 3;
 
         carAdapter = new CarAdapter(this, autos);
@@ -81,11 +106,56 @@ public class CarsActivity extends AppCompatActivity {
         configurarBotonEliminar();
     }
 
+    private void procesarAutos() {
+        String autosGuardados = sharedPref.getString("Autos","noAutos");
+        Log.v(TAG, "AUTOS GUARDADOS: "+ autosGuardados);
+        String[] listaAutos = sharedPref.getString("Autos","noAutos").split(",");
+        for (String auto : listaAutos) {
+            agregarAuto(auto);
+        }
+    }
+
+    private void agregarAuto(String modelo) {
+        Log.v(TAG, "Agregando auto");
+        Car autoNuevo = new Car(modelo, R.drawable.auto4);
+        autos.add(autoNuevo);
+    }
+
+    private void obtenerAutos(String strIDusr) {
+        sharedServer.obtenerAutos(strIDusr, new JSONCallback() {
+            @Override
+            public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                Log.v(TAG, "Respuesta: "+ respuesta);
+                String strAutos = "";
+
+                Iterator<?> keys = respuesta.keys();
+                while(keys.hasNext()){
+                    String key = (String)keys.next();
+                    try {
+                        String modelo = respuesta.getJSONObject(key).optString("modelo");
+                        strAutos = strAutos + modelo + ",";
+                        String idAuto = respuesta.getJSONObject(key).optString("id");
+                        Log.v(TAG, "Claves   :"+ respuesta.getJSONObject(key).optString("modelo"));
+                        Log.v(TAG, "Claves   :"+ respuesta.getJSONObject(key).optString("id"));
+                        //Car auto = new Car(modelo, R.drawable.auto1);
+                        //autos.add(auto);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                editorShared.putString("Autos", strAutos);
+                Log.v(TAG, "Autos   :"+ strAutos);
+                editorShared.apply();
+            }
+        });
+        procesarAutos();
+    }
+
     private void configurarBotonEliminar() {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eliminarAuto();
+                //eliminarAuto();
             }
         });
     }
@@ -95,6 +165,12 @@ public class CarsActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.unable_delete_car, Toast.LENGTH_SHORT).show();
         } else {
             //Llamar al app
+            sharedServer.eliminarAuto(strIDusr, String.valueOf(indice), new JSONCallback() {
+                @Override
+                public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                    //Respuesta server
+                }
+            });
             cantidadAutos--;
         }
     }
@@ -128,6 +204,7 @@ public class CarsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 infiniteCardView.bringCardToFront(carAdapter.getCount()-1);
+                Log.v(TAG, "Indice: "+ indice);
                 if(indice == 0){
                     indice = carAdapter.getCount()-1;
                 } else {
