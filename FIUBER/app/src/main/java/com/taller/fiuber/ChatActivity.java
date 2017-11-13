@@ -100,25 +100,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void enviarNotificacion(String nombreUsuario, String IDDestino, String mensaje) {
-        JSONObject jsonMensaje = new JSONObject();
-        String topico = "topic/"+IDDestino;
 
-        String body = "{\"to\": \"/topics/6\", \"notification\": {\"title\": \"This is the Title\", \"text\": \"Hello Im a notification\", \"click_action\": \"CHATACTIVITY\" } }";
+        String body = "{\"to\": \"/topics/" + IDDestino +"\", \"notification\": {\"title\": \"" + nombreUsuario+ "\", \"text\": \"" + mensaje + "\", \"click_action\": \"CHATACTIVITY\" } }";
 
-        try {
-            jsonMensaje.put("to", topico);
-            jsonMensaje.put("notification", new JSONObject()
-                                                    .put("title", nombreUsuario)
-                                                    .put("text", mensaje)
-                                                    .put("click_action", "CHATACTIVITY")
-                                                );
-        }
-        catch(JSONException e)
-        {
-
-        }
-        String str = jsonMensaje.toString();
-        Log.v(TAG, "JSON: "+ str.replaceAll("\\\\", ""));
         enviarPOST("https://fcm.googleapis.com/fcm/send", body, new JSONCallback() {
             @Override
             public void ejecutar(JSONObject respuesta, long codigoServidor) {
@@ -127,15 +111,6 @@ public class ChatActivity extends AppCompatActivity {
                 Log.v(TAG, "JSON: "+ str);
             }
         });
-        /*
-        enviarPOST("https://fcm.googleapis.com/fcm/send", jsonMensaje, new JSONCallback() {
-            @Override
-            public void ejecutar(JSONObject respuesta, long codigoServidor) {
-                Log.v(TAG, "Codigdo servidor: "+ codigoServidor);
-                String str = respuesta.toString();
-                Log.v(TAG, "JSON: "+ str);
-            }
-        });*/
     }
 
     private void ponerMensajeFirebase(String idUsuario, String idPasajero, String idChofer, String nombreUsr) {
