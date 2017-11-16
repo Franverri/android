@@ -58,6 +58,9 @@ public class MainChoferActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_chofer);
 
+        //Comenzar servicio de localizacion
+        startService(new Intent(this, LocationService.class));
+
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);

@@ -68,8 +68,7 @@
             android:theme="@style/Main">
             <intent-filter>
                 <action android:name="MAINCHOFERACTIVITY" />
-
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".CarsActivity" />
@@ -77,7 +76,6 @@
         <activity android:name=".ChatActivity">
             <intent-filter>
                 <action android:name="CHATACTIVITY" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -88,7 +86,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".RegisterCarActivity"></activity>
+        <activity android:name=".RegisterCarActivity" />
+
+        <service android:name=".LocationService" android:process=":LocationService" />
     </application>
 
 </manifest>
