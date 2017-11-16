@@ -68,17 +68,8 @@ public class CarsActivity extends AppCompatActivity {
         btnDelete = (Button) findViewById(R.id.cars_delete);
 
         //Creo la lista de autos junto con su indice
-        //Debería pedir los autos al APP Server
         indice = 0;
-        Car auto1 = new Car("Auto naranja", R.drawable.auto1);
-        autos.add(auto1);
         obtenerAutos(strIDusr);
-        Car auto2 = new Car("Auto rojo", R.drawable.auto2);
-        Car auto3 = new Car("Auto azul", R.drawable.auto3);
-        autos.add(auto2);
-        autos.add(auto3);
-        //agregarAuto("Auto nuevo");
-        cantidadAutos = 3;
 
         carAdapter = new CarAdapter(this, autos);
         infiniteCardView.setClickable(true);
@@ -107,11 +98,13 @@ public class CarsActivity extends AppCompatActivity {
     }
 
     private void procesarAutos() {
+        cantidadAutos = 0;
         String autosGuardados = sharedPref.getString("Autos","noAutos");
         Log.v(TAG, "AUTOS GUARDADOS: "+ autosGuardados);
         String[] listaAutos = sharedPref.getString("Autos","noAutos").split(",");
         for (String auto : listaAutos) {
             agregarAuto(auto);
+            cantidadAutos++;
         }
     }
 
@@ -137,8 +130,6 @@ public class CarsActivity extends AppCompatActivity {
                         String idAuto = respuesta.getJSONObject(key).optString("id");
                         Log.v(TAG, "Claves   :"+ respuesta.getJSONObject(key).optString("modelo"));
                         Log.v(TAG, "Claves   :"+ respuesta.getJSONObject(key).optString("id"));
-                        //Car auto = new Car(modelo, R.drawable.auto1);
-                        //autos.add(auto);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -155,7 +146,7 @@ public class CarsActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //eliminarAuto();
+                eliminarAuto();
             }
         });
     }
@@ -165,12 +156,15 @@ public class CarsActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), R.string.unable_delete_car, Toast.LENGTH_SHORT).show();
         } else {
             //Llamar al app
+            /*
             sharedServer.eliminarAuto(strIDusr, String.valueOf(indice), new JSONCallback() {
                 @Override
                 public void ejecutar(JSONObject respuesta, long codigoServidor) {
                     //Respuesta server
                 }
-            });
+            });*/
+            Log.v(TAG, "CANTIDAD AUTOS: " + cantidadAutos);
+            autos.remove(indice);
             cantidadAutos--;
         }
     }

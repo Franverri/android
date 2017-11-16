@@ -165,4 +165,48 @@ public class SharedServer extends InterfazRest {
         enviarGET(URLAPIREST+"/driver/"+idUsr+"/cars",callback);
     }
 
+    public void modificarPosicionChofer(String strID, double longitud, double latitud, JSONCallback callback) {
+
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("posicion", new JSONObject()
+                    .put("lng", longitud)
+                    .put("lat", latitud)
+            );
+
+        }
+        catch(JSONException e)
+        {
+
+        }
+        String str = json.toString();
+        Log.v(TAG, "MODIFICAR POSICION CHOFER");
+        Log.v(TAG, "JSON: "+ str);
+        Log.v(TAG, "URL: "+URLAPIREST+"/driver/"+strID+"/position");
+        enviarPUT(URLAPIREST+"/driver/"+strID+"/position", json, callback);
+    }
+
+
+    public void modificarPosicionPasajero(String strID, double longitud, double latitud, JSONCallback callback) {
+
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("posicion", new JSONObject()
+                    .put("lng", longitud)
+                    .put("lat", latitud)
+            );
+
+        }
+        catch(JSONException e)
+        {
+
+        }
+        String str = json.toString();
+        Log.v(TAG, "MODIFICAR POSICION PASAJERO");
+        Log.v(TAG, "JSON: "+ str);
+        Log.v(TAG, "URL: "+URLAPIREST+"/user/"+strID+"/position");
+        enviarPUT(URLAPIREST+"/user/"+strID+"/position", json, callback);
+    }
 }

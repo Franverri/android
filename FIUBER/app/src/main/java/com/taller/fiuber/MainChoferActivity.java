@@ -46,6 +46,8 @@ public class MainChoferActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private BadgeDrawerArrowDrawable badgeDrawable;
 
+    private Intent intentLocalizacion;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,10 @@ public class MainChoferActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_main_chofer);
+
+        //Comenzar servicio de localizacion
+        intentLocalizacion = new Intent(this, LocationService.class);
+        startService(intentLocalizacion);
 
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
@@ -168,6 +174,7 @@ public class MainChoferActivity extends AppCompatActivity {
                         Log.v(TAG, "Cerrar sesión clikeado");
                         editorShared.clear();
                         editorShared.apply();
+                        stopService(intentLocalizacion);
                         goLogin();
                         return true;
                     case R.id.nav_chofer_autos:

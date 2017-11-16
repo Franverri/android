@@ -88,10 +88,12 @@ public class ChatActivity extends AppCompatActivity {
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
                         ponerMensajeFirebase(IDUsuario, "7", IDUsuario, nombreUsuario);
                         enviarNotificacion(nombreUsuario, "7", mensajeIngresado);
+                        //incrementarContador("7");
                     } else {
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
                         ponerMensajeFirebase(IDUsuario, IDUsuario, "6", nombreUsuario);
                         enviarNotificacion(nombreUsuario, "6", mensajeIngresado);
+                        //incrementearContador("6");
                     }
                 }
             }
