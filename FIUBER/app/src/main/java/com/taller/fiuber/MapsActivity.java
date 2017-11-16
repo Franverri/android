@@ -53,6 +53,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -93,6 +95,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ActionBarDrawerToggle toggle;
     private BadgeDrawerArrowDrawable badgeDrawable;
 
+    private String IDUsr;
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -121,8 +125,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //Suscribirse a un tópico de notificaciones
         FirebaseMessaging.getInstance().subscribeToTopic("NEWSPASAJERO");
-        String idUser = sharedPref.getString("ID", "noID");
-        FirebaseMessaging.getInstance().subscribeToTopic(idUser);
+        IDUsr = sharedPref.getString("ID", "noID");
+        FirebaseMessaging.getInstance().subscribeToTopic(IDUsr);
 
         //Prueba contador notificaciones
         editorShared.putInt("mensajes", 10);
@@ -214,6 +218,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 LatLng ubicacion = new LatLng(latitud, longitud);
                 Log.v(TAG, "Latitud: "+location.getLatitude() + " Longitud: "+ location.getLongitude());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion, 15));
+                sharedServer.modificarPosicionPasajero(IDUsr, longitud, latitud, new JSONCallback() {
+                    @Override
+                    public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                        Log.v(TAG, "Codigo   : "+ codigoServidor);
+                        Log.v(TAG, "respuesta: "+ respuesta);
+                    }
+                });
             }
 
             @Override
