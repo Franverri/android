@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.json.JSONObject;
+
 public class LocationService extends Service {
     private static final String TAG = "LocationService";
     private LocationManager mLocationManager = null;
@@ -19,6 +21,8 @@ public class LocationService extends Service {
     private SharedServer sharedServer;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editorShared;
+
+    private String strID;
 
     private class LocationListener implements android.location.LocationListener
     {
@@ -35,6 +39,15 @@ public class LocationService extends Service {
         {
             Log.v(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
+            double latitud = location.getLatitude();
+            double longitud = location.getLongitude();
+            sharedServer.modificarPosicionChofer(strID, longitud, latitud, new JSONCallback() {
+                @Override
+                public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                    Log.v(TAG, "Codigo   : " + codigoServidor);
+                    Log.v(TAG, "Respuesta: " + respuesta);
+                }
+            });
         }
 
         @Override
@@ -90,7 +103,8 @@ public class LocationService extends Service {
         Log.v(TAG, strToken);
         sharedServer.configurarTokenAutenticacion(strToken);
 
-        
+        //Guardo el ID
+        strID = sharedPref.getString("ID", "noID");
 
         initializeLocationManager();
         try {
