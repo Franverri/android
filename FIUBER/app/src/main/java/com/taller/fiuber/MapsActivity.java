@@ -85,6 +85,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button btnUbicacion;
     private double latitud;
     private double longitud;
+    private boolean rutaBuscada;
 
     SharedServer sharedServer;
     SharedPreferences sharedPref;
@@ -118,6 +119,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        //inicializo bool
+        rutaBuscada = false;
 
         //Almaceno el token del usuario
         String strToken = sharedPref.getString("token", "noToken");
@@ -274,7 +278,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnConfirmarViaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goSeleccionarChofer();
+                if(rutaBuscada){
+                    sharedServer.obtenerChoferesCercanos(latitud, longitud, new JSONCallback() {
+                        @Override
+                        public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                            Log.v(TAG, "------CHOFERES CERCANOS-------");
+                            Log.v(TAG, "Codigo   : "+ codigoServidor);
+                            Log.v(TAG, "respuesta: "+ respuesta);
+                            editorShared.putString("choferesCercanos", String.valueOf(respuesta));
+                        }
+                    });
+                    goSeleccionarChofer();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Seleccione el viaje primero", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -345,6 +362,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         setNavItemCount(R.id.nav_chat, 0);
                         goChat();
                         return true;
+                    case R.id.nav_payment:
+                        goPayment();
+                        return true;
                 }
                 return false;
             }
@@ -376,6 +396,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         try {
             Log.v(TAG, "ORIGEN: " + origin + " DESTINO: " + destination);
+            rutaBuscada = true;
             new DirectionFinder(this, origin, destination).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -517,6 +538,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void goChat() {
         Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
+    }
+
+    private void goPayment() {
+        Intent intent = new Intent(this, RegisterPayment.class);
         startActivity(intent);
     }
 }

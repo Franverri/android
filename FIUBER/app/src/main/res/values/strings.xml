@@ -73,6 +73,10 @@
     <string name="unable_delete_car">Mínimo un auto</string>
     <string name="registo_auto_exitoso">Auto registrado correctamente</string>
     <string name="registo_auto_error">Error al registrar auto</string>
-
+    <string name="menu_pagos">Pagos</string>
+    <string name="payment_fechaVencimiento">Fecha de vencimiento</string>
+    <string name="payment_codSeguridad">Codigo de seguridad</string>
+    <string name="registo_payment_erroneo">Completar todos los campos</string>
+    <string name="fecha_payment_erroneo">Fecha inválida</string>
 
 </resources>

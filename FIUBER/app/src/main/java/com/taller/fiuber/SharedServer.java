@@ -209,4 +209,33 @@ public class SharedServer extends InterfazRest {
         Log.v(TAG, "URL: "+URLAPIREST+"/user/"+strID+"/position");
         enviarPUT(URLAPIREST+"/user/"+strID+"/position", json, callback);
     }
+
+    public void obtenerChoferesCercanos(double longitud, double latitud, JSONCallback callback){
+        Log.v(TAG, "URL: "+URLAPIREST+"/driver/search?lng="+longitud+"&lat="+latitud);
+        enviarGET(URLAPIREST+"/driver/search?lng="+longitud+"&lat="+latitud,callback);
+    }
+
+    public void registrarPago(String IDUsr, String strTarjeta, String strCodSeguridad, String strFechaVencimiento, JSONCallback callback) {
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("metodo", "tarjeta");
+            json.put("seleccionado", true);
+            json.put("parametros", new JSONObject()
+                    .put("moneda", "pesos")
+                    .put("numero", strTarjeta)
+                    .put("fechaVencimiento", strFechaVencimiento)
+                    .put("cvv", strCodSeguridad)
+            );
+
+        }
+        catch(JSONException e)
+        {
+
+        }
+        String str = json.toString();
+        Log.v(TAG, "JSON: "+ str);
+        Log.v(TAG, "URL: "+URLAPIREST+"/users/"+IDUsr+"/metodopago");
+        enviarPUT(URLAPIREST+"/users/"+IDUsr+"/metodopago", json, callback);
+    }
 }

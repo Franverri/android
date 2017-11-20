@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -46,6 +47,12 @@ public class RegisterPasajeroActivity extends HashFunction {
     private int dia, mes, año;
     private DatePickerDialog.OnDateSetListener mDataSetListener;
 
+    private EditText codSeguridad;
+    private EditText mesVencimiento;
+    private EditText añoVencimiento;
+
+    private String usrID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +68,13 @@ public class RegisterPasajeroActivity extends HashFunction {
         nombre = (EditText) findViewById(R.id.regP_nombre);
         apellido = (EditText) findViewById(R.id.regP_apellido);
         cuentaFacebook = (EditText) findViewById(R.id.regP_cuentaFacebook);
-        tarjetaCredito = (EditText) findViewById(R.id.regP_tarjetaCredito);
+        //tarjetaCredito = (EditText) findViewById(R.id.regP_tarjetaCredito);
         btnFecha = (Button) findViewById(R.id.btnPFecha);
         fechaNacimiento = (EditText) findViewById(R.id.regP_fechaNacimiento);
+
+        //codSeguridad = (EditText) findViewById(R.id.regP_codSeguridad);
+        //mesVencimiento = (EditText) findViewById(R.id.regP_mesVencimiento);
+        //añoVencimiento = (EditText) findViewById(R.id.regP_añoVencimiento);
 
         btnFecha.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,6 +111,10 @@ public class RegisterPasajeroActivity extends HashFunction {
                 String strCuentaFacebook = cuentaFacebook.getText().toString();
                 String strFechaNacimiento = fechaNacimiento.getText().toString();
 
+                //String strTarjeta = tarjetaCredito.getText().toString();
+                //String strCodSeguridad = codSeguridad.getText().toString();
+                //String strFechaVencimiento = mesVencimiento.getText().toString() + "-" + añoVencimiento.getText().toString();
+
                 Log.v(TAG, "Usuario    : "+strUsuario);
                 Log.v(TAG, "Contraseña : "+strContraseña);
                 Log.v(TAG, "Mail       : "+strMail);
@@ -107,10 +122,23 @@ public class RegisterPasajeroActivity extends HashFunction {
                 Log.v(TAG, "Apellido   : "+strApellido);
                 Log.v(TAG, "Cuenta Face: "+strCuentaFacebook);
                 Log.v(TAG, "Fecha nacim: "+strFechaNacimiento);
+                //Log.v(TAG, "Tarjeta    : "+strTarjeta);
+                //Log.v(TAG, "Codigo Segu: "+strCodSeguridad);
+                //Log.v(TAG, "Fecha Venci: "+strFechaVencimiento);
 
                 computeSHAHash(strContraseña);
                 registrarUsuarioEnServidor("passenger", strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, "Argentina", strFechaNacimiento);
+                //registrarMetodoPago(usrID, strTarjeta, strCodSeguridad, strFechaVencimiento);
+            }
+        });
+    }
 
+    private void registrarMetodoPago(String usrID, String strTarjeta, String strCodSeguridad, String strFechaVencimiento) {
+        sharedServer.registrarPago(usrID, strTarjeta, strCodSeguridad, strFechaVencimiento, new JSONCallback() {
+            @Override
+            public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                Log.v(TAG, "Respuesta: "+ respuesta);
+                Log.v(TAG, "Codigo   : "+ codigoServidor);
             }
         });
     }
@@ -127,6 +155,11 @@ public class RegisterPasajeroActivity extends HashFunction {
             Log.v(TAG, "Respueta server: "+str);
             if((codigoServidor >= 200) && (codigoServidor <= 210)){
                 Log.i(TAG, "Registro de usuario exitoso");
+                try {
+                    usrID = respuesta.getString("id");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Toast.makeText(getApplicationContext(), R.string.registo_usr_exitoso, Toast.LENGTH_SHORT).show();
                 goLogin();
             } else {

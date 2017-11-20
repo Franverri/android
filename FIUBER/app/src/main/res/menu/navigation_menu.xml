@@ -15,6 +15,10 @@
         android:icon="@mipmap/ic_settings_black_24dp"
         android:title="@string/menu_configuracion" />
 
+    <item android:id="@+id/nav_payment"
+        android:icon="@mipmap/ic_payment_black_24dp"
+        android:title="@string/menu_pagos" />
+
     <item android:id="@+id/nav_logout"
         android:icon="@mipmap/ic_close_black_24dp"
         android:title="@string/menu_logout" />
