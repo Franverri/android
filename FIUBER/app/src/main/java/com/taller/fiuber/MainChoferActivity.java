@@ -22,7 +22,11 @@ import android.widget.TextView;
 import com.facebook.login.LoginManager;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -48,6 +52,8 @@ public class MainChoferActivity extends AppCompatActivity {
 
     private Intent intentLocalizacion;
 
+    private String usrID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,10 +75,11 @@ public class MainChoferActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
-        //Almaceno el token del usuario
+        //Almaceno el token/ID del usuario
         String strToken = sharedPref.getString("token", "noToken");
         Log.v(TAG, strToken);
         sharedServer.configurarTokenAutenticacion(strToken);
+        usrID = sharedPref.getString("ID", "noID");
 
         //Suscribirse a un tópico de notificaciones
         //FirebaseMessaging.getInstance().subscribeToTopic("NEWSCHOFER");
@@ -89,10 +96,16 @@ public class MainChoferActivity extends AppCompatActivity {
 
         listItems = new ArrayList<>();
 
+        //Obtengo viajes
+        obtenerPosiblesViajes();
+
+        procesarViajes();
+
+        /*
         for (int i = 0; i<10; i++){
             ListItem listItem = new ListItem("Heading"+(i+1), "Descripción");
             listItems.add(listItem);
-        }
+        }*/
 
         adapter = new MyAdapter(listItems, this);
         recyclerView.setAdapter(adapter);
@@ -102,6 +115,50 @@ public class MainChoferActivity extends AppCompatActivity {
 
         //CAMBIAR ESTA HARDCODEADO
         setNavItemCount(R.id.nav_chofer_chat, 10);
+    }
+
+
+    private void procesarViajes() {
+        String viajesGuardados = sharedPref.getString("posiblesViajes","noViajes");
+        String[] listaViajes = viajesGuardados.split(";");
+        for (String viaje : listaViajes) {
+            String[] viajes = viaje.split(",");
+            int metros = Integer.parseInt(viajes[2]);
+            float km = (float) metros / 1000;
+            ListItem listItem = new ListItem(viajes[1], viajes[0]+"$  ---  "+km+" km");
+            listItems.add(listItem);
+        }
+    }
+
+    private void obtenerPosiblesViajes() {
+        sharedServer.obtenerViajes(usrID, new JSONCallback() {
+            @Override
+            public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                String strViajes = "";
+                Log.v(TAG, "Respuesta: "+respuesta);
+                Log.v(TAG, "Codigo   : "+codigoServidor);
+                editorShared.putString("posiblesViajes", String.valueOf(respuesta));
+                editorShared.apply();
+
+                Iterator<?> keys = respuesta.keys();
+                while(keys.hasNext()){
+                    String key = (String)keys.next();
+                    try {
+                        String costo = respuesta.getJSONObject(key).optString("costo");
+                        strViajes = strViajes + costo + ",";
+                        String nombreUsuario = respuesta.getJSONObject(key).getJSONObject("datosPasajero").optString("nombreUsuario");
+                        strViajes = strViajes + nombreUsuario + ",";
+                        String distancia = respuesta.getJSONObject(key).getJSONObject("ruta").optString("distancia");
+                        strViajes = strViajes + distancia + ";";
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                editorShared.putString("posiblesViajes", strViajes);
+                Log.v(TAG, "Viajes   :"+ strViajes);
+                editorShared.apply();
+            }
+        });
     }
 
     private void setNavItemCount(int itemId, int count) {
