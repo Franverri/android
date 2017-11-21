@@ -78,5 +78,6 @@
     <string name="payment_codSeguridad">Codigo de seguridad</string>
     <string name="registo_payment_erroneo">Completar todos los campos</string>
     <string name="fecha_payment_erroneo">Fecha inválida</string>
+    <string name="sin_viajes">No hay viajes</string>
 
 </resources>

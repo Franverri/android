@@ -84,6 +84,9 @@ public class LoginActivity extends HashFunction  {
             }
         }
 
+        //editorShared.clear();
+        //editorShared.apply();
+
         setContentView(R.layout.activity_login);
 
         //Guardo los datos ingresados de mail y contraseña

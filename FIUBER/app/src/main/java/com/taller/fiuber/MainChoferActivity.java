@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -99,8 +100,6 @@ public class MainChoferActivity extends AppCompatActivity {
         //Obtengo viajes
         obtenerPosiblesViajes();
 
-        procesarViajes();
-
         /*
         for (int i = 0; i<10; i++){
             ListItem listItem = new ListItem("Heading"+(i+1), "Descripción");
@@ -154,9 +153,14 @@ public class MainChoferActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                editorShared.putString("posiblesViajes", strViajes);
-                Log.v(TAG, "Viajes   :"+ strViajes);
-                editorShared.apply();
+                if(strViajes.isEmpty()){
+                    Toast.makeText(getApplicationContext(), R.string.sin_viajes, Toast.LENGTH_SHORT).show();
+                } else {
+                    editorShared.putString("posiblesViajes", strViajes);
+                    Log.v(TAG, "Viajes   :"+ strViajes);
+                    editorShared.apply();
+                    procesarViajes();
+                }
             }
         });
     }

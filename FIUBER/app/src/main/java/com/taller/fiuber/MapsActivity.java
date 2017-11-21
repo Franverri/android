@@ -208,6 +208,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                editorShared.putString("origen", strOrigen);
+                editorShared.putString("destino", strDestino);
+                editorShared.apply();
                 sendRequest(strOrigen, strDestino);
             }
         });
