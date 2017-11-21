@@ -238,4 +238,9 @@ public class SharedServer extends InterfazRest {
         Log.v(TAG, "URL: "+URLAPIREST+"/users/"+IDUsr+"/metodopago");
         enviarPUT(URLAPIREST+"/users/"+IDUsr+"/metodopago", json, callback);
     }
+
+    public void obtenerViajes(String usrID, JSONCallback callback) {
+        Log.v(TAG, "URL: "+URLAPIREST+"/driver/"+usrID+"/trip");
+        enviarGET(URLAPIREST+"/driver/"+usrID+"/trip",callback);
+    }
 }
