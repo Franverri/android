@@ -123,7 +123,9 @@ public class MainChoferActivity extends AppCompatActivity {
         String[] listaViajes = viajesGuardados.split(";");
         for (String viaje : listaViajes) {
             String[] viajes = viaje.split(",");
-            ListItem listItem = new ListItem(viajes[1], viajes[0]);
+            int metros = Integer.parseInt(viajes[2]);
+            float km = (float) metros / 1000;
+            ListItem listItem = new ListItem(viajes[1], viajes[0]+"$  ---  "+km+" km");
             listItems.add(listItem);
         }
     }
