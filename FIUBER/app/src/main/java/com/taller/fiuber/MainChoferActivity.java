@@ -114,8 +114,37 @@ public class MainChoferActivity extends AppCompatActivity {
 
         //CAMBIAR ESTA HARDCODEADO
         setNavItemCount(R.id.nav_chofer_chat, 10);
+
+        //Obtener autos
+        obtenerAutos(usrID);
     }
 
+    private void obtenerAutos(String strIDusr) {
+        sharedServer.obtenerAutos(strIDusr, new JSONCallback() {
+            @Override
+            public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                Log.v(TAG, "Respuesta: "+ respuesta);
+                String strAutos = "";
+
+                Iterator<?> keys = respuesta.keys();
+                while(keys.hasNext()){
+                    String key = (String)keys.next();
+                    try {
+                        String modelo = respuesta.getJSONObject(key).optString("modelo");
+                        strAutos = strAutos + modelo + ",";
+                        String idAuto = respuesta.getJSONObject(key).optString("id");
+                        Log.v(TAG, "Claves   :"+ respuesta.getJSONObject(key).optString("modelo"));
+                        Log.v(TAG, "Claves   :"+ respuesta.getJSONObject(key).optString("id"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                editorShared.putString("Autos", strAutos);
+                Log.v(TAG, "Autos   :"+ strAutos);
+                editorShared.apply();
+            }
+        });
+    }
 
     private void procesarViajes() {
         String viajesGuardados = sharedPref.getString("posiblesViajes","noViajes");

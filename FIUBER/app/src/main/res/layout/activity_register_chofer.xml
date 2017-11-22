@@ -141,6 +141,8 @@
 
             </LinearLayout>
 
+            <!--
+
             <TextView
                 android:id="@+id/reg_info_auto"
                 android:layout_width="match_parent"
@@ -288,6 +290,8 @@
                     android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
+
+            -->
 
             <Button
                 android:id="@+id/reg_btn_registrarse"
