@@ -69,7 +69,8 @@ public class CarsActivity extends AppCompatActivity {
 
         //Creo la lista de autos junto con su indice
         indice = 0;
-        obtenerAutos(strIDusr);
+        //obtenerAutos(strIDusr);
+        procesarAutos();
 
         carAdapter = new CarAdapter(this, autos);
         infiniteCardView.setClickable(true);
@@ -101,11 +102,22 @@ public class CarsActivity extends AppCompatActivity {
         cantidadAutos = 0;
         String autosGuardados = sharedPref.getString("Autos","noAutos");
         Log.v(TAG, "AUTOS GUARDADOS: "+ autosGuardados);
-        String[] listaAutos = sharedPref.getString("Autos","noAutos").split(",");
-        for (String auto : listaAutos) {
-            agregarAuto(auto);
-            cantidadAutos++;
+        if(autosGuardados.equals("noAutos")){
+            Toast.makeText(getApplicationContext(), R.string.no_cars, Toast.LENGTH_SHORT).show();
+            agregarNoAuto();
+        } else {
+            String[] listaAutos = sharedPref.getString("Autos","noAutos").split(",");
+            for (String auto : listaAutos) {
+                agregarAuto(auto);
+                cantidadAutos++;
+            }
         }
+    }
+
+    private void agregarNoAuto() {
+        Log.v(TAG, "Agregando auto");
+        Car autoNuevo = new Car("", R.drawable.noautos);
+        autos.add(autoNuevo);
     }
 
     private void agregarAuto(String modelo) {

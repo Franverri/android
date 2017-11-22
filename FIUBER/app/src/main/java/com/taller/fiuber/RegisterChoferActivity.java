@@ -36,13 +36,13 @@ public class RegisterChoferActivity extends HashFunction {
     private EditText nombre;
     private EditText apellido;
     private EditText cuentaFacebook;
-    private EditText modeloAuto;
-    private EditText colorAuto;
-    private EditText patenteAuto;
-    private EditText añoAuto;
-    private String estadoAuto;
-    private boolean aireAcondicionado;
-    private EditText musicaAuto;
+    //private EditText modeloAuto;
+    //private EditText colorAuto;
+    //private EditText patenteAuto;
+    //private EditText añoAuto;
+    //private String estadoAuto;
+    //private boolean aireAcondicionado;
+    //private EditText musicaAuto;
     private Button btnFecha;
     private EditText fechaNacimiento;
     private int dia, mes, año;
@@ -63,11 +63,11 @@ public class RegisterChoferActivity extends HashFunction {
         nombre = (EditText) findViewById(R.id.reg_nombre);
         apellido = (EditText) findViewById(R.id.reg_apellido);
         cuentaFacebook = (EditText) findViewById(R.id.reg_cuentaFacebook);
-        modeloAuto = (EditText) findViewById(R.id.reg_modeloAuto);
-        colorAuto = (EditText) findViewById(R.id.reg_colorAuto);
-        patenteAuto = (EditText) findViewById(R.id.reg_patenteAuto);
-        añoAuto = (EditText) findViewById(R.id.reg_anioAuto);
-        musicaAuto = (EditText) findViewById(R.id.reg_musicaAuto);
+        //modeloAuto = (EditText) findViewById(R.id.reg_modeloAuto);
+        //colorAuto = (EditText) findViewById(R.id.reg_colorAuto);
+        //patenteAuto = (EditText) findViewById(R.id.reg_patenteAuto);
+        //añoAuto = (EditText) findViewById(R.id.reg_anioAuto);
+        //musicaAuto = (EditText) findViewById(R.id.reg_musicaAuto);
         btnFecha = (Button) findViewById(R.id.btnFecha);
         fechaNacimiento = (EditText) findViewById(R.id.reg_fechaNacimiento);
 
@@ -95,6 +95,7 @@ public class RegisterChoferActivity extends HashFunction {
         };
 
         //Maneja la información del estado del auto según el boton que clickee
+        /*
         RadioGroup radioGroupEstado = (RadioGroup) findViewById(R.id.reg_estado_grupo);
         radioGroupEstado.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
@@ -116,9 +117,10 @@ public class RegisterChoferActivity extends HashFunction {
                         break;
                 }
             }
-        });
+        });*/
 
         //Maneja la información del aire acondicionado del auto según el boton que clickee
+        /*
         RadioGroup radioGroupAire = (RadioGroup) findViewById(R.id.reg_aire_grupo);
         radioGroupAire.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
@@ -136,7 +138,7 @@ public class RegisterChoferActivity extends HashFunction {
                         break;
                 }
             }
-        });
+        });*/
 
         Button btnGuardar = (Button) findViewById(R.id.reg_btn_registrarse);
         btnGuardar.setOnClickListener(new View.OnClickListener() {
@@ -148,11 +150,11 @@ public class RegisterChoferActivity extends HashFunction {
                 String strNombre = nombre.getText().toString();
                 String strApellido = apellido.getText().toString();
                 String strCuentaFacebook = cuentaFacebook.getText().toString();
-                String strModeloAuto = modeloAuto.getText().toString();
-                String strColorAuto = colorAuto.getText().toString();
-                String strPatenteAuto = patenteAuto.getText().toString();
-                String strAñoAuto = añoAuto.getText().toString();
-                String strMusicaAuto = musicaAuto.getText().toString();
+                //String strModeloAuto = modeloAuto.getText().toString();
+                //String strColorAuto = colorAuto.getText().toString();
+                //String strPatenteAuto = patenteAuto.getText().toString();
+                //String strAñoAuto = añoAuto.getText().toString();
+                //String strMusicaAuto = musicaAuto.getText().toString();
                 String strFechaNacimiento = fechaNacimiento.getText().toString();
 
                 Log.v(TAG, "Usuario    : "+strUsuario);
@@ -162,6 +164,7 @@ public class RegisterChoferActivity extends HashFunction {
                 Log.v(TAG, "Apellido   : "+strApellido);
                 Log.v(TAG, "Cuenta Face: "+strCuentaFacebook);
                 Log.v(TAG, "Fecha nacim: "+strFechaNacimiento);
+                /*
                 Log.v(TAG, " ---AUTO----");
                 Log.v(TAG, "Modelo     : "+strModeloAuto);
                 Log.v(TAG, "Color      : "+strColorAuto);
@@ -169,7 +172,7 @@ public class RegisterChoferActivity extends HashFunction {
                 Log.v(TAG, "Año        : "+strAñoAuto);
                 Log.v(TAG, "Estado     : "+estadoAuto);
                 Log.v(TAG, "Aire       : "+aireAcondicionado);
-                Log.v(TAG, "Música     : "+strMusicaAuto);
+                Log.v(TAG, "Música     : "+strMusicaAuto);*/
 
                 computeSHAHash(strContraseña);
                 registrarUsuarioEnServidor("driver", strUsuario, strContraseña, strMail, strNombre, strApellido, strCuentaFacebook, "Argentina", strFechaNacimiento);
