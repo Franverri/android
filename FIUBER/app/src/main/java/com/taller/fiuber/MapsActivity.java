@@ -53,11 +53,13 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -171,6 +173,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.v(TAG, "Origen: " + place.getName());
                 Log.v(TAG, "Address: " + place.getAddress());
                 strOrigen = place.getAddress().toString();
+                LatLng queriedLocation = place.getLatLng();
+                Log.v(TAG, "Latitude is : " + queriedLocation.latitude);
+                Log.v(TAG, "Longitude is: " + queriedLocation.longitude);
             }
 
             @Override
@@ -282,16 +287,42 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 if(rutaBuscada){
-                    sharedServer.obtenerChoferesCercanos(latitud, longitud, new JSONCallback() {
+                    sharedServer.obtenerChoferesCercanos(longitud, latitud, new JSONCallback() {
                         @Override
                         public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                            String strChoferes = "";
                             Log.v(TAG, "------CHOFERES CERCANOS-------");
                             Log.v(TAG, "Codigo   : "+ codigoServidor);
                             Log.v(TAG, "respuesta: "+ respuesta);
-                            editorShared.putString("choferesCercanos", String.valueOf(respuesta));
+
+                            Iterator<?> keys = respuesta.keys();
+                            while(keys.hasNext()){
+                                String key = (String)keys.next();
+                                try {
+                                    String id = respuesta.getJSONObject(key).optString("id");
+                                    strChoferes = strChoferes + id + ",";
+                                    String modelo = respuesta.getJSONObject(key).getJSONObject("perfil").optString("modelo");
+                                    strChoferes = strChoferes + modelo + ",";
+                                    String estado = respuesta.getJSONObject(key).getJSONObject("perfil").optString("estado");
+                                    strChoferes = strChoferes + estado + ",";
+                                    String musica = respuesta.getJSONObject(key).getJSONObject("perfil").optString("musica");
+                                    strChoferes = strChoferes + musica + ",";
+                                    String año = respuesta.getJSONObject(key).getJSONObject("perfil").optString("anio");
+                                    strChoferes = strChoferes + año + ";";
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            if(strChoferes.isEmpty()){
+                                Toast.makeText(getApplicationContext(), R.string.no_choferes, Toast.LENGTH_SHORT).show();
+                            } else {
+                                editorShared.putString("choferesCercanos", strChoferes);
+                                Log.v(TAG, "Choferes   :"+ strChoferes);
+                                editorShared.apply();
+                                goSeleccionarChofer();
+                            }
                         }
                     });
-                    goSeleccionarChofer();
                 } else {
                     Toast.makeText(getApplicationContext(), "Seleccione el viaje primero", Toast.LENGTH_SHORT).show();
                 }

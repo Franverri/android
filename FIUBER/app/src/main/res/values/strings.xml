@@ -80,5 +80,6 @@
     <string name="fecha_payment_erroneo">Fecha inválida</string>
     <string name="sin_viajes">No hay viajes</string>
     <string name="no_cars">No existen autos</string>
+    <string name="no_choferes">No hay choferes disponibles</string>
 
 </resources>
