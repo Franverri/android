@@ -165,8 +165,6 @@ public class MainChoferActivity extends AppCompatActivity {
                 String strViajes = "";
                 Log.v(TAG, "Respuesta: "+respuesta);
                 Log.v(TAG, "Codigo   : "+codigoServidor);
-                editorShared.putString("posiblesViajes", String.valueOf(respuesta));
-                editorShared.apply();
 
                 Iterator<?> keys = respuesta.keys();
                 while(keys.hasNext()){

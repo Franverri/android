@@ -22,6 +22,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
@@ -56,14 +57,19 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     private void sendNotification(String title,String messageBody, String click_action) {
         Intent intent;
-        if(click_action.equals("CHATACTIVITY")){
-            intent = new Intent(this, ChatActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        }
-        else if(click_action.equals("MAINCHOFERACTIVITY")){
-            intent = new Intent(this, MainChoferActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        }else{
+        if(click_action != null){
+            if(click_action.equals("CHATACTIVITY")){
+                intent = new Intent(this, ChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }
+            else if(click_action.equals("MAINCHOFERACTIVITY")){
+                intent = new Intent(this, MainChoferActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }else{
+                intent = new Intent(this, MapsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            }
+        } else {
             intent = new Intent(this, MapsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }

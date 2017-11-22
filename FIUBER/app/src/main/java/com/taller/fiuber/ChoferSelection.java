@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
 
@@ -18,6 +19,7 @@ public class ChoferSelection extends AppCompatActivity {
 
     private static final String TAG = "ChoferSelectionActivity";
 
+    private List<Car> listChofer = new ArrayList<>();
     private List<Integer> lstImages = new ArrayList<>();
     private HorizontalInfiniteCycleViewPager pager;
 
@@ -35,10 +37,13 @@ public class ChoferSelection extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
-        initData();
+        //Cargar choferes disponibles
+        cargarChoferesDisponibles();
+
+        //initData();
 
         pager = (HorizontalInfiniteCycleViewPager)findViewById(R.id.horizontal_cycle);
-        ChoferAdapter adapter = new ChoferAdapter(lstImages, getBaseContext());
+        ChoferAdapter adapter = new ChoferAdapter(listChofer, getBaseContext());
         pager.setAdapter(adapter);
 
         //Configurar click boton "Seleccionar chofer"
@@ -61,6 +66,22 @@ public class ChoferSelection extends AppCompatActivity {
         lstImages.add(R.drawable.auto2);
         lstImages.add(R.drawable.auto3);
     }
+
+    private void cargarChoferesDisponibles() {
+        String strChoferes = sharedPref.getString("choferesCercanos", "noChoferes");
+        String[] listaChoferes = strChoferes.split(";");
+        for (String chofer : listaChoferes) {
+            String[] autoChofer = chofer.split(",");
+            Log.v(TAG, "IDChof: "+ autoChofer[0]);
+            Log.v(TAG, "Modelo: "+ autoChofer[1]);
+            Log.v(TAG, "Estado: "+ autoChofer[2]);
+            Log.v(TAG, "Musica: "+ autoChofer[3]);
+            Log.v(TAG, "Año   : "+ autoChofer[4]);
+        }
+        listChofer.add(new Car("Peugeot 207", R.drawable.auto1, "Buen estado", "Cumbia", "2001", "6"));
+        listChofer.add(new Car("Citroen C4", R.drawable.auto2, "Buen estado", "Pop", "2007", "6"));
+    }
+
 
     private void goMain() {
         Intent intent = new Intent(this, MapsActivity.class);

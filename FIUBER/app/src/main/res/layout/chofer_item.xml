@@ -1,3 +1,4 @@
+<!--
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
@@ -9,3 +10,48 @@
         android:layout_height="match_parent" />
 
 </LinearLayout>
+-->
+
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_chofer_view"
+    android:layout_width="match_parent"
+    android:layout_height="380dp"
+    android:layout_margin="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/card_chofer"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/card_chofer_modelo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_chofer"
+            android:maxLines="3"
+            android:padding="8dp"
+            android:text="MODELO"
+            android:textColor="#222"
+            android:textStyle="bold"
+            android:textSize="30dp" />
+
+        <TextView
+            android:id="@+id/card_chofer_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/card_chofer_modelo"
+            android:maxLines="3"
+            android:padding="8dp"
+            android:text="DESCRIPCION"
+            android:textColor="#666"
+            android:textSize="22dp" />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
