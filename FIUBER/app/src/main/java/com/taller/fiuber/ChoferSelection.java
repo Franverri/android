@@ -20,7 +20,6 @@ public class ChoferSelection extends AppCompatActivity {
     private static final String TAG = "ChoferSelectionActivity";
 
     private List<Car> listChofer = new ArrayList<>();
-    private List<Integer> lstImages = new ArrayList<>();
     private HorizontalInfiniteCycleViewPager pager;
 
     SharedServer sharedServer;
@@ -40,8 +39,6 @@ public class ChoferSelection extends AppCompatActivity {
         //Cargar choferes disponibles
         cargarChoferesDisponibles();
 
-        //initData();
-
         pager = (HorizontalInfiniteCycleViewPager)findViewById(R.id.horizontal_cycle);
         ChoferAdapter adapter = new ChoferAdapter(listChofer, getBaseContext());
         pager.setAdapter(adapter);
@@ -52,19 +49,14 @@ public class ChoferSelection extends AppCompatActivity {
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v(TAG, "Chofer " + String.valueOf(pager.getRealItem()) + " seleccionado.");
+                Log.v(TAG, "Posición " + String.valueOf(pager.getRealItem()) + " seleccionada.");
+                Log.v(TAG, "ID Chofer " + listChofer.get(pager.getRealItem()).getIdChofer() + " seleccionada.");
                 editorShared.putString("viajeConfirmado","si");
                 editorShared.apply();
-                goMain();
+                //goMain();
             }
         });
 
-    }
-
-    private void initData() {
-        lstImages.add(R.drawable.auto1);
-        lstImages.add(R.drawable.auto2);
-        lstImages.add(R.drawable.auto3);
     }
 
     private void cargarChoferesDisponibles() {
@@ -77,9 +69,10 @@ public class ChoferSelection extends AppCompatActivity {
             Log.v(TAG, "Estado: "+ autoChofer[2]);
             Log.v(TAG, "Musica: "+ autoChofer[3]);
             Log.v(TAG, "Año   : "+ autoChofer[4]);
+            listChofer.add(new Car(autoChofer[1], R.drawable.auto2, autoChofer[2], autoChofer[3], autoChofer[4], autoChofer[0]));
         }
-        listChofer.add(new Car("Peugeot 207", R.drawable.auto1, "Buen estado", "Cumbia", "2001", "6"));
-        listChofer.add(new Car("Citroen C4", R.drawable.auto2, "Buen estado", "Pop", "2007", "6"));
+        //listChofer.add(new Car("Peugeot 207", R.drawable.auto1, "Buen estado", "Cumbia", "2001", "12"));
+        //listChofer.add(new Car("Citroen C4", R.drawable.auto2, "Buen estado", "Pop", "2007", "7"));
     }
 
 
