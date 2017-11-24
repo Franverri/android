@@ -163,8 +163,8 @@ public class MainChoferActivity extends AppCompatActivity {
             @Override
             public void ejecutar(JSONObject respuesta, long codigoServidor) {
                 String strViajes = "";
-                Log.v(TAG, "Respuesta: "+respuesta);
-                Log.v(TAG, "Codigo   : "+codigoServidor);
+                Log.v(TAG, "Respuesta Viajes: "+respuesta);
+                Log.v(TAG, "Codigo Viajes   : "+codigoServidor);
 
                 Iterator<?> keys = respuesta.keys();
                 while(keys.hasNext()){
@@ -267,7 +267,12 @@ public class MainChoferActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_chofer_autos:
                         Log.v(TAG, "Autos clikeado");
-                        goCars();
+                        String autosAlmacenados = sharedPref.getString("Autos", "");
+                        if(autosAlmacenados.isEmpty()){
+                            goAñadirAuto();
+                        } else {
+                            goCars();
+                        }
                         return true;
                     case R.id.nav_chofer_chat:
                         editorShared.putInt("mensajes", 0);
@@ -307,6 +312,11 @@ public class MainChoferActivity extends AppCompatActivity {
 
     private void goCars() {
         Intent intent = new Intent(this, CarsActivity.class);
+        startActivity(intent);
+    }
+
+    private void goAñadirAuto() {
+        Intent intent = new Intent(this, RegisterCarActivity.class);
         startActivity(intent);
     }
 
