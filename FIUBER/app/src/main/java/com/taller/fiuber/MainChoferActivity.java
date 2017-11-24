@@ -67,10 +67,6 @@ public class MainChoferActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_chofer);
 
-        //Comenzar servicio de localizacion
-        intentLocalizacion = new Intent(this, LocationService.class);
-        startService(intentLocalizacion);
-
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
@@ -81,6 +77,12 @@ public class MainChoferActivity extends AppCompatActivity {
         Log.v(TAG, strToken);
         sharedServer.configurarTokenAutenticacion(strToken);
         usrID = sharedPref.getString("ID", "noID");
+
+        //Comenzar servicio de localizacion
+        intentLocalizacion = new Intent(this, LocationService.class);
+        intentLocalizacion.putExtra("IDChofer", usrID);
+        intentLocalizacion.putExtra("TokenChofer", strToken);
+        startService(intentLocalizacion);
 
         //Suscribirse a un tópico de notificaciones
         //FirebaseMessaging.getInstance().subscribeToTopic("NEWSCHOFER");
