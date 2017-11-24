@@ -41,6 +41,7 @@ public class LocationService extends Service {
             mLastLocation.set(location);
             double latitud = location.getLatitude();
             double longitud = location.getLongitude();
+            Log.v(TAG, "ID enviado: "+ strID);
             sharedServer.modificarPosicionChofer(strID, longitud, latitud, new JSONCallback() {
                 @Override
                 public void ejecutar(JSONObject respuesta, long codigoServidor) {
@@ -99,12 +100,13 @@ public class LocationService extends Service {
         editorShared = sharedPref.edit();
 
         //Almaceno el token del usuario
-        String strToken = sharedPref.getString("token", "noToken");
-        Log.v(TAG, strToken);
-        sharedServer.configurarTokenAutenticacion(strToken);
+        //String strToken = sharedPref.getString("token", "noToken");
+        //Log.v(TAG, strToken);
+        //sharedServer.configurarTokenAutenticacion(strToken);
 
         //Guardo el ID
         strID = sharedPref.getString("ID", "noID");
+        Log.v(TAG, "ID: "+ strID);
 
         initializeLocationManager();
         try {
@@ -128,10 +130,30 @@ public class LocationService extends Service {
     }
 
     @Override
+    public void onStart(Intent intent, int startId) {
+        super.onStart(intent, startId);
+        Bundle extras = intent.getExtras();
+
+        if(extras == null) {
+            Log.d(TAG, "Service: null");
+        } else {
+            Log.d(TAG, "Service: not null");
+            String strIDChofer = (String) extras.get("IDChofer");
+            Log.d(TAG, "ID parametro: "+ strIDChofer);
+            strID = strIDChofer;
+            String strTokenChofer = (String) extras.get("TokenChofer");
+            Log.d(TAG, "Token parametro: "+ strTokenChofer);
+            sharedServer.configurarTokenAutenticacion(strTokenChofer);
+        }
+    }
+
+    @Override
     public void onDestroy()
     {
         Log.e(TAG, "onDestroy");
         super.onDestroy();
+        editorShared.clear();
+        editorShared.apply();
         if (mLocationManager != null) {
             for (int i = 0; i < mLocationListeners.length; i++) {
                 try {

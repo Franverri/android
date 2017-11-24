@@ -67,10 +67,6 @@ public class MainChoferActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_chofer);
 
-        //Comenzar servicio de localizacion
-        intentLocalizacion = new Intent(this, LocationService.class);
-        startService(intentLocalizacion);
-
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
@@ -81,6 +77,12 @@ public class MainChoferActivity extends AppCompatActivity {
         Log.v(TAG, strToken);
         sharedServer.configurarTokenAutenticacion(strToken);
         usrID = sharedPref.getString("ID", "noID");
+
+        //Comenzar servicio de localizacion
+        intentLocalizacion = new Intent(this, LocationService.class);
+        intentLocalizacion.putExtra("IDChofer", usrID);
+        intentLocalizacion.putExtra("TokenChofer", strToken);
+        startService(intentLocalizacion);
 
         //Suscribirse a un tópico de notificaciones
         //FirebaseMessaging.getInstance().subscribeToTopic("NEWSCHOFER");
@@ -163,8 +165,8 @@ public class MainChoferActivity extends AppCompatActivity {
             @Override
             public void ejecutar(JSONObject respuesta, long codigoServidor) {
                 String strViajes = "";
-                Log.v(TAG, "Respuesta: "+respuesta);
-                Log.v(TAG, "Codigo   : "+codigoServidor);
+                Log.v(TAG, "Respuesta Viajes: "+respuesta);
+                Log.v(TAG, "Codigo Viajes   : "+codigoServidor);
 
                 Iterator<?> keys = respuesta.keys();
                 while(keys.hasNext()){
@@ -267,7 +269,12 @@ public class MainChoferActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_chofer_autos:
                         Log.v(TAG, "Autos clikeado");
-                        goCars();
+                        String autosAlmacenados = sharedPref.getString("Autos", "");
+                        if(autosAlmacenados.isEmpty()){
+                            goAñadirAuto();
+                        } else {
+                            goCars();
+                        }
                         return true;
                     case R.id.nav_chofer_chat:
                         editorShared.putInt("mensajes", 0);
@@ -307,6 +314,11 @@ public class MainChoferActivity extends AppCompatActivity {
 
     private void goCars() {
         Intent intent = new Intent(this, CarsActivity.class);
+        startActivity(intent);
+    }
+
+    private void goAñadirAuto() {
+        Intent intent = new Intent(this, RegisterCarActivity.class);
         startActivity(intent);
     }
 

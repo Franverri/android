@@ -50,8 +50,10 @@ public class ChoferSelection extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.v(TAG, "Posición " + String.valueOf(pager.getRealItem()) + " seleccionada.");
-                Log.v(TAG, "ID Chofer " + listChofer.get(pager.getRealItem()).getIdChofer() + " seleccionada.");
+                String idChoferSeleccionado = listChofer.get(pager.getRealItem()).getIdChofer();
+                Log.v(TAG, "ID Chofer " + idChoferSeleccionado + " seleccionada.");
                 editorShared.putString("viajeConfirmado","si");
+                editorShared.putString("choferSeleccionado", idChoferSeleccionado);
                 editorShared.apply();
                 //goMain();
             }
