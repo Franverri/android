@@ -157,6 +157,7 @@ public class MainChoferActivity extends AppCompatActivity {
             float km = (float) metros / 1000;
             ListItem listItem = new ListItem(viajes[1], viajes[0]+"$  ---  "+km+" km");
             listItems.add(listItem);
+            adapter.notifyDataSetChanged();
         }
     }
 
