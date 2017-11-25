@@ -1,6 +1,8 @@
 package com.taller.fiuber;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +27,8 @@ public class ChoferSelection extends AppCompatActivity {
     SharedServer sharedServer;
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
+
+    ProgressDialog myDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +59,17 @@ public class ChoferSelection extends AppCompatActivity {
                 editorShared.putString("viajeConfirmado","si");
                 editorShared.putString("choferSeleccionado", idChoferSeleccionado);
                 editorShared.apply();
-                //goMain();
+                myDialog = new ProgressDialog(ChoferSelection.this);
+                myDialog.setMessage("Esperando respuesta del chofer...");
+                myDialog.setCancelable(false);
+                myDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        goMain();
+                    }
+                });
+                myDialog.show();
             }
         });
 

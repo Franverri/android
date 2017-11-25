@@ -15,8 +15,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +56,7 @@ public class MainChoferActivity extends AppCompatActivity {
     private Intent intentLocalizacion;
 
     private String usrID;
+    private String IDPasajeroSeleccionado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +70,30 @@ public class MainChoferActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main_chofer);
 
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                IDPasajeroSeleccionado= null;
+            } else {
+                IDPasajeroSeleccionado = extras.getString("IDPasajeroSeleccionado");
+            }
+        } else {
+            IDPasajeroSeleccionado = (String) savedInstanceState.getSerializable("IDPasajeroSeleccionado");
+        }
+        Log.v(TAG, "ID PASAJERO SELECCIONADO: "+ IDPasajeroSeleccionado);
+
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        //Almaceno el ID del pasajero seleccionado
+        if(IDPasajeroSeleccionado != null){
+            Log.v(TAG, "Pasajero guardado");
+            editorShared.putString("pasajeroSeleccionado", IDPasajeroSeleccionado);
+            editorShared.apply();
+        }
+
 
         //Almaceno el token/ID del usuario
         String strToken = sharedPref.getString("token", "noToken");
@@ -108,7 +131,7 @@ public class MainChoferActivity extends AppCompatActivity {
             listItems.add(listItem);
         }*/
 
-        adapter = new MyAdapter(listItems, this);
+        adapter = new MyAdapter(listItems, this, IDPasajeroSeleccionado);
         recyclerView.setAdapter(adapter);
 
         //Menu de navegación lateral
@@ -155,7 +178,7 @@ public class MainChoferActivity extends AppCompatActivity {
             String[] viajes = viaje.split(",");
             int metros = Integer.parseInt(viajes[2]);
             float km = (float) metros / 1000;
-            ListItem listItem = new ListItem(viajes[1], viajes[0]+"$  ---  "+km+" km");
+            ListItem listItem = new ListItem(viajes[1], viajes[0]+"$  ---  "+km+" km", viajes[3]);
             listItems.add(listItem);
             adapter.notifyDataSetChanged();
         }
@@ -178,7 +201,9 @@ public class MainChoferActivity extends AppCompatActivity {
                         String nombreUsuario = respuesta.getJSONObject(key).getJSONObject("datosPasajero").optString("nombreUsuario");
                         strViajes = strViajes + nombreUsuario + ",";
                         String distancia = respuesta.getJSONObject(key).getJSONObject("ruta").optString("distancia");
-                        strViajes = strViajes + distancia + ";";
+                        strViajes = strViajes + distancia + ",";
+                        String idUsuario = respuesta.getJSONObject(key).getJSONObject("datosPasajero").optString("idPasajero");
+                        strViajes = strViajes + idUsuario + ";";
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

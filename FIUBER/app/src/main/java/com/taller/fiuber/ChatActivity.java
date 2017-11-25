@@ -50,6 +50,8 @@ public class ChatActivity extends AppCompatActivity {
     private String IDUsuario = "";
     private String tipoUsr = "";
 
+    private String usuarioRelacionado;
+
     private EditText input;
 
     @Override
@@ -72,9 +74,15 @@ public class ChatActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.list);
 
         if(tipoUsr.equals("driver")){
-            showAllOldMessages("7", IDUsuario);
+            //Obtengo el usuario con el cual chatear
+            usuarioRelacionado = sharedPref.getString("pasajeroSeleccionado", null);
+            //showAllOldMessages("1", IDUsuario);
+            showAllOldMessages(usuarioRelacionado, IDUsuario);
         } else {
-            showAllOldMessages(IDUsuario, "6");
+            //Obtengo el usuario con el cual chatear
+            usuarioRelacionado = sharedPref.getString("choferSeleccionado", null);
+            //showAllOldMessages(IDUsuario, "2");
+            showAllOldMessages(IDUsuario, usuarioRelacionado);
         }
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -86,16 +94,14 @@ public class ChatActivity extends AppCompatActivity {
                 } else {
                     if(tipoUsr.equals("driver")){
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
-                        //ponerMensajeFirebase(IDUsuario, "7", IDUsuario, nombreUsuario);
-                        ponerMensajeFirebase(IDUsuario, "7", IDUsuario, nombreUsuario);
-                        enviarNotificacion(nombreUsuario, "7", mensajeIngresado);
-                        //incrementarContador("7");
+                        //ponerMensajeFirebase(IDUsuario, "1", IDUsuario, nombreUsuario);
+                        ponerMensajeFirebase(IDUsuario, usuarioRelacionado, IDUsuario, nombreUsuario);
+                        enviarNotificacion(nombreUsuario, "1", mensajeIngresado);
                     } else {
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
-                        //ponerMensajeFirebase(IDUsuario, IDUsuario, "6", nombreUsuario);
-                        ponerMensajeFirebase(IDUsuario, IDUsuario, "6", nombreUsuario);
-                        enviarNotificacion(nombreUsuario, "6", mensajeIngresado);
-                        //incrementearContador("6");
+                        //ponerMensajeFirebase(IDUsuario, IDUsuario, "2", nombreUsuario);
+                        ponerMensajeFirebase(IDUsuario, IDUsuario, usuarioRelacionado, nombreUsuario);
+                        enviarNotificacion(nombreUsuario, "2", mensajeIngresado);
                     }
                 }
             }
