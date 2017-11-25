@@ -1,6 +1,8 @@
 package com.taller.fiuber;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +17,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
 
     private List<ListItem> listItems;
     private Context context;
+    private String IDSeleccionado;
 
-    public MyAdapter(List<ListItem> listItems, Context context) {
+    public MyAdapter(List<ListItem> listItems, Context context, String IDPasajeroSeleccionado) {
         this.listItems = listItems;
         this.context = context;
+        this.IDSeleccionado = IDPasajeroSeleccionado;
     }
 
     @Override
@@ -30,7 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        ListItem listItem = listItems.get(position);
+        final ListItem listItem = listItems.get(position);
 
         holder.textViewHead.setText(listItem.getHead());
         holder.textViewDesc.setText(listItem.getDesc());
@@ -40,6 +44,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
             @Override
             public void onClick(View v) {
                 Log.v("CARDVIEW", "Aceptar clickeado de item "+position);
+                Log.v("CARDVIEW", "ID Pasajero "+listItem.getIdPasajero());
+                String ID =  listItem.getIdPasajero();
+                setPasajero(ID);
+                Intent intent = new Intent(context, MainChoferActivity.class);
+                intent.putExtra("IDPasajeroSeleccionado", ID);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                //listItems.clear();
             }
         });
 
@@ -74,5 +86,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
             btnAceptar = (Button) itemView.findViewById(R.id.btnAceptar);
             btnRechazar = (Button) itemView.findViewById(R.id.btnRechazar);
         }
+    }
+
+    public void setPasajero(String ID){
+        this.IDSeleccionado = ID;
+    }
+
+    public String getIDPasajero(){
+        return IDSeleccionado;
     }
 }

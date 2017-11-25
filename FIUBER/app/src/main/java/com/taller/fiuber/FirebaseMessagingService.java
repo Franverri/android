@@ -70,7 +70,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             }
         } else {
-            intent = new Intent(this, MapsActivity.class);
+            intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
 
