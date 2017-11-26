@@ -143,6 +143,7 @@ public class LoginActivity extends HashFunction  {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 final AccessToken accessToken = loginResult.getAccessToken();
+                Log.v(TAG, "Facebook token: "+accessToken.getToken());
 
                 GraphRequestAsyncTask request = GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
                     @Override

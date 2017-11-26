@@ -144,6 +144,7 @@ public class SharedServer extends InterfazRest {
             jsonAuto.put("estado", estado);
             jsonAuto.put("aireAcondicionado", aire);
             jsonAuto.put("musica", musica);
+            //jsonAuto.put("activo", true);
 
         }
         catch(JSONException e)
@@ -242,5 +243,33 @@ public class SharedServer extends InterfazRest {
     public void obtenerViajes(String usrID, JSONCallback callback) {
         Log.v(TAG, "URL: "+URLAPIREST+"/driver/"+usrID+"/trip");
         enviarGET(URLAPIREST+"/driver/"+usrID+"/trip",callback);
+    }
+
+    public void solicitarViaje(String usrID, String origen, String destino, String idChoferSeleccionado, JSONCallback callback) {
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("IDPasajero", usrID);
+            json.put("origen", origen);
+            json.put("destino", destino);
+        }
+        catch(JSONException e)
+        {
+
+        }
+        Log.v(TAG, "URL: "+URLAPIREST+"/driver/"+idChoferSeleccionado+"/trip");
+        Log.v(TAG, "JSON: "+ json);
+        enviarPOST(URLAPIREST+"/driver/"+idChoferSeleccionado+"/trip",json,callback);
+    }
+
+    public void aceptarViaje(String idChofer, String idViajeSeleccionado, JSONCallback callback) {
+        JSONObject json = new JSONObject();
+        Log.v(TAG, "URL: "+URLAPIREST+"/driver/"+idChofer+"/trip/"+idViajeSeleccionado);
+        enviarPOST(URLAPIREST+"/driver/"+idChofer+"/trip/"+idViajeSeleccionado,json,callback);
+    }
+
+    public void rechazarViaje(String idChofer, String idViajeSeleccionado, JSONCallback callback) {
+        Log.v(TAG, "URL: "+URLAPIREST+"/driver/"+idChofer+"/trip/"+idViajeSeleccionado);
+        enviarDELETE(URLAPIREST+"/driver/"+idChofer+"/trip/"+idViajeSeleccionado,callback);
     }
 }

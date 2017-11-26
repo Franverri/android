@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class ChoferSelection extends AppCompatActivity {
 
     ProgressDialog myDialog;
 
+    private String usrID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,13 @@ public class ChoferSelection extends AppCompatActivity {
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        //Almaceno el token del usuario
+        String strToken = sharedPref.getString("token", "noToken");
+        sharedServer.configurarTokenAutenticacion(strToken);
+
+        //Obtengo ID de usr
+        usrID = sharedPref.getString("ID", "noID");
 
         //Cargar choferes disponibles
         cargarChoferesDisponibles();
@@ -56,9 +67,12 @@ public class ChoferSelection extends AppCompatActivity {
                 Log.v(TAG, "Posición " + String.valueOf(pager.getRealItem()) + " seleccionada.");
                 String idChoferSeleccionado = listChofer.get(pager.getRealItem()).getIdChofer();
                 Log.v(TAG, "ID Chofer " + idChoferSeleccionado + " seleccionada.");
-                editorShared.putString("viajeConfirmado","si");
+                editorShared.putBoolean("viajeSolicitado",true);
                 editorShared.putString("choferSeleccionado", idChoferSeleccionado);
                 editorShared.apply();
+
+                solicitarViaje(idChoferSeleccionado);
+
                 myDialog = new ProgressDialog(ChoferSelection.this);
                 myDialog.setMessage("Esperando respuesta del chofer...");
                 myDialog.setCancelable(false);
@@ -73,6 +87,19 @@ public class ChoferSelection extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void solicitarViaje(String idChoferSeleccionado) {
+        String origen = sharedPref.getString("origen", null);
+        String destino = sharedPref.getString("destino", null);
+
+        sharedServer.solicitarViaje(usrID, origen, destino, idChoferSeleccionado, new JSONCallback() {
+            @Override
+            public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                Log.v(TAG, "Codigo   : "+ codigoServidor);
+                Log.v(TAG, "respuesta: "+ respuesta);
+            }
+        });
     }
 
     private void cargarChoferesDisponibles() {

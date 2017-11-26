@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.storage.StreamDownloadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +58,9 @@ public class MainChoferActivity extends AppCompatActivity {
 
     private String usrID;
     private String IDPasajeroSeleccionado;
+    private String IDViajeSeleccionado;
+
+    private boolean viajeRechazado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,33 +77,47 @@ public class MainChoferActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
-                IDPasajeroSeleccionado= null;
+                IDPasajeroSeleccionado = null;
+                IDViajeSeleccionado = null;
+                viajeRechazado = false;
             } else {
                 IDPasajeroSeleccionado = extras.getString("IDPasajeroSeleccionado");
+                IDViajeSeleccionado = extras.getString("IDViajeSeleccionado");
+                viajeRechazado = extras.getBoolean("Rechazado");
             }
         } else {
             IDPasajeroSeleccionado = (String) savedInstanceState.getSerializable("IDPasajeroSeleccionado");
+            IDViajeSeleccionado = (String) savedInstanceState.getSerializable("IDViajeSeleccionado");
+            viajeRechazado = (boolean) savedInstanceState.getSerializable("Rechazado");
         }
         Log.v(TAG, "ID PASAJERO SELECCIONADO: "+ IDPasajeroSeleccionado);
+        Log.v(TAG, "ID  VIAJE   SELECCIONADO: "+ IDViajeSeleccionado);
 
         //Iniciliazación sharedPref
         sharedServer = new SharedServer();
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
-        //Almaceno el ID del pasajero seleccionado
-        if(IDPasajeroSeleccionado != null){
-            Log.v(TAG, "Pasajero guardado");
-            editorShared.putString("pasajeroSeleccionado", IDPasajeroSeleccionado);
-            editorShared.apply();
-        }
-
-
         //Almaceno el token/ID del usuario
         String strToken = sharedPref.getString("token", "noToken");
         Log.v(TAG, strToken);
         sharedServer.configurarTokenAutenticacion(strToken);
         usrID = sharedPref.getString("ID", "noID");
+
+        //Almaceno el ID del pasajero seleccionado
+        if((IDPasajeroSeleccionado != null)&&(IDViajeSeleccionado != null)){
+            Log.v(TAG, "Rechazado: " + viajeRechazado);
+            if(!viajeRechazado){
+                Log.v(TAG, "Viaje aceptado");
+                editorShared.putString("pasajeroSeleccionado", IDPasajeroSeleccionado);
+                editorShared.putString("viajeSeleccionado", IDViajeSeleccionado);
+                editorShared.apply();
+                aceptarViaje(usrID, IDViajeSeleccionado);
+            } else {
+                Log.v(TAG, "Viaje rechazado");
+                rechazarViaje(usrID, IDViajeSeleccionado);
+            }
+        }
 
         //Comenzar servicio de localizacion
         intentLocalizacion = new Intent(this, LocationService.class);
@@ -144,6 +162,26 @@ public class MainChoferActivity extends AppCompatActivity {
         obtenerAutos(usrID);
     }
 
+    private void aceptarViaje(String idPasajeroSeleccionado, String idViajeSeleccionado) {
+        sharedServer.aceptarViaje(idPasajeroSeleccionado, idViajeSeleccionado, new JSONCallback() {
+            @Override
+            public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                Log.v(TAG, "Respuesta aceptar viaje: "+respuesta);
+                Log.v(TAG, "Codigo aceptar viaje   : "+codigoServidor);
+            }
+        });
+    }
+
+    private void rechazarViaje(String idPasajeroSeleccionado, String idViajeSeleccionado) {
+        sharedServer.rechazarViaje(idPasajeroSeleccionado, idViajeSeleccionado, new JSONCallback() {
+            @Override
+            public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                Log.v(TAG, "Respuesta rechazar viaje: "+respuesta);
+                Log.v(TAG, "Codigo rechazar viaje   : "+codigoServidor);
+            }
+        });
+    }
+
     private void obtenerAutos(String strIDusr) {
         sharedServer.obtenerAutos(strIDusr, new JSONCallback() {
             @Override
@@ -178,7 +216,7 @@ public class MainChoferActivity extends AppCompatActivity {
             String[] viajes = viaje.split(",");
             int metros = Integer.parseInt(viajes[2]);
             float km = (float) metros / 1000;
-            ListItem listItem = new ListItem(viajes[1], viajes[0]+"$  ---  "+km+" km", viajes[3]);
+            ListItem listItem = new ListItem(viajes[1], viajes[0]+"$  ---  "+km+" km", viajes[3], viajes[4]);
             listItems.add(listItem);
             adapter.notifyDataSetChanged();
         }
@@ -203,7 +241,9 @@ public class MainChoferActivity extends AppCompatActivity {
                         String distancia = respuesta.getJSONObject(key).getJSONObject("ruta").optString("distancia");
                         strViajes = strViajes + distancia + ",";
                         String idUsuario = respuesta.getJSONObject(key).getJSONObject("datosPasajero").optString("idPasajero");
-                        strViajes = strViajes + idUsuario + ";";
+                        strViajes = strViajes + idUsuario + ",";
+                        String idViaje = respuesta.getJSONObject(key).optString("idViaje");
+                        strViajes = strViajes + idViaje + ";";
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

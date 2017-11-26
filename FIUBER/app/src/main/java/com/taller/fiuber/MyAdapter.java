@@ -46,9 +46,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
                 Log.v("CARDVIEW", "Aceptar clickeado de item "+position);
                 Log.v("CARDVIEW", "ID Pasajero "+listItem.getIdPasajero());
                 String ID =  listItem.getIdPasajero();
+                String IDViaje = listItem.getIdViaje();
                 setPasajero(ID);
                 Intent intent = new Intent(context, MainChoferActivity.class);
                 intent.putExtra("IDPasajeroSeleccionado", ID);
+                intent.putExtra("IDViajeSeleccionado", IDViaje);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 //listItems.clear();
@@ -59,9 +61,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
             @Override
             public void onClick(View v) {
                 Log.v("CARDVIEW", "Rechazar clickeado de item "+position);
+
+                String ID =  listItem.getIdPasajero();
+                String IDViaje = listItem.getIdViaje();
+                setPasajero(ID);
+                Intent intent = new Intent(context, MainChoferActivity.class);
+                intent.putExtra("Rechazado", true);
+                intent.putExtra("IDPasajeroSeleccionado", ID);
+                intent.putExtra("IDViajeSeleccionado", IDViaje);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 listItems.remove(position);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, getItemCount());
+
+                context.startActivity(intent);
             }
         });
     }
@@ -92,7 +106,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>  {
         this.IDSeleccionado = ID;
     }
 
-    public String getIDPasajero(){
-        return IDSeleccionado;
-    }
+
 }

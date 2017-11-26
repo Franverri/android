@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -99,6 +100,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private BadgeDrawerArrowDrawable badgeDrawable;
 
     private String IDUsr;
+    ProgressDialog myDialog;
 
     @Override
     protected void onPause() {
@@ -137,6 +139,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Prueba contador notificaciones
         editorShared.putInt("mensajes", 10);
         editorShared.apply();
+
+        //Veo si el viaje esta pedido
+        verificarPedidoViaje();
 
         //Menu de navegación lateral
         configurarMenuLateral();
@@ -264,6 +269,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    private void verificarPedidoViaje() {
+        boolean viajeSolicitado = sharedPref.getBoolean("viajeSolicitado", false);
+        if(viajeSolicitado){
+            myDialog = new ProgressDialog(MapsActivity.this);
+            myDialog.setMessage("Esperando respuesta del chofer...");
+            myDialog.setCancelable(false);
+            myDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //CANCELAR VIAJE DESDE EL APP Server
+                    dialog.dismiss();
+                }
+            });
+            myDialog.show();
+        }
+    }
+
     private void hideChat()
     {
         Menu nav_Menu = navigationView.getMenu();
@@ -366,7 +388,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Esconder el boton de mensaje hasta que se confirme un viaje
         hideChat();
 
-        if(sharedPref.getString("viajeConfirmado", "no").equals("si")){
+        if(sharedPref.getBoolean("viajeAceptado", false)){
             showChat();
         }
 
