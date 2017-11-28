@@ -173,7 +173,7 @@ public class RegisterPasajeroActivity extends HashFunction {
      * Envía la información ingresada por el usuario hacía el APP Server para su procesamiento.
      */
     private void registrarUsuarioEnServidor(String tipo, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento){
-        sharedServer.darAltaUsuario("passenger", usuario, contraseña, mail, nombre, apellido, cuentaFacebook, nacionalidad, fechaNacimiento, new RegistrarUsuarioCallback());
+        sharedServer.darAltaUsuario("passenger", usuario, contraseña, mail, nombre, apellido, cuentaFacebook, null, nacionalidad, fechaNacimiento, new RegistrarUsuarioCallback());
     }
 
     /**

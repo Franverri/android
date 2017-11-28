@@ -3,6 +3,7 @@ package com.taller.fiuber;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -62,6 +63,8 @@ public class LoginActivity extends HashFunction  {
 
     LoginButton faceLoginButton;
     CallbackManager callbackManager;
+
+    ProgressDialog myDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,19 +156,34 @@ public class LoginActivity extends HashFunction  {
                         String IDFace = user.optString("id");
                         String mail = user.optString("email");
                         Log.v(TAG, "Nombre Face: "+nombreFace);
-                        Log.v(TAG, "ID Face    : "+IDFace);
+                        Log.v(TAG, "ID Face    : "+ IDFace);
                         Log.v(TAG, "Mail       : "+mail);
 
+                        editorShared.putString("nombreFace", nombreFace);
+                        editorShared.putString("idFace", IDFace);
+                        editorShared.putString("tokenFace", accessToken.getToken());
+                        editorShared.apply();
+
+                        myDialog = new ProgressDialog(LoginActivity.this);
+                        myDialog.setMessage("Sincronizando Facebook...");
+                        myDialog.setCancelable(false);
+                        myDialog.show();
+
+
+                        sharedServer.obtenerTokenFacebook(nombreFace.replaceAll("\\s+",""), "password", accessToken.getToken(), new IngresarUsuarioFaceCallback());
+
+                        /*
                         String[] parts = nombreFace.split(" ");
                         String strNombre = parts[0];
                         String strApellido = parts[1];
                         Log.v(TAG, "Nombre  : "+strNombre);
-                        Log.v(TAG, "Apellido: "+strApellido);
+                        Log.v(TAG, "Apellido: "+strApellido);*/
                         //editorShared.putString("nombre", strNombre);
                         //editorShared.putString("apellido", strApellido);
                     }
                 }).executeAsync();
-                goMainPasajero();
+
+                //goMainPasajero();
             }
 
             @Override
@@ -236,6 +254,77 @@ public class LoginActivity extends HashFunction  {
                     Toast.makeText(getApplicationContext(), "Usuario incorrecto", Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     Log.v(TAG, "Error al intentar leer el JSON");
+                }
+            }
+        }
+    }
+
+    private class IngresarUsuarioFaceCallback extends JSONCallback
+    {
+        @Override
+        public void ejecutar(JSONObject respuesta, long codigoServidor) {
+            String str = respuesta.toString();
+            Log.v(TAG, "Respueta server: "+str);
+
+            if((codigoServidor >= 200) && (codigoServidor <= 210)){
+                //Usuario y contraseña correctos
+                try {
+                    String strToken = respuesta.getString("token");
+                    Log.v(TAG, "Token : "+strToken);
+                    String strTipo = respuesta.getString("tipo");
+                    Log.v(TAG, "Tipo  : "+strTipo);
+                    String strIDusr = respuesta.getString("id");
+                    Log.v(TAG, "ID Usr: "+strIDusr);
+                    editorShared.putString("token", strToken);
+                    editorShared.putBoolean("logueado", true);
+                    editorShared.putString("tipo", strTipo);
+                    editorShared.putString("ID", strIDusr);
+                    editorShared.apply();
+
+                    //Obtengo los datos del usuario logueado
+                    cargarDatosUsuario(strIDusr);
+
+                    //Almaceno el token del usuario
+                    sharedServer.configurarTokenAutenticacion(strToken);
+
+                    myDialog.dismiss();
+                    goMainPasajero();
+
+                } catch (JSONException e) {
+                    Log.v(TAG, "Error al intentar leer el JSON");
+                }
+            } else {
+                //El usuario no existe, debo crearlo
+                Log.v(TAG, "USUARIO FACE NO EXISTE");
+                String nombreFace = sharedPref.getString("nombreFace", null);
+                Log.v(TAG, "NOMBRE FACE: " + nombreFace);
+                String tokenFace = sharedPref.getString("tokenFace", null);
+                String idFace = sharedPref.getString("idFace", null);
+                Log.v(TAG, "ID FACE    : " + idFace);
+
+                String[] parts = nombreFace.split(" ");
+                String strNombre = parts[0];
+                String strApellido = parts[1];
+                Log.v(TAG, "Nombre  : "+strNombre);
+                Log.v(TAG, "Apellido: "+strApellido);
+
+                if((nombreFace != null) && (tokenFace != null) && (idFace != null)){
+                    Log.v(TAG, "Creando usuario de facebook...");
+                    sharedServer.darAltaUsuario("passenger", nombreFace.replaceAll("\\s+",""), "password", "mail", strNombre, strApellido, idFace, tokenFace, "Argentina", "...", new JSONCallback() {
+                        @Override
+                        public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                            Log.v(TAG, "Respuesta: "+respuesta);
+                            Log.v(TAG, "Codigo   : "+codigoServidor);
+                            if((codigoServidor >= 200) && (codigoServidor <= 210)){
+                                //HACER EL LOGIN DE NUEVO??
+                                String nombreFace = sharedPref.getString("nombreFace", null);
+                                String tokenFace = sharedPref.getString("tokenFace", null);
+                                sharedServer.obtenerTokenFacebook(nombreFace.replaceAll("\\s+",""), "password", tokenFace, new IngresarUsuarioCallback());
+                                //goMainPasajero();
+                            }
+                        }
+                    });
+
                 }
             }
         }

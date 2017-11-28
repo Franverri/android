@@ -47,11 +47,30 @@ public class SharedServer extends InterfazRest {
         enviarPOST(URLAPIREST+"/token",json,callback);
     }
 
+    public void obtenerTokenFacebook(String usuario, String contrasena, String tokenFace, JSONCallback callback)
+    {
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("nombreUsuario", usuario);
+            json.put("contrasena",contrasena);
+            json.put("tokenFacebook", tokenFace);
+        }
+        catch(JSONException e)
+        {
+
+        }
+        Log.v(TAG, "URL: "+URLAPIREST+"/token");
+        String str = json.toString();
+        Log.v(TAG, "JSON: "+ str);
+        enviarPOST(URLAPIREST+"/token",json,callback);
+    }
+
     /**
      * Envía un JSON con todos los datos del usuario para darlo de alta en la base de datos del Server.
      * Si el nombre de usuario ya existe deberá enviar un código de error.
      */
-    public void darAltaUsuario(String tipo, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String nacionalidad, String fechaNacimiento, JSONCallback callback)
+    public void darAltaUsuario(String tipo, String usuario, String contraseña, String mail, String nombre, String apellido, String cuentaFacebook, String tokenFacebook, String nacionalidad, String fechaNacimiento, JSONCallback callback)
     {
         JSONObject jsonUsuario = new JSONObject();
 
@@ -60,15 +79,12 @@ public class SharedServer extends InterfazRest {
             jsonUsuario.put("type", tipo);
             jsonUsuario.put("username", usuario);
             jsonUsuario.put("password", contraseña);
-            //Ver tema facebook cono la API del APP Server
-            //jsonUsuario.put("fb",
-            //        new JSONArray()
-            //                .put(new JSONObject()
-            //                        .put("userId", "FACE ID")
-            //                        .put("authToken", "FACE TOKEN")
-            //                )
-            //);
-            // ---FIN FACE---
+            if(tokenFacebook != null){
+                jsonUsuario.put("fb", new JSONObject()
+                        .put("userId", cuentaFacebook)
+                        .put("authToken", tokenFacebook)
+                );
+            }
             jsonUsuario.put("firstName", nombre);
             jsonUsuario.put("lastName", apellido);
             jsonUsuario.put("country", "Argentina");
