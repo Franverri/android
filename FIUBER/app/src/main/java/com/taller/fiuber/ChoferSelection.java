@@ -73,17 +73,7 @@ public class ChoferSelection extends AppCompatActivity {
 
                 solicitarViaje(idChoferSeleccionado);
 
-                myDialog = new ProgressDialog(ChoferSelection.this);
-                myDialog.setMessage("Esperando respuesta del chofer...");
-                myDialog.setCancelable(false);
-                myDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        goMain();
-                    }
-                });
-                myDialog.show();
+                goMain();
             }
         });
 

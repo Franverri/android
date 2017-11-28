@@ -62,6 +62,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Pantalla principal para los usuarios de tipo pasajero en la cual se puede solicitar un viaje indicando
@@ -147,7 +149,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         configurarMenuLateral();
 
         //CAMBIAR ESTA HARDCODEADO
-        setNavItemCount(R.id.nav_chat, 10);
+        int cantMensajes = sharedPref.getInt("contadorMensajes", -1);
+        Log.v(TAG, "Cantidad mensajes: "+ cantMensajes);
+        if(cantMensajes!=-1){
+            //setNavItemCount(R.id.nav_chat, 10);
+            setNavItemCount(R.id.nav_chat, cantMensajes);
+        } else {
+            setNavItemCount(R.id.nav_chat, 0);
+        }
 
         //Permisos de localizacion
         boolean permissionGranted = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -275,10 +284,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             myDialog = new ProgressDialog(MapsActivity.this);
             myDialog.setMessage("Esperando respuesta del chofer...");
             myDialog.setCancelable(false);
-            myDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancelar", new DialogInterface.OnClickListener() {
+            myDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancelar viaje", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //CANCELAR VIAJE DESDE EL APP Server
+                    String choferSeleccionado = sharedPref.getString("choferSeleccionado", null);
+                    if(choferSeleccionado != null){
+                        //FALTA EL ID DEL VIAJE!
+                        //sharedServer.rechazarViaje(choferSeleccionado, );
+                    }
                     dialog.dismiss();
                 }
             });
@@ -357,7 +371,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         badgeDrawable.setText("");
 
         //Para cuando no hay notificaciones
-        int cantMsj = sharedPref.getInt("mensajes", -1);
+        //int cantMsj = sharedPref.getInt("mensajes", -1);
+        int cantMsj = sharedPref.getInt("contadorMensajes", -1);
         Log.v(TAG, "Mensajes: "+cantMsj);
         if(cantMsj == 0){
             badgeDrawable.setEnabled(false);
@@ -409,6 +424,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Log.v(TAG, "Cerrar sesión clikeado");
                         editorShared.clear();
                         editorShared.apply();
+
+                        /*
+                        Map<String,?> prefs = sharedPref.getAll();
+                        for(Map.Entry<String,?> prefToReset : prefs.entrySet()){
+                            String key = prefToReset.getKey();
+                            String logKey = key;
+                            if(!(Objects.equals(key, "viajeSolicitado"))){
+                                editorShared.remove(prefToReset.getKey()).commit();
+                                logKey = logKey + " ELIMINADO";
+                            }
+                            Log.v(TAG, "KEY PREF: "+ logKey);
+                        }*/
+
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(IDUsr);
                         goLogin();
                         return true;
                     case R.id.nav_chat:

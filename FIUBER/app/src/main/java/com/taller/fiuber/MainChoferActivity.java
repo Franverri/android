@@ -331,6 +331,7 @@ public class MainChoferActivity extends AppCompatActivity {
                         editorShared.clear();
                         editorShared.apply();
                         stopService(intentLocalizacion);
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(usrID);
                         goLogin();
                         return true;
                     case R.id.nav_chofer_autos:

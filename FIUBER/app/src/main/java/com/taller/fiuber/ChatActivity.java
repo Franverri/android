@@ -107,11 +107,18 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        resetearContadorMensajes();
+
+    }
+
+    private void resetearContadorMensajes() {
+        editorShared.putInt("contadorMensajes", 0);
+        editorShared.apply();
     }
 
     private void enviarNotificacion(String nombreUsuario, String IDDestino, String mensaje) {
 
-        String body = "{\"to\": \"/topics/" + IDDestino +"\", \"notification\": {\"title\": \"" + nombreUsuario+ "\", \"text\": \"" + mensaje + "\", \"click_action\": \"CHATACTIVITY\" } }";
+        String body = "{\"to\": \"/topics/" + IDDestino +"\", \"data\": {\"action\": 0, \"title\": \"" + nombreUsuario+ "\", \"message\": \"" + mensaje + " } }";
 
         enviarPOST("https://fcm.googleapis.com/fcm/send", body, new JSONCallback() {
             @Override

@@ -96,27 +96,46 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         switch (action){
             case 0:
+                //Nuevo mensaje de chat (Notificación para ambos - uno o el otro, no simultaneo)
+                int cantidadMensajes = sharedPref.getInt("contadorMensajes", -1);
+                Log.v(TAG, "CANTIDAD MENSAJES: " + cantidadMensajes);
+                if(cantidadMensajes!=-1){
+                    cantidadMensajes++;
+                } else {
+                    cantidadMensajes = 1;
+                }
+                editorShared.putInt("contadorMensajes", cantidadMensajes);
+                editorShared.apply();
                 intent = new Intent(this, ChatActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             case 1:
+                //Viaje rechazado (Notificación para el pasajero)
                 intent = new Intent(this, MapsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 editorShared.putBoolean("viajeRechazado", true);
                 editorShared.apply();
                 break;
             case 2:
+                //Viaje aceptado (Notificación para el pasajero)
                 intent = new Intent(this, MapsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 editorShared.putBoolean("viajeAceptado", true);
                 editorShared.apply();
                 break;
             case 3:
+                //Viaje terminado (Notificacion para el chofer)
                 intent = new Intent(this, MainChoferActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             case 4:
+                //Viaje terminado (Notificacion para el pasajero)
                 intent = new Intent(this, MapsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                break;
+            case 5:
+                //Nuevo viaje (Notificación para el chofer)
+                intent = new Intent(this, MainChoferActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;
             default:

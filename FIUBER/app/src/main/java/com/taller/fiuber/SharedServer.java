@@ -129,6 +129,7 @@ public class SharedServer extends InterfazRest {
      */
     public void obtenerDatosUsrServidor(String idUsr, JSONCallback callback)
     {
+        Log.v(TAG, "URL: "+URLAPIREST+"/users/"+idUsr);
         enviarGET(URLAPIREST+"/users/"+idUsr,callback);
     }
 
@@ -163,6 +164,7 @@ public class SharedServer extends InterfazRest {
     }
 
     public void obtenerAutos(String idUsr, JSONCallback callback){
+        Log.v(TAG, "URL: "+URLAPIREST+"/driver/"+idUsr+"/cars");
         enviarGET(URLAPIREST+"/driver/"+idUsr+"/cars",callback);
     }
 
