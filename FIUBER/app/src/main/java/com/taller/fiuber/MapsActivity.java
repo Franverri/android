@@ -139,10 +139,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         FirebaseMessaging.getInstance().subscribeToTopic(IDUsr);
 
         //Prueba contador notificaciones
-        editorShared.putInt("mensajes", 10);
-        editorShared.apply();
+        //editorShared.putInt("mensajes", 10);
+        //editorShared.apply();
 
-        //Veo si el viaje esta pedido
+        //Veo si el viaje esta pedido, aceptado o rechazado
         verificarPedidoViaje();
 
         //Menu de navegación lateral
@@ -290,13 +290,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //CANCELAR VIAJE DESDE EL APP Server
                     String choferSeleccionado = sharedPref.getString("choferSeleccionado", null);
                     if(choferSeleccionado != null){
-                        //FALTA EL ID DEL VIAJE!
-                        //sharedServer.rechazarViaje(choferSeleccionado, );
+                        String idViaje = sharedPref.getString("idViajeSeleccionado", null);
+                        if(idViaje != null){
+                            sharedServer.rechazarViaje(choferSeleccionado, idViaje, new JSONCallback() {
+                                @Override
+                                public void ejecutar(JSONObject respuesta, long codigoServidor) {
+                                    Log.v(TAG, "Codigo   : "+ codigoServidor);
+                                    Log.v(TAG, "respuesta: "+ respuesta);
+                                }
+                            });
+                        }
                     }
                     dialog.dismiss();
                 }
             });
             myDialog.show();
+        } else {
+            boolean viajeAceptado = sharedPref.getBoolean("viajeAceptado", false);
+            boolean viajeRechazado = sharedPref.getBoolean("viajeRechazado", false);
+            if(viajeAceptado){
+                Toast.makeText(getApplicationContext(), R.string.viaje_aceptado, Toast.LENGTH_SHORT).show();
+            } else if(viajeRechazado){
+                Toast.makeText(getApplicationContext(), R.string.viaje_rechazado, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -374,7 +390,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //int cantMsj = sharedPref.getInt("mensajes", -1);
         int cantMsj = sharedPref.getInt("contadorMensajes", -1);
         Log.v(TAG, "Mensajes: "+cantMsj);
-        if(cantMsj == 0){
+        if(cantMsj == -1){
             badgeDrawable.setEnabled(false);
         }
 

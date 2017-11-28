@@ -81,5 +81,9 @@
     <string name="sin_viajes">No hay viajes</string>
     <string name="no_cars">No existen autos</string>
     <string name="no_choferes">No hay choferes disponibles</string>
+    <string name="viaje_aceptado">Su viaje a sido aceptado</string>
+    <string name="viaje_rechazado">Su viaje ha sido rechazado</string>
+    <string name="payment_add">Metodo de pago agregado</string>
+    <string name="payment_error">Error al agregar metodo de pago</string>
 
 </resources>

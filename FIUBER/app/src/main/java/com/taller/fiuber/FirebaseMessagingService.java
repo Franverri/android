@@ -113,6 +113,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 //Viaje rechazado (Notificación para el pasajero)
                 intent = new Intent(this, MapsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                editorShared.remove("viajeSolicitado");
                 editorShared.putBoolean("viajeRechazado", true);
                 editorShared.apply();
                 break;
@@ -120,6 +121,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 //Viaje aceptado (Notificación para el pasajero)
                 intent = new Intent(this, MapsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                editorShared.remove("viajeSolicitado");
                 editorShared.putBoolean("viajeAceptado", true);
                 editorShared.apply();
                 break;

@@ -2,6 +2,7 @@ package com.taller.fiuber;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -89,6 +90,12 @@ public class RegisterPayment extends AppCompatActivity {
                         public void ejecutar(JSONObject respuesta, long codigoServidor) {
                             Log.v(TAG, "Respuesta: "+ respuesta);
                             Log.v(TAG, "Codigo   : "+ codigoServidor);
+                            if((codigoServidor >= 200) && (codigoServidor <= 210)){
+                                Toast.makeText(getApplicationContext(), R.string.payment_add, Toast.LENGTH_SHORT).show();
+                                goMain();
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.payment_error, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                 }
@@ -96,6 +103,12 @@ public class RegisterPayment extends AppCompatActivity {
         });
 
 
+    }
+
+    private void goMain() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     private boolean fechaInvalida() {

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -13,6 +14,11 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.Normalizer;
 
 /**
  * Encargada de implementar todas las conexiones directas con el APP Server
@@ -35,7 +41,6 @@ abstract public class InterfazRest {
         this.token = token;
     }
 
-
     /**
      * Envía un JSON con datos a la URL pasada como parámetro (que será la del APP Server) mediante un POST
      * para luego almacenar la respuesta recibida en otro JSON (callback) que finalmente sera procesado.
@@ -54,9 +59,11 @@ abstract public class InterfazRest {
 
                 HttpPost post = new HttpPost(URL);
 
-                post.setHeader("Content-type", "application/json");
+                //post.setHeader("Content-type", "application/json");
+                post.setHeader("content-type", "application/json; charset=UTF-8");
                 if(!token.isEmpty()){
                     post.setHeader("Authorization","Bearer "+token);
+                    Log.v("InterfazRest", "Token: " + token);
                 }
 
 
@@ -65,9 +72,11 @@ abstract public class InterfazRest {
                     //Configura post para que envie el json.
 
                     Log.v("InterfazRest", "JSON enviado: "+json.toString());
-
-                    StringEntity entidad = new StringEntity(json.toString());
+                    //StringEntity entidad = new StringEntity(json.toString());
+                    String entidadSinAcento = stripAccents(json.toString());
+                    StringEntity entidad = new StringEntity(entidadSinAcento);
                     post.setEntity(entidad);
+
 
                     //Envio y espero la peticion.
                     HttpResponse resp = httpClient.execute(post);
@@ -99,6 +108,13 @@ abstract public class InterfazRest {
         POST peticion = new POST();
 
         peticion.execute();
+    }
+
+    public static String stripAccents(String s)
+    {
+        s = Normalizer.normalize(s, Normalizer.Form.NFD);
+        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return s;
     }
 
     /**

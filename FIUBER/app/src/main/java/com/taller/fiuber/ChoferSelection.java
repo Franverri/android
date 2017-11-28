@@ -14,10 +14,12 @@ import android.widget.Toast;
 
 import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ChoferSelection extends AppCompatActivity {
 
@@ -73,23 +75,37 @@ public class ChoferSelection extends AppCompatActivity {
 
                 solicitarViaje(idChoferSeleccionado);
 
-                goMain();
+                //goMain();
             }
         });
 
+    }
+
+    private class ViajeCallback extends JSONCallback
+    {
+        @Override
+        public void ejecutar(JSONObject respuesta, long codigoServidor) {
+            Log.v(TAG, "Codigo   : "+ codigoServidor);
+            Log.v(TAG, "respuesta: "+ respuesta);
+
+            if((codigoServidor >= 200) && (codigoServidor <= 210)){
+                //Viaje solicitado correctamente
+                String idViaje = respuesta.optString("idViaje");
+                editorShared.putString("idViajeSeleccionado", idViaje);
+                editorShared.apply();
+                goMain();
+            } else {
+                //Error
+                Toast.makeText(getApplicationContext(), "Error al solicitar viaje", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void solicitarViaje(String idChoferSeleccionado) {
         String origen = sharedPref.getString("origen", null);
         String destino = sharedPref.getString("destino", null);
 
-        sharedServer.solicitarViaje(usrID, origen, destino, idChoferSeleccionado, new JSONCallback() {
-            @Override
-            public void ejecutar(JSONObject respuesta, long codigoServidor) {
-                Log.v(TAG, "Codigo   : "+ codigoServidor);
-                Log.v(TAG, "respuesta: "+ respuesta);
-            }
-        });
+        sharedServer.solicitarViaje(usrID, origen, destino, idChoferSeleccionado, new ViajeCallback());
     }
 
     private void cargarChoferesDisponibles() {
