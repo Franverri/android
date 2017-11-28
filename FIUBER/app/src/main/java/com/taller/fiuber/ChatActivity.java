@@ -118,7 +118,9 @@ public class ChatActivity extends AppCompatActivity {
 
     private void enviarNotificacion(String nombreUsuario, String IDDestino, String mensaje) {
 
-        String body = "{\"to\": \"/topics/" + IDDestino +"\", \"data\": {\"action\": 0, \"title\": \"" + nombreUsuario+ "\", \"message\": \"" + mensaje + " } }";
+        //String body = "{\"to\": \"/topics/" + IDDestino +"\", \"data\": {\"action\": 0, \"title\": \"" + nombreUsuario+ "\", \"message\": \"" + mensaje + " } }";
+
+        String body = "{\"to\": \"/topics/" + IDDestino + "\", \"data\": {\"action\": 0, \"title\": \"" + nombreUsuario + "\", \"message\": \"" + mensaje + "\" } }";
 
         enviarPOST("https://fcm.googleapis.com/fcm/send", body, new JSONCallback() {
             @Override

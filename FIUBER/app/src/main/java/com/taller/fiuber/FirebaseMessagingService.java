@@ -23,6 +23,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     private Context appContext;
     private int action;
+    private int notificationID;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editorShared;
@@ -36,6 +37,18 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         appContext=getBaseContext();
         sharedPref = appContext.getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
+
+        //Inicializar notification ID
+        notificationID = sharedPref.getInt("notificationID", -1);
+        if(notificationID == -1){
+            notificationID = 0;
+            editorShared.putInt("notificationID", notificationID);
+            editorShared.apply();
+        } else {
+            notificationID++;
+            editorShared.putInt("notificationID", notificationID);
+            editorShared.apply();
+        }
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -134,6 +147,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 //Viaje terminado (Notificacion para el pasajero)
                 intent = new Intent(this, MapsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                editorShared.remove("viajeAceptado");
+                editorShared.apply();
                 break;
             case 5:
                 //Nuevo viaje (Notificación para el chofer)
@@ -160,6 +175,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+        Log.v(TAG, "NOTIFICATION ID: " + notificationID);
+        notificationManager.notify(notificationID, notificationBuilder.build());
     }
 }
