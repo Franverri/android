@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +99,9 @@ public class MainChoferActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
+        //editorShared.clear();
+        //editorShared.apply();
+
         //Almaceno el token/ID del usuario
         String strToken = sharedPref.getString("token", "noToken");
         Log.v(TAG, strToken);
@@ -109,6 +113,7 @@ public class MainChoferActivity extends AppCompatActivity {
             Log.v(TAG, "Rechazado: " + viajeRechazado);
             if(!viajeRechazado){
                 Log.v(TAG, "Viaje aceptado");
+                editorShared.putBoolean("viajeAceptado", true);
                 editorShared.putString("pasajeroSeleccionado", IDPasajeroSeleccionado);
                 editorShared.putString("viajeSeleccionado", IDViajeSeleccionado);
                 editorShared.apply();
@@ -131,8 +136,8 @@ public class MainChoferActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic(idUser);
 
         //Prueba contador notificaciones
-        editorShared.putInt("mensajes", 10);
-        editorShared.apply();
+        //editorShared.putInt("mensajes", 10);
+        //editorShared.apply();
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -141,7 +146,13 @@ public class MainChoferActivity extends AppCompatActivity {
         listItems = new ArrayList<>();
 
         //Obtengo viajes
-        obtenerPosiblesViajes();
+        boolean viajeEnCurso = sharedPref.getBoolean("viajeAceptado", false);
+        if(viajeEnCurso){
+            RelativeLayout layout = (RelativeLayout) findViewById(R.id.activity_main_chofer);
+            layout.setBackgroundResource(R.drawable.fondomaincurso);
+        } else {
+            obtenerPosiblesViajes();
+        }
 
         /*
         for (int i = 0; i<10; i++){
@@ -155,8 +166,15 @@ public class MainChoferActivity extends AppCompatActivity {
         //Menu de navegación lateral
         configurarMenuLateral();
 
-        //CAMBIAR ESTA HARDCODEADO
-        setNavItemCount(R.id.nav_chofer_chat, 10);
+        //Configuracion cantidad mensajes
+        int cantMensajes = sharedPref.getInt("contadorMensajes", -1);
+        Log.v(TAG, "Cantidad mensajes: "+ cantMensajes);
+        if(cantMensajes!=-1){
+            //setNavItemCount(R.id.nav_chat, 10);
+            setNavItemCount(R.id.nav_chofer_chat, cantMensajes);
+        } else {
+            setNavItemCount(R.id.nav_chofer_chat, 0);
+        }
 
         //Obtener autos
         obtenerAutos(usrID);
@@ -270,9 +288,10 @@ public class MainChoferActivity extends AppCompatActivity {
         badgeDrawable.setText("");
 
         //Para cuando no hay notificaciones
-        int cantMsj = sharedPref.getInt("mensajes", -1);
+        //int cantMsj = sharedPref.getInt("mensajes", -1);
+        int cantMsj = sharedPref.getInt("contadorMensajes", -1);
         Log.v(TAG, "Mensajes: "+cantMsj);
-        if(cantMsj == 0){
+        if(cantMsj == -1){
             badgeDrawable.setEnabled(false);
         }
 
@@ -307,11 +326,11 @@ public class MainChoferActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.nav_menu_chofer);
 
         //Esconder el boton de mensaje hasta que se confirme un viaje
-        //hideChat();
+        hideChat();
 
-        //if(sharedPref.getString("viajeConfirmado", "no").equals("si")){
-        //    showChat();
-        //}
+        if(sharedPref.getBoolean("viajeAceptado", false)){
+            showChat();
+        }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -328,11 +347,16 @@ public class MainChoferActivity extends AppCompatActivity {
                     case R.id.nav_chofer_logout:
                         LoginManager.getInstance().logOut();
                         Log.v(TAG, "Cerrar sesión clikeado");
-                        editorShared.clear();
-                        editorShared.apply();
-                        stopService(intentLocalizacion);
-                        FirebaseMessaging.getInstance().unsubscribeFromTopic(usrID);
-                        goLogin();
+                        boolean viajeEnCurso = sharedPref.getBoolean("viajeAceptado", false);
+                        if(!viajeEnCurso){
+                            editorShared.clear();
+                            editorShared.apply();
+                            stopService(intentLocalizacion);
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(usrID);
+                            goLogin();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Viaje en curso", Toast.LENGTH_SHORT).show();
+                        }
                         return true;
                     case R.id.nav_chofer_autos:
                         Log.v(TAG, "Autos clikeado");

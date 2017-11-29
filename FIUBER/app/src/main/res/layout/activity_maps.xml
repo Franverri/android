@@ -13,6 +13,7 @@
         android:orientation="vertical"  >
 
         <LinearLayout
+            android:id="@+id/ly1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -26,6 +27,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ly2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -39,6 +41,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ly3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -63,6 +66,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ly4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

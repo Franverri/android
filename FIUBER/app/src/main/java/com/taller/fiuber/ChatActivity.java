@@ -63,6 +63,10 @@ public class ChatActivity extends AppCompatActivity {
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
+        //Elimino los mensjaes sin leer
+        editorShared.remove("contadorMensajes");
+        editorShared.apply();
+
         //Obtengo el usuario logueado
         nombreUsuario = sharedPref.getString("usuario", null);
         IDUsuario = sharedPref.getString("ID", null);
@@ -96,12 +100,12 @@ public class ChatActivity extends AppCompatActivity {
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
                         //ponerMensajeFirebase(IDUsuario, "1", IDUsuario, nombreUsuario);
                         ponerMensajeFirebase(IDUsuario, usuarioRelacionado, IDUsuario, nombreUsuario);
-                        enviarNotificacion(nombreUsuario, "1", mensajeIngresado);
+                        enviarNotificacion(nombreUsuario, usuarioRelacionado, mensajeIngresado);
                     } else {
                         //Faltaría tener un "pasajeroAsignado" en el sharedPref
                         //ponerMensajeFirebase(IDUsuario, IDUsuario, "2", nombreUsuario);
                         ponerMensajeFirebase(IDUsuario, IDUsuario, usuarioRelacionado, nombreUsuario);
-                        enviarNotificacion(nombreUsuario, "2", mensajeIngresado);
+                        enviarNotificacion(nombreUsuario, usuarioRelacionado, mensajeIngresado);
                     }
                 }
             }
@@ -122,12 +126,14 @@ public class ChatActivity extends AppCompatActivity {
 
         String body = "{\"to\": \"/topics/" + IDDestino + "\", \"data\": {\"action\": 0, \"title\": \"" + nombreUsuario + "\", \"message\": \"" + mensaje + "\" } }";
 
+        Log.v(TAG, "JSON ENVIADO: " + body);
+
         enviarPOST("https://fcm.googleapis.com/fcm/send", body, new JSONCallback() {
             @Override
             public void ejecutar(JSONObject respuesta, long codigoServidor) {
                 Log.v(TAG, "Codigdo servidor: "+ codigoServidor);
                 String str = respuesta.toString();
-                Log.v(TAG, "JSON: "+ str);
+                Log.v(TAG, "JSON RECIBIDO   : "+ str);
             }
         });
     }

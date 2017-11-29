@@ -59,6 +59,7 @@ public class RegisterPayment extends AppCompatActivity {
         sharedServer.configurarTokenAutenticacion(strToken);
 
         IDUsr = sharedPref.getString("ID", "noID");
+        Log.v(TAG, "ID: " + IDUsr);
 
         tarjetaCredito = (EditText) findViewById(R.id.payment_tarjetaCredito);
         codSeguridad = (EditText) findViewById(R.id.payment_codSeguridad);

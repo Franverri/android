@@ -13,6 +13,8 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.RemoteMessage;
 
 import org.json.JSONException;
@@ -107,6 +109,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }*/
 
+        Log.v(TAG, "ACTION: " + action);
         switch (action){
             case 0:
                 //Nuevo mensaje de chat (Notificación para ambos - uno o el otro, no simultaneo)
@@ -142,13 +145,33 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 //Viaje terminado (Notificacion para el chofer)
                 intent = new Intent(this, MainChoferActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                editorShared.remove("viajeAceptado");
+                editorShared.remove("contadorMensajes");
+                editorShared.apply();
                 break;
             case 4:
                 //Viaje terminado (Notificacion para el pasajero)
                 intent = new Intent(this, MapsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 editorShared.remove("viajeAceptado");
+                editorShared.remove("contadorMensajes");
                 editorShared.apply();
+
+                //Obtengo el usuario logueado
+                String IDUsuario = sharedPref.getString("ID", null);
+                String tipoUsr = sharedPref.getString("tipo",null);
+                String usuarioRelacionado = "";
+                if(tipoUsr.equals("driver")){
+                    //Obtengo el usuario con el cual chatear
+                    usuarioRelacionado = sharedPref.getString("pasajeroSeleccionado", null);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl("https://fiuber-177714.firebaseio.com/");
+                    ref.child(usuarioRelacionado+IDUsuario).removeValue();
+                } else {
+                    //Obtengo el usuario con el cual chatear
+                    usuarioRelacionado = sharedPref.getString("choferSeleccionado", null);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReferenceFromUrl("https://fiuber-177714.firebaseio.com/");
+                    ref.child(IDUsuario+usuarioRelacionado).removeValue();
+                }
                 break;
             case 5:
                 //Nuevo viaje (Notificación para el chofer)

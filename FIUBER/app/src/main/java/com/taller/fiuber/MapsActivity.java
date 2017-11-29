@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -126,6 +127,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         sharedPref = getSharedPreferences(getString(R.string.saved_data), Context.MODE_PRIVATE);
         editorShared = sharedPref.edit();
 
+        //editorShared.clear();
+        //editorShared.apply();
+
         //inicializo bool
         rutaBuscada = false;
 
@@ -148,7 +152,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Menu de navegación lateral
         configurarMenuLateral();
 
-        //CAMBIAR ESTA HARDCODEADO
+        //Configuracion cantidad mensajes
         int cantMensajes = sharedPref.getInt("contadorMensajes", -1);
         Log.v(TAG, "Cantidad mensajes: "+ cantMensajes);
         if(cantMensajes!=-1){
@@ -276,6 +280,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }, 10);
             return;
         }
+
+        boolean viajeEnCurso = sharedPref.getBoolean("viajeAceptado", false);
+        if(viajeEnCurso){
+            cambiosDuranteViajeEnCurso();
+        }
+    }
+
+    private void cambiosDuranteViajeEnCurso() {
+        LinearLayout ly1=(LinearLayout)this.findViewById(R.id.ly1);
+        ly1.setVisibility(LinearLayout.GONE);
+
+        LinearLayout ly2=(LinearLayout)this.findViewById(R.id.ly2);
+        ly2.setVisibility(LinearLayout.GONE);
+
+        LinearLayout ly3=(LinearLayout)this.findViewById(R.id.ly3);
+        ly3.setVisibility(LinearLayout.GONE);
+
+        LinearLayout ly4=(LinearLayout)this.findViewById(R.id.ly4);
+        ly4.setVisibility(LinearLayout.GONE);
+
+        String or = sharedPref.getString("origen", null);
+        String de = sharedPref.getString("destino", null);
+
+        if((or != null) && (de != null)){
+            Log.v(TAG, "ORIGEN ENVIADO AL REQUEST : "+ or);
+            Log.v(TAG, "DESTINO ENVIADO AL REQUEST: "+ de);
+            sendRequest(or, de);
+        }
     }
 
     private void verificarPedidoViaje() {
@@ -308,11 +340,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             boolean viajeAceptado = sharedPref.getBoolean("viajeAceptado", false);
             boolean viajeRechazado = sharedPref.getBoolean("viajeRechazado", false);
-            if(viajeAceptado){
-                Toast.makeText(getApplicationContext(), R.string.viaje_aceptado, Toast.LENGTH_SHORT).show();
-            } else if(viajeRechazado){
+            if(viajeRechazado){
                 Toast.makeText(getApplicationContext(), R.string.viaje_rechazado, Toast.LENGTH_SHORT).show();
             }
+            /*
+            if(viajeAceptado){
+                //Toast.makeText(getApplicationContext(), R.string.viaje_aceptado, Toast.LENGTH_SHORT).show();
+            } else if(viajeRechazado){
+                Toast.makeText(getApplicationContext(), R.string.viaje_rechazado, Toast.LENGTH_SHORT).show();
+            }*/
         }
     }
 
@@ -436,10 +472,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         Log.v(TAG, "Configuración clikeado");
                         return true;
                     case R.id.nav_logout:
-                        LoginManager.getInstance().logOut();
-                        Log.v(TAG, "Cerrar sesión clikeado");
-                        editorShared.clear();
-                        editorShared.apply();
+                        boolean viajeEnCurso = sharedPref.getBoolean("viajeAceptado", false);
+                        if(!viajeEnCurso){
+                            LoginManager.getInstance().logOut();
+                            Log.v(TAG, "Cerrar sesión clikeado");
+                            editorShared.clear();
+                            editorShared.apply();
 
                         /*
                         Map<String,?> prefs = sharedPref.getAll();
@@ -453,11 +491,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             Log.v(TAG, "KEY PREF: "+ logKey);
                         }*/
 
-                        FirebaseMessaging.getInstance().unsubscribeFromTopic(IDUsr);
-                        goLogin();
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(IDUsr);
+                            goLogin();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Viaje en curso", Toast.LENGTH_SHORT).show();
+                        }
                         return true;
                     case R.id.nav_chat:
-                        editorShared.putInt("mensajes", 0);
+                        editorShared.remove("contadorMensajes");
                         editorShared.apply();
                         configurarNotificaciones();
                         setNavItemCount(R.id.nav_chat, 0);
@@ -481,8 +522,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void sendRequest(String origin, String destination) {
-        origin = strOrigen;
-        destination = strDestino;
+        //origin = strOrigen;
+        //destination = strDestino;
+        strOrigen = origin;
+        strDestino = destination;
         Log.v(TAG, "Origen : " + origin);
         Log.v(TAG, "Destino: " + destination);
 
