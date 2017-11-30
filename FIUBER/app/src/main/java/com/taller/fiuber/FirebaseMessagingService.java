@@ -113,6 +113,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         switch (action){
             case 0:
                 //Nuevo mensaje de chat (Notificación para ambos - uno o el otro, no simultaneo)
+                /*
                 int cantidadMensajes = sharedPref.getInt("contadorMensajes", -1);
                 Log.v(TAG, "CANTIDAD MENSAJES: " + cantidadMensajes);
                 if(cantidadMensajes!=-1){
@@ -121,7 +122,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     cantidadMensajes = 1;
                 }
                 editorShared.putInt("contadorMensajes", cantidadMensajes);
-                editorShared.apply();
+                editorShared.apply();*/
                 intent = new Intent(this, ChatActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 break;

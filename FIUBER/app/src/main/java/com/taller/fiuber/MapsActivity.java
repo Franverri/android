@@ -426,6 +426,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //int cantMsj = sharedPref.getInt("mensajes", -1);
         int cantMsj = sharedPref.getInt("contadorMensajes", -1);
         Log.v(TAG, "Mensajes: "+cantMsj);
+        badgeDrawable.setEnabled(false);
         if(cantMsj == -1){
             badgeDrawable.setEnabled(false);
         }
